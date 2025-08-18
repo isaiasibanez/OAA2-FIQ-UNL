@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Métodos de optimización – Optimización y Aprendizaje Automático II</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../CAPITULO_2/B1_regresion_lineal_logistica.html" rel="next">
+<link href="../CAPITULO_1/A4_condiciones_optimalidad.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-327735d1480bff6f7510335fe22ad292.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../CAPITULO_1/A1_intro_optimizacion.html">1. OPTIMIZACIÓN MATEMÁTICA</a></li><li class="breadcrumb-item"><a href="../CAPITULO_1/A5_metodos_optimizacion.html">1.5 Métodos de optimización</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Optimización y Aprendizaje Automático II</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">1. OPTIMIZACIÓN MATEMÁTICA</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A1_intro_optimizacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.1 Introducción a la optimización</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A2_optimizacion_convexa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.2 Optimización convexa</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A3_resolucion_computacional.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.3 Resolución computacional con CVXPY y SciPy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A4_condiciones_optimalidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.4 Condiciones de optimalidad</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A5_metodos_optimizacion.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">1.5 Métodos de optimización</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">2. MODELOS DISCRIMINATIVOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B1_regresion_lineal_logistica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.1 Regresión lineal y regresión logística</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B2_glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.2 Modelos lineales generalizados</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B3_ridge_lasso.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.3 Técnicas de regularización</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B4_svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.4 Máquinas de vectores soporte</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B5_intro_redes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.5 Introducción a redes neuronales</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#métodos-de-primer-orden" id="toc-métodos-de-primer-orden" class="nav-link active" data-scroll-target="#métodos-de-primer-orden">Métodos de primer orden</a>
+  <ul class="collapse">
+  <li><a href="#método-de-descenso-por-gradiente" id="toc-método-de-descenso-por-gradiente" class="nav-link" data-scroll-target="#método-de-descenso-por-gradiente">Método de descenso por gradiente</a></li>
+  <li><a href="#condición-de-lipschitz-para-el-gradiente" id="toc-condición-de-lipschitz-para-el-gradiente" class="nav-link" data-scroll-target="#condición-de-lipschitz-para-el-gradiente">Condición de Lipschitz para el gradiente</a></li>
+  <li><a href="#convergencia-para-funciones-objetivos-convexas" id="toc-convergencia-para-funciones-objetivos-convexas" class="nav-link" data-scroll-target="#convergencia-para-funciones-objetivos-convexas">Convergencia para funciones objetivos convexas</a></li>
+  <li><a href="#método-de-descenso-por-gradiente-proyectado" id="toc-método-de-descenso-por-gradiente-proyectado" class="nav-link" data-scroll-target="#método-de-descenso-por-gradiente-proyectado">Método de descenso por gradiente proyectado</a></li>
+  <li><a href="#resultados-de-convergencia" id="toc-resultados-de-convergencia" class="nav-link" data-scroll-target="#resultados-de-convergencia">Resultados de convergencia</a></li>
+  <li><a href="#método-de-descenso-por-gradiente-estocástico" id="toc-método-de-descenso-por-gradiente-estocástico" class="nav-link" data-scroll-target="#método-de-descenso-por-gradiente-estocástico">Método de descenso por gradiente estocástico</a></li>
+  </ul></li>
+  <li><a href="#métodos-de-segundo-orden" id="toc-métodos-de-segundo-orden" class="nav-link" data-scroll-target="#métodos-de-segundo-orden">Métodos de segundo orden</a>
+  <ul class="collapse">
+  <li><a href="#método-de-newton" id="toc-método-de-newton" class="nav-link" data-scroll-target="#método-de-newton">Método de Newton</a></li>
+  <li><a href="#variantes-y-extensiones-del-método-de-newton" id="toc-variantes-y-extensiones-del-método-de-newton" class="nav-link" data-scroll-target="#variantes-y-extensiones-del-método-de-newton">Variantes y extensiones del método de Newton</a></li>
+  </ul></li>
+  <li><a href="#actividades" id="toc-actividades" class="nav-link" data-scroll-target="#actividades">Actividades</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../CAPITULO_1/A1_intro_optimizacion.html">1. OPTIMIZACIÓN MATEMÁTICA</a></li><li class="breadcrumb-item"><a href="../CAPITULO_1/A5_metodos_optimizacion.html">1.5 Métodos de optimización</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Métodos de optimización</h1>
+<p class="subtitle lead">Capítulo 1 - Sección 5</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr style="border: 1px solid rgba(50, 0, 0, 1);">
+<div class="hidden">
+<p><span class="math display">\[
+\def\NN{\mathbb{N}}
+\def\ZZ{\mathbb{Z}}
+\def\RR{\mathbb{R}}
+\def\media{\mathbb{E}}
+\def\calL{\mathcal{L}}
+\def\calG{\mathcal{G}}
+\def\aa{{\bf a}}
+\def\bb{{\bf b}}
+\def\cc{{\bf c}}
+\def\dd{{\bf d}}
+\def\hh{{\bf h}}
+\def\qq{{\bf q}}
+\def\xx{{\bf x}}
+\def\yy{{\bf y}}
+\def\zz{{\bf z}}
+\def\uu{{\bf u}}
+\def\vv{{\bf v}}
+\def\XX{{\bf X}}
+\def\TT{{\bf T}}
+\def\SS{{\bf S}}
+\def\bfg{{\bf g}}
+\def\bftheta{\boldsymbol{\theta}}
+\def\bflambda{\boldsymbol{\lambda}}
+\def\bfeta{\boldsymbol{\eta}}
+\def\bfmu{\boldsymbol{\mu}}
+\def\bfnu{\boldsymbol{\nu}}
+\def\bfSigma{\boldsymbol{\Sigma}}
+\def\bfone{\mathbf{1}}
+\def\bfzero{\mathbf{0}}
+\def\argmin{\mathop{\mathrm{arg\,min\,}}}
+\def\argmax{\mathop{\mathrm{arg\,max\,}}}
+\]</span></p>
+</div>
+<p>En general, los problemas de optimización que surgen en el área de estadística y <em>machine learning</em> involucran funciones complejas, no lineales y/o de alta dimensión. Como consecuencia, obtener una solución exacta suele ser inalcanzable o innecesario. Esto último sucede, por ejemplo, cuando la solución exacta es costosa computacionalmente.</p>
+<p>Aquí es cuando entran en juego los métodos de optimización numérica: algoritmos iterativos que aproximan una solución al problema de optimización. Su objetivo es construir una secuencia de puntos <span class="math inline">\(\{\xx_t \mid t\in\mathbb{N}_0\}\)</span> que converja al punto óptimo <span class="math inline">\(\xx^*\)</span>, o lo suficientemente cerca de él.</p>
+<p>Los métodos de optimización se definen a partir de las propiedades analíticas de la función objetivo. En esta sección, presentaremos algunos de los métodos fundamentales, construidos bajo distintas suposiciones de diferenciabilidad de <span class="math inline">\(f\)</span>, ya sea utilizando información de primer orden (gradiente), o incorporando información de segundo orden (matriz Hessiana).</p>
+<section id="métodos-de-primer-orden" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="métodos-de-primer-orden">Métodos de primer orden</h2>
+<p>En principio, consideraremos el caso sin restricciones <span class="math display">\[
+\min_{\xx\in\RR^n} f(\xx).
+\]</span></p>
+<p>Si <span class="math inline">\(f\)</span> es una función diferenciable, ya hemos visto que una condición necesaria para que <span class="math inline">\(\xx^\star\in\RR^n\)</span> resuelve el problema de optimización es que <span class="math inline">\(\nabla f(\xx^\star)=\mathbf{0}\)</span>. Más aún, cuando <span class="math inline">\(f\)</span> es convexa, la condición también es suficiente (ver Teorema 1.4.2).</p>
+<p>Una idea fundamental para construir un algoritmo de optimización es aproximar <span class="math inline">\(f\)</span> con modelos más simples y manejables. En particular, los métodos de primer orden se basan en la aproximación de Taylor de primer orden alrededor de un punto <span class="math inline">\(\xx_t\)</span>, a saber: <span class="math display">\[
+f(\xx) \approx f(\xx_{t}) + \langle \nabla f(\xx_{t}), \xx - \xx_{t} \rangle.
+\]</span></p>
+<section id="método-de-descenso-por-gradiente" class="level3">
+<h3 class="anchored" data-anchor-id="método-de-descenso-por-gradiente">Método de descenso por gradiente</h3>
+<p>Una propiedad fundamental del vector gradiente <span class="math inline">\(\nabla f(\xx)\)</span> es que es la <em>dirección de máximo crecimiento</em> de <span class="math inline">\(f\)</span> a partir del punto <span class="math inline">\(\xx\)</span>. Por lo tanto, una idea básica para minimizar <span class="math inline">\(f\)</span> es moverse en la dirección opuesta, <span class="math inline">\(-\nabla f(\xx)\)</span>, una determinada distancia, para luego volver a calcular el vector gradiente y repetir el descenso. Esto deriva en el primer método de optimización que estudiaremos: <em>descenso por gradiente</em>.</p>
+<div class="highlight">
+<p><span class="badge bg-dark">Método de descenso por gradiente</span></p>
+<hr>
+<p>Dado un <em>punto inicial</em> <span class="math inline">\(\xx_0\in\text{dom}\,f\)</span> y una <em>tasa de aprendizaje</em> <span class="math inline">\(\eta\)</span>:</p>
+<div style="margin-left: 1em">
+<p><strong>repetir</strong> para <span class="math inline">\(t = 0,1,2,\dots\)</span>:</p>
+<blockquote class="blockquote">
+<p><strong>1°</strong> Calcular dirección <span class="math inline">\(-\nabla f(\xx_t)\)</span></p>
+<p><strong>2°</strong> Actualizar <span class="math inline">\(\xx_{t+1} := \xx_t - \eta \nabla f(\xx_t)\)</span>.</p>
+</blockquote>
+<p><strong>hasta</strong> que el criterio de parada se satisfaga.</p>
+</div>
+<hr>
+</div>
+<br>
+<div class="alert alert-light text-dark" role="important">
+<p><span class="badge bg-warning text-dark">Importante</span></p>
+<p>Como criterio de parada, se puede fijar una cantidad máxima de iteraciones, aunque en general también se utilizan condiciones de convergencia, como que la norma del gradiente sea menor que un umbral prefijado, o que el cambio entre iteraciones sucesivas sea suficientemente pequeño. En fórmulas: <span class="math display">\[
+\|\nabla f(\xx_t)\|_2&lt;\varepsilon_1\qquad\text{o}\qquad\|\xx_{t}-\xx_{t-1}\|_2&lt;\varepsilon_2.
+\]</span></p>
+</div>
+<p><br> A continuación mostraremos una función en Python que implementa el algoritmo básico de descenso por gradiente, con los siguientes argumentos:</p>
+<ul>
+<li><code>f</code>: función objetivo.</li>
+<li><code>grad_f</code>: función gradiente de <span class="math inline">\(f\)</span>.</li>
+<li><code>x_inicial</code>: punto inicial.</li>
+<li><code>lr</code>: (<em>learning rate</em>) tasa de aprendizaje <span class="math inline">\(\eta\)</span>.</li>
+<li><code>max_iter</code>: cantidad máxima de iteraciones.</li>
+<li><code>tol_grad</code>: tolerancia para norma del gradiente (opcional).</li>
+<li><code>tol_x</code>: tolerancia para norma de diferencia entre iteraciones (opcional).</li>
+</ul>
+<p>La salida es una lista con los puntos obtenidos en las iteraciones (<code>x_iter</code>), y los valores de la función (<code>f_iter</code>).</p>
+<div id="24560093" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gradient_descent(f, grad_f, x_inicial, lr<span class="op">=</span><span class="fl">0.1</span>, max_iter<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                      tol_grad<span class="op">=</span><span class="va">None</span>, tol_x<span class="op">=</span><span class="va">None</span>, verbose<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.array(x_inicial, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    x_iter <span class="op">=</span> [x.copy()]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    f_iter <span class="op">=</span> [f(x)]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, max_iter <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      grad <span class="op">=</span> grad_f(x)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Criterio de parada por norma del gradiente:</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> tol_grad <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> np.linalg.norm(grad) <span class="op">&lt;</span> tol_grad:</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> verbose:</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>          <span class="bu">print</span>(<span class="ss">f"Parada en iteración </span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">: |grad_f| &lt; </span><span class="sc">{</span>tol_grad<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        t <span class="op">=</span> t<span class="op">-</span><span class="dv">1</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>      x_new <span class="op">=</span> x <span class="op">-</span> lr <span class="op">*</span> grad</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Criterio de parada por norma de diferencia entre iteraciones:</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> tol_x <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> np.linalg.norm(x_new <span class="op">-</span> x) <span class="op">&lt;</span> tol_x:</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> verbose:</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>          <span class="bu">print</span>(<span class="ss">f"Parada en iteración </span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">: |x_t - x_(t+1)| &lt; </span><span class="sc">{</span>tol_x<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x_new</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        x_iter.append(x.copy())</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        f_iter.append(f(x))</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>      x <span class="op">=</span> x_new</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>      x_iter.append(x.copy())</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>      f_iter.append(f(x))</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> verbose:</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>      <span class="bu">print</span>(<span class="ss">f"Iteración final: </span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>      <span class="bu">print</span>(<span class="ss">f"Último punto: </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>      <span class="bu">print</span>(<span class="ss">f"Valor de f: </span><span class="sc">{</span>f(x)<span class="sc">}</span><span class="ss">"</span>)  </span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x_iter, f_iter</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+<div class="callout-example">
+<p><span class="badge bg-primary">Ejemplo 1</span> Vamos a utilizar el método de descenso por gradiente para aproximarnos al valor mínimo de</p>
+<p><span class="math display">\[
+f(x,y)=2(x-2)^2+5(y-3)^2,
+\]</span></p>
+<p>el cual sabemos que ocurre en <span class="math inline">\((2,3)\)</span> (vértice del paraboloide elíptico). Necesitamos proporcionar el gradiente de <span class="math inline">\(f\)</span>, el cual es <span class="math display">\[
+\nabla f(x,y)=\left(4(x-2), 10(y-3)\right).
+\]</span></p>
+<div id="739e5be7" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Función y gradiente:</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x):</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">2</span><span class="op">*</span>(x[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">5</span><span class="op">*</span>(x[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">3</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> grad_f(x):</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([<span class="dv">4</span> <span class="op">*</span> (x[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">2</span>), <span class="dv">10</span> <span class="op">*</span> (x[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">3</span>)])</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Parámetros:</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>x_inicial <span class="op">=</span> (<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>lr <span class="op">=</span> <span class="fl">0.05</span>               </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>max_iter <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>tol_grad <span class="op">=</span> <span class="fl">1e-3</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>tol_x <span class="op">=</span> <span class="fl">1e-3</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejecutar GD:</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>x_iter, f_iter <span class="op">=</span> gradient_descent(f, grad_f, x_inicial, lr, max_iter, tol_grad, tol_x)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parada en iteración 28: |x_t - x_(t+1)| &lt; 0.001
+Iteración final: 28
+Último punto: [1.99613144 2.99999999]
+Valor de f: 2.9931553533161224e-05</code></pre>
+</div>
+</div>
+<p>La secuencia de valores obtenidas es:</p>
+<div id="b69d9723" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x_arr <span class="op">=</span> np.array(x_iter)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>x_vals <span class="op">=</span> x_arr[:, <span class="dv">0</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>y_vals <span class="op">=</span> x_arr[:, <span class="dv">1</span>]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>tabla <span class="op">=</span> pd.DataFrame({<span class="st">'x'</span>: x_vals, <span class="st">'y'</span>: y_vals})</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tabla)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>           x         y
+0   0.000000  0.000000
+1   0.400000  1.500000
+2   0.720000  2.250000
+3   0.976000  2.625000
+4   1.180800  2.812500
+5   1.344640  2.906250
+6   1.475712  2.953125
+7   1.580570  2.976562
+8   1.664456  2.988281
+9   1.731565  2.994141
+10  1.785252  2.997070
+11  1.828201  2.998535
+12  1.862561  2.999268
+13  1.890049  2.999634
+14  1.912039  2.999817
+15  1.929631  2.999908
+16  1.943705  2.999954
+17  1.954964  2.999977
+18  1.963971  2.999989
+19  1.971177  2.999994
+20  1.976942  2.999997
+21  1.981553  2.999999
+22  1.985243  2.999999
+23  1.988194  3.000000
+24  1.990555  3.000000
+25  1.992444  3.000000
+26  1.993955  3.000000
+27  1.995164  3.000000
+28  1.996131  3.000000</code></pre>
+</div>
+</div>
+<p>Por último, vamos a realizar la gráfica en el dominio <span class="math inline">\(\RR^2\)</span> de la función.</p>
+<div id="d54cd893" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grilla para graficar:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.5</span>, <span class="dv">7</span>, <span class="dv">100</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.5</span>, <span class="dv">5</span>, <span class="dv">100</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>X, Y <span class="op">=</span> np.meshgrid(x, y)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f_xy(x, y):</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> f(np.array([x, y]))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> f_xy(X, Y)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># GRAFICA:</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Curvas de nivel:</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>contours <span class="op">=</span> plt.contour(X, Y, Z, levels<span class="op">=</span><span class="dv">30</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>plt.clabel(contours, inline<span class="op">=</span><span class="va">True</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Ruta de descenso por gradiente:</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>plt.plot(x_vals, y_vals, marker<span class="op">=</span><span class="st">'o'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>, label<span class="op">=</span><span class="st">'Iteraciones'</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>plt.scatter(<span class="dv">2</span>, <span class="dv">3</span>, color<span class="op">=</span><span class="st">'blue'</span>, label<span class="op">=</span><span class="st">'Mínimo'</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'x'</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'y'</span>)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>plt.xlim(<span class="op">-</span><span class="fl">0.2</span>, <span class="dv">4</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="op">-</span><span class="fl">0.2</span>, <span class="dv">5</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, facecolor<span class="op">=</span><span class="st">'white'</span>, framealpha<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="A5_metodos_optimizacion_files/figure-html/cell-5-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="810" height="508"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="condición-de-lipschitz-para-el-gradiente" class="level3">
+<h3 class="anchored" data-anchor-id="condición-de-lipschitz-para-el-gradiente">Condición de Lipschitz para el gradiente</h3>
+<p>Dado que el descenso por gradiente opera considerando la aproximación de primer orden de <span class="math inline">\(f\)</span>, una gran clave sea preguntarse qué tan rápido deja de ser precisa dicha aproximación. Una respuesta natural a esta pregunta viene dada por la <em>suavidad</em> de <span class="math inline">\(f\)</span>.</p>
+<p>Así, una vía estándar es imponer una cota sobre qué tan rápido puede cambiar el gradiente de la función al moverse ligeramente en cualquier dirección. Como consecuencia, al movernos en dirección de <span class="math inline">\(-\nabla f(\xx_t)\)</span> desde <span class="math inline">\(\xx_t\)</span>, los nuevos gradientes que encontraremos en el camino seguirán estando mayormente alineados con <span class="math inline">\(\nabla f(\xx_t)\)</span>, lo cual significa que <span class="math inline">\(-\nabla f(\xx_t)\)</span> seguirá siendo una buena dirección de descenso durante algún tiempo.</p>
+<p>Específicamente, requeriremos que el gradiente <span class="math inline">\(\nabla f(x)\)</span> sea <span class="math inline">\(L\)</span>-Lipschitz continuo para alguna constante <span class="math inline">\(L \geq 0\)</span>. Esta condición a menudo se llama <span class="math inline">\(L\)</span><em>-suavidad</em> en la literatura. La presentamos ahora para funciones generales con dominios convexos arbitrarios <span class="math inline">\(\Omega\)</span>; hoy solo nos importará el caso <span class="math inline">\(\Omega = \mathbb{R}^{n}\)</span>.</p>
+<div class="definicion">
+<p><strong>Definición 1.</strong> (<span class="math inline">\(L\)</span>-suavidad) Sea <span class="math inline">\(\Omega\)</span> un conjunto convexo. Una función diferenciable <span class="math inline">\(f: \Omega \to \RR\)</span> es <span class="math inline">\(L\)</span>-suave si su gradiente es <span class="math inline">\(L\)</span>-Lipschitz continuo, esto es, <span class="math display">\[
+\|\nabla f(\xx) - \nabla f(\yy)\|_{2} \leq L \|\xx - \yy\|_{2}, \qquad \forall \xx, \yy \in \Omega.
+\]</span></p>
+</div>
+<p>Una consecuencia inmediata de la <span class="math inline">\(L\)</span>-suavidad es que la función admite una <em>cota superior cuadrática</em>. A continuación, esta propiedad será extremadamente útil para cuantificar la mejora de un paso del algoritmo de descenso por gradiente, lo cual a menudo se denomina <em>lema del descenso del gradiente</em>.</p>
+<div class="teorema">
+<p><strong>Teorema 1.</strong> (Cota superior cuadrática). Sea <span class="math inline">\(f: \Omega \to \mathbb{R}\)</span> una función <span class="math inline">\(L\)</span>-suave en un dominio convexo <span class="math inline">\(\Omega\)</span>. Entonces, podemos acotar superiormente la función <span class="math inline">\(f\)</span> como <span class="math display">\[
+f(\yy) \leq f(\xx) + \langle \nabla f(\xx), \yy - \xx \rangle + \frac{L}{2} \|\yy - \xx\|_{2}^{2} \quad \forall \xx, \yy \in \Omega.
+\tag{2}
+\]</span></p>
+</div>
+<details>
+<summary>
+Mostrar detalles
+</summary>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Demostración</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Definamos la recta que conecta <span class="math inline">\(\xx\)</span> con <span class="math inline">\(\yy\)</span> como <span class="math inline">\(\gamma(t):=t\yy+(1-t)\xx\)</span> y la restricción de <span class="math inline">\(f\)</span> sobre dicha recta como <span class="math inline">\(h(t):=f(\gamma(t))\)</span>. El teorema fundamental del cálculo permite escribir <span class="math display">\[
+h(1)-h(0)=\int_0^1h'(t)\, dt.
+\]</span></p>
+<p>Pero <span class="math inline">\(h(1)=f(\yy)\)</span>, <span class="math inline">\(h(0)=f(\xx)\)</span> y <span class="math display">\[
+h'(t)=\nabla f(\gamma(t))\cdot \gamma'(t)=f(t\yy+(1-t)\xx)\cdot (\yy-\xx).
+\]</span></p>
+<p>Reemplazando resulta <span class="math display">\[
+\begin{align*}
+  f(\yy)-f(\xx)&amp;=\int_0^1\nabla f(t\yy+(1-t)\xx)\cdot (\yy-\xx)\,dt\\
+  &amp;=\int_0^1\left(\nabla f(t\yy+(1-t)\xx)-\nabla f(\xx)\right)\cdot (\yy-\xx)\,dt+\nabla f(\xx)\cdot (\yy-\xx)\\
+  &amp;\leq \int_0^1\|\nabla f(t\yy+(1-t)\xx)-\nabla f(\xx)\|_2\|\yy-\xx\|_2\,dt+\nabla f(\xx)\cdot (\yy-\xx),
+\end{align*}
+\]</span></p>
+<p>donde en el último paso se utilizó la desigualdad de Cauchy-Schwarz. Observar que el primer factor del integrando es el cambio de gradiente entre dos puntos, lo cual puede ser acotado en virtud de la <span class="math inline">\(L\)</span>-suavidad; es decir <span class="math display">\[
+\|\nabla f(t\yy+(1-t)\xx)-\nabla f(\xx)\|_2\leq L\|t\yy+(1-t)\xx-\xx\|_2=tL\|\yy-\xx\|_2.
+\]</span></p>
+Finalmente nos queda <span class="math display">\[
+\begin{align*}
+f(\yy)-f(\xx)&amp;\leq L\|\yy-\xx\|_2^2\int_0^1 t\,dt++\nabla f(\xx)\cdot (\yy-\xx)\\
+&amp;=\frac{L}{2}\|\yy-\xx\|_2^2++\nabla f(\xx)\cdot (\yy-\xx).
+\end{align*}
+\]</span>
+<div style="text-align: right;">
+<span class="math inline">\(\blacksquare\)</span>
+</div>
+</div>
+</div>
+</div>
+</details>
+<div class="teorema">
+<p><strong>Teorema 2.</strong> (Lema del descenso por gradiente) Sea <span class="math inline">\(f:\RR^n\to\RR\)</span> una función <span class="math inline">\(L\)</span>-suave. Entonces, para cualquier <span class="math inline">\(0 &lt; \eta \leq \frac{1}{L}\)</span>, cada paso del método de descenso por gradiente garantiza</p>
+<p><span class="math display">\[
+f(\xx_{t+1}) \leq f(\xx_{t}) - \frac{\eta}{2} \|\nabla f(\xx_{t})\|_{2}^{2}.
+\]</span></p>
+</div>
+<details>
+<summary>
+Mostrar detalles
+</summary>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Observaciones</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Demostración</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<ul>
+<li><p>El lema nos asegura que para funciones <span class="math inline">\(L\)</span>-suaves, existe una buena elección de la tasa de aprendizaje que permite garantizar que con cada paso del método de descenso por gradiente se mejorará el valor de la función, siempre que el punto actual no tenga un gradiente nulo.</p></li>
+<li><p>Es importante remarcar que el resultado anterior no requiere que <span class="math inline">\(f\)</span> sea convexa.</p></li>
+<li><p>Además, si <span class="math inline">\(f\)</span> está acotada inferiormente, el lema asegura que, en promedio, los gradientes de los puntos producidos por el método eventualmente deben volverse pequeños. En efecto, para la <span class="math inline">\(T\)</span>-ésima iteración, la aplicación sucesiva del lema resulta en <span class="math display">\[
+f(\xx_T)\leq f(\xx_0)-\frac{\eta}{2}\sum_{t=0}^{T-1}\|\nabla f(\xx_t)\|_2^2.
+\]</span> Entonces, para <span class="math inline">\(f^\star:=\inf f\)</span> debe ocurrir <span class="math display">\[
+\sum_{t=0}^{T-1}\|\nabla f(\xx_t)\|_2^2\leq \frac{2}{\eta T}\left(f(\xx_0)-f^\star\right),
+\]</span> tal que al menos algún valor del conjunto <span class="math inline">\(\left\{\|\nabla f (\xx_t)\|_2^2\right\} \mid 0\leq t\leq T-1\}\)</span> está acotado superiormente por <span class="math inline">\(\tfrac{2}{\eta T}\left(f(\xx_0)-f^\star\right)\)</span>.</p></li>
+<li><p>En la observación anterior, es importante notar que la cota obtenida depende del punto inicial <span class="math inline">\(\xx_0\)</span>. Cuanto más cercano esté a un punto óptimo, menor será el valor de <span class="math inline">\(f(\xx_0)-f^\star\)</span> y, por lo tanto, de la cota. Esto resalta la importancia de una buena elección del punto inicial para acelerar la convergencia del método.</p></li>
+</ul>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>La cota superior cuadrática del Teorema 1 para <span class="math inline">\(\xx=\xx_t\)</span> y <span class="math inline">\(\yy=\xx_{t+1}\)</span> es <span class="math display">\[
+f(\xx_{t+1})\leq f(\xx_t)+\nabla f(\xx_t)\cdot(\xx_{t+1}-\xx_t)+\frac{L}{2}\|\xx_{t+1}-\xx_t\|_2^2.
+\]</span></p>
+<p>Basta utilizar en el lado derecho la fórmula de descenso por gradiente <span class="math inline">\(\xx_{t+1}=\xx_t+\eta\nabla f(\xx_t)\)</span>: <span class="math display">\[
+\begin{align*}
+  f(\xx_{t+1})&amp;\leq f(\xx_t)-\eta\underbrace{\nabla f(\xx_{t})\cdot\nabla f(\xx_t)}_{\|\nabla f(\xx_t)\|_2^2}+\frac{L}{2}\eta^2\|\nabla f(\xx_t)\|_2^2\\
+  &amp;=f(\xx_t)-\eta \left(1-\frac{L}{2}\eta\right)\|\nabla f(\xx_t)\|_2^2.
+\end{align*}
+\]</span></p>
+Cuando <span class="math inline">\(\eta\leq\frac{1}{L}\)</span>, el paréntesis es <span class="math inline">\(1-\frac{L}{2}\eta\geq\frac{1}{2}\)</span>. Realizando este cambio, se obtiene el resultado.
+<div style="text-align: right;">
+<span class="math inline">\(\blacksquare\)</span>
+</div>
+</div>
+</div>
+</div>
+</details>
+</section>
+<section id="convergencia-para-funciones-objetivos-convexas" class="level3">
+<h3 class="anchored" data-anchor-id="convergencia-para-funciones-objetivos-convexas">Convergencia para funciones objetivos convexas</h3>
+<p>El Teorema 2 solo garantiza una tasa de convergencia para la <em>norma del gradiente</em> de la función objetivo, pero no dice nada acerca de la brecha <span class="math inline">\(f(\xx_t)-f^\star\)</span>. En otras palabras, aunque el gradiente pequeño es una necesidad para pensar en optimalidad, no es suficiente para asegurar que el valor de la función esté efectivamente cerca del óptimo.</p>
+<p>Sin embargo, para funciones objetivo convexas, sí se puede establecer una razón de convergencia. Para ello, primero necesitamos enunciar el siguiente resultado.</p>
+<div class="teorema">
+<p><strong>Lema 3.</strong> Sea <span class="math inline">\(f:\RR^n\to\RR\)</span> una función convexa y diferenciable. Entonces, para cualquier elección del tamaño de paso <span class="math inline">\(\eta\)</span>, cualquier par de puntos consecutivos <span class="math inline">\((\xx_t,\xx_{t+1})\)</span> del método de descenso por gradiente satisfacen <span class="math display">\[
+f(\xx_{t}) \leq f(\xx) + \frac{1}{2\eta} \left( \|\xx - \xx_{t}\|_{2}^{2} - \|\xx - \xx_{t+1}\|_{2}^{2} + \|\xx_{t+1} - \xx_{t}\|_{2}^{2} \right) \qquad \forall \xx \in \mathbb{R}^{n}.
+\]</span></p>
+</div>
+<div class="teorema">
+<p><strong>Teorema 4.</strong> Sea <span class="math inline">\(f:\RR^n\to\RR\)</span> una función convexa y <span class="math inline">\(L\)</span>-suave, con minimizador <span class="math inline">\(\xx^\star \in \RR^n\)</span>, y sea <span class="math inline">\(0 &lt; \eta \leq \frac{1}{L}\)</span>. El método de descenso por gradiente verifica <span class="math display">\[
+f(\xx_{t}) - f(\xx^{*}) \leq \frac{\|\xx^\star - \xx_{0}\|_{2}^{2}}{2 t \eta} \qquad \forall t\in\NN.
+\]</span></p>
+</div>
+<details>
+<summary>
+Mostrar detalles
+</summary>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Observación</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Demostración</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<ul>
+<li>Aunque el método de descenso por gradiente garantiza que el valor de la función se acerque al óptimo, no siempre asegura que los puntos iterados converjan rápidamente al punto óptimo <span class="math inline">\(\xx^\star\)</span>. Para obtener garantías más fuertes sobre la rapidez con la que las iteraciones se acercan al punto óptimo, se requieren condiciones adicionales.</li>
+</ul>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<p>Sean <span class="math inline">\((\xx_t,\xx_{t+1})\)</span> dos puntos consecutivos de la iteración de descenso por gradiente. Entonces <span class="math inline">\(\|\xx_{t+1}-\xx_{t}\|_2^2=\eta\|\nabla f(\xx_t)\|_2^2\)</span>. Por Teorema 3, resulta <span class="math display">\[
+f(\xx_{t}) \leq f(\xx) + \frac{1}{2\eta} \left( \|\xx - \xx_{t}\|_{2}^{2} - \|\xx - \xx_{t+1}\|_{2}^{2}\right)+\frac{\eta}{2}\|\nabla f(\xx_t)\|_2^2, \qquad \forall \xx \in \mathbb{R}^{n}.
+\]</span></p>
+<p>Pero la <span class="math inline">\(L\)</span>-suavidad de <span class="math inline">\(f\)</span> nos permite usar el Teorema 2; para <span class="math inline">\(0\leq\eta\leq\frac{1}{L}\)</span> se cumple <span class="math inline">\(\frac{\eta}{2}\|\nabla f(\xx_t)\|_2^2\leq f(\xx_t)-f(\xx_{t+1})\)</span>. Reemplazando en la expresión anterior, resulta <span class="math display">\[
+f(\xx_{t+1})\leq f(\xx)+ \frac{1}{2\eta} \left( \|\xx - \xx_{t}\|_{2}^{2} - \|\xx - \xx_{t+1}\|_{2}^{2}\right),\qquad\forall\xx\in\RR^n.
+\]</span></p>
+<p>Sumando sobre <span class="math inline">\(t=0,1,\cdot,T-1\)</span>, y teniendo en cuenta que el lado derecho es telescópico, obtenemos <span class="math display">\[
+\sum_{t=0}^{T-1}f(\xx_{t+1})\leq Tf(\xx)+\frac{1}{2\eta}\left(\|\xx-\xx_0\|_2^2-\|\xx-\xx_T\|_2^2\right).
+\]</span></p>
+<p>Ahora bien, vamos a aplicar esta última desigualdad a <span class="math inline">\(\xx=\xx^\star\)</span> y descartar el término <span class="math inline">\(\|\xx-\xx_T\|_2^2\)</span> (esto último se puede hacer porque está restando):</p>
+<p><span class="math display">\[
+\sum_{t=0}^{T-1}f(\xx_{t+1})\leq Tf(\xx^{\star})+\frac{1}{2\eta}\|\xx^{\star}-\xx_0\|_2^2.
+\]</span></p>
+<p>Por último, vamos a usar el hecho que <span class="math inline">\(Tf(\xx_T)\leq\sum_{t=0}^{T-1}f(\xx_{t+1})\)</span>; esto debido a que el Teorema 2 asegura que <span class="math inline">\(f(\xx_t)\)</span> es no creciente en <span class="math inline">\(t\)</span>. Así, finalmente obtenemos <span class="math display">\[
+T(f(\xx_T)-f(\xx^{\star}))\leq \frac{1}{2\eta}\|\xx^{\star}-\xx_0\|_2^2.
+\]</span></p>
+<div style="text-align: right;">
+<span class="math inline">\(\blacksquare\)</span>
+</div>
+</div>
+</div>
+</div>
+</details>
+</section>
+<section id="método-de-descenso-por-gradiente-proyectado" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="método-de-descenso-por-gradiente-proyectado">Método de descenso por gradiente proyectado</h3>
+<p>Vamos a ver ahora como adaptar el método de descenso por gradiente a problemas de optimización con restricciones de la forma</p>
+<p><span class="math display">\[
+\min_{\xx \in \Omega} f(\xx).
+\]</span></p>
+<p>En este caso, supondremos que <span class="math inline">\(f\)</span> es diferenciable y que el conjunto factible <span class="math inline">\(\Omega\)</span> es cerrado y convexo. La forma natural de extender el método de descenso por gradiente consiste en proyectar los puntos obtenidos sobre <span class="math inline">\(\Omega\)</span>, de manera tal de asegurarnos que la sucesión <span class="math inline">\(\{\xx_t\mid t\in\mathbb{N}_0\}\subset\Omega\)</span>.</p>
+<div class="highlight">
+<p><span class="badge bg-dark">Método de descenso por gradiente proyectado</span></p>
+<hr>
+<p>Dado un <em>punto inicial</em> <span class="math inline">\(\xx_0\in\Omega\)</span> y una <em>tasa de aprendizaje</em> <span class="math inline">\(\eta &gt; 0\)</span>:</p>
+<div style="margin-left: 1em">
+<p><strong>repetir</strong> para <span class="math inline">\(t = 0,1,2,\dots\)</span>:</p>
+<blockquote class="blockquote">
+<p><strong>1°</strong> Calcular dirección <span class="math inline">\(-\nabla f(\xx_t)\)</span>.</p>
+<p><strong>2°</strong> Calcular paso de gradiente: <span class="math inline">\(\yy_{t+1} := \xx_t - \eta \nabla f(\xx_t)\)</span>.</p>
+<p><strong>3°</strong> Proyectar sobre <span class="math inline">\(\Omega\)</span>: <span class="math inline">\(\xx_{t+1} := \Pi_{\Omega}(\yy_{t+1})\)</span>.</p>
+</blockquote>
+<p><strong>hasta</strong> que se satisfaga el criterio de parada.</p>
+</div>
+<hr>
+</div>
+<aside>
+<p>La <em>proyección ortogonal</em> de un punto <span class="math inline">\(\yy\in \RR^n\)</span> sobre un conjunto <span class="math inline">\(\Omega\)</span> se define como</p>
+<p><span class="math display">\[
+\Pi_{\Omega}(\yy) := \arg\min_{\yy \in \Omega} \|\xx - \yy\|_2.
+\]</span></p>
+Cuando <span class="math inline">\(\Omega\)</span> es cerrado y convexo, la proyección ortogonal existe y es única.
+</aside>
+<p><br></p>
+<p>Vamos a implementar en Python este método. Cabe destacar que el paso de proyección es por sí mismo un problema de optimización, cuyo objetivo es hallar el punto más cercano dentro del conjunto factible <span class="math inline">\(\Omega\)</span>. En algunos casos, como por ejemplo <span class="math inline">\(\Omega=[0,1]^n\)</span>, el conjunto factible tiene una forma especial que permite resolver la proyección de forma explícita y eficiente.</p>
+<p>Por lo tanto, en relación al método de descenso por gradiente, se agrega un nuevo argumento:</p>
+<ul>
+<li><code>proy</code>: función de proyección sobre el conjunto factible.</li>
+</ul>
+<div id="82c650f6" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> projected_gradient_descent(f, grad_f, x_inicial, proy,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                               lr<span class="op">=</span><span class="fl">0.1</span>, max_iter<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                               tol_grad<span class="op">=</span><span class="va">None</span>, tol_x<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                               verbose<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.array(x_inicial, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    x_iter <span class="op">=</span> [x.copy()]</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    f_iter <span class="op">=</span> [f(x)]</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, max_iter <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      grad <span class="op">=</span> grad_f(x)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Criterio de parada por norma del gradiente:</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> tol_grad <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> np.linalg.norm(grad) <span class="op">&lt;</span> tol_grad:</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> verbose:</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>          <span class="bu">print</span>(<span class="ss">f"Parada en iteración </span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">: |grad_f| &lt; </span><span class="sc">{</span>tol_grad<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        t <span class="op">=</span> t<span class="op">-</span><span class="dv">1</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>      y <span class="op">=</span> x <span class="op">-</span> lr <span class="op">*</span> grad</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>      x_new <span class="op">=</span> proy(y)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Criterio de parada por norma de diferencia entre iteraciones:</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> tol_x <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> np.linalg.norm(x_new <span class="op">-</span> x) <span class="op">&lt;</span> tol_x:</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> verbose:</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>          <span class="bu">print</span>(<span class="ss">f"Parada en iteración </span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">: |x_t - x_(t+1)| &lt; </span><span class="sc">{</span>tol_x<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x_new</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        x_iter.append(x.copy())</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        f_iter.append(f(x))</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>      x <span class="op">=</span> x_new</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>      x_iter.append(x.copy())</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>      f_iter.append(f(x))</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> verbose:</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>      <span class="bu">print</span>(<span class="ss">f"Iteración final: </span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>      <span class="bu">print</span>(<span class="ss">f"Último punto: </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>      <span class="bu">print</span>(<span class="ss">f"Valor de f: </span><span class="sc">{</span>f(x)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x_iter, f_iter</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout-example">
+<p><span class="badge bg-primary">Ejemplo 2</span> Vamos a utilizar el método de descenso por gradiente proyectado para aproximarnos al valor mínimo de</p>
+<p><span class="math display">\[
+f(x,y)=2(x-2)^2+5(y-3)^2,
+\]</span></p>
+<p>sobre el conjunto factible <span class="math inline">\(\Omega=[0,1]\times[0,1]\)</span>. En este caso la función de proyección es sencilla: consiste en <em>recortar</em> cada coordenada al intervalo correspondiente; es decir <span class="math display">\[
+\Pi_{[0,1]\times[0,1]}(x,y):=\left(\min(\max(x,0),1),\min(\max(y,0),1)\right).
+\]</span></p>
+<p>Esto se calcula rápidamente con la función <code>np.clip</code> de NumPy.</p>
+<div id="0b8059cf" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Función y gradiente:</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x):</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">2</span><span class="op">*</span>(x[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">5</span><span class="op">*</span>(x[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">3</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> grad_f(x):</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([<span class="dv">4</span> <span class="op">*</span> (x[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">2</span>), <span class="dv">10</span> <span class="op">*</span> (x[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">3</span>)])</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Proyección:</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> proy(x):</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.clip(x, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Parámetros:</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>x_inicial <span class="op">=</span> (<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>lr <span class="op">=</span> <span class="fl">0.01</span>             </span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>max_iter <span class="op">=</span> <span class="dv">20</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>tol_grad <span class="op">=</span> <span class="fl">1e-3</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>tol_x <span class="op">=</span> <span class="fl">1e-3</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejecutar PGD:</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>x_iter, f_iter <span class="op">=</span> projected_gradient_descent(f, grad_f, x_inicial, proy, lr, max_iter, tol_grad, tol_x)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parada en iteración 18: |x_t - x_(t+1)| &lt; 0.001
+Iteración final: 18
+Último punto: [1. 1.]
+Valor de f: 22.0</code></pre>
+</div>
+</div>
+<p>La secuencia de valores obtenidas es:</p>
+<div id="cea2ab3b" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>x_arr <span class="op">=</span> np.array(x_iter)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>x_vals <span class="op">=</span> x_arr[:, <span class="dv">0</span>]</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>y_vals <span class="op">=</span> x_arr[:, <span class="dv">1</span>]</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>tabla <span class="op">=</span> pd.DataFrame({<span class="st">'x'</span>: x_vals, <span class="st">'y'</span>: y_vals})</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tabla)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>           x      y
+0   0.000000  0.000
+1   0.080000  0.300
+2   0.156800  0.570
+3   0.230528  0.813
+4   0.301307  1.000
+5   0.369255  1.000
+6   0.434484  1.000
+7   0.497105  1.000
+8   0.557221  1.000
+9   0.614932  1.000
+10  0.670335  1.000
+11  0.723521  1.000
+12  0.774580  1.000
+13  0.823597  1.000
+14  0.870653  1.000
+15  0.915827  1.000
+16  0.959194  1.000
+17  1.000000  1.000
+18  1.000000  1.000</code></pre>
+</div>
+</div>
+<p>Por último, vamos a realizar la gráfica en el dominio <span class="math inline">\(\RR^2\)</span> de la función.</p>
+<div id="7a8f8287" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grilla para graficar:</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="dv">100</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="dv">100</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>X, Y <span class="op">=</span> np.meshgrid(x, y)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> f(np.array([X, Y]))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># GRAFICA:</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Curvas de nivel:</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>contours <span class="op">=</span> plt.contour(X, Y, Z, levels<span class="op">=</span><span class="dv">10</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>plt.clabel(contours, inline<span class="op">=</span><span class="va">True</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Ruta de descenso por gradiente proyectado:</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>plt.plot(x_vals, y_vals, marker<span class="op">=</span><span class="st">'o'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>, label<span class="op">=</span><span class="st">'Iteraciones'</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>plt.scatter(<span class="dv">2</span>, <span class="dv">3</span>, color<span class="op">=</span><span class="st">'blue'</span>, label<span class="op">=</span><span class="st">'Mínimo sin restricciones'</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Caja [0,1]^2 en azul:</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>caja_x <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>]</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>caja_y <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>]</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>plt.plot(caja_x, caja_y, color<span class="op">=</span><span class="st">'blue'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, linestyle<span class="op">=</span><span class="st">'-'</span>, label<span class="op">=</span><span class="st">'$\Omega = [0,1]^2$'</span>)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'x'</span>)</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'y'</span>)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, facecolor<span class="op">=</span><span class="st">'white'</span>, framealpha<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>plt.xlim(<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span>)</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span>)</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>&lt;&gt;:19: SyntaxWarning: invalid escape sequence '\O'
+&lt;&gt;:19: SyntaxWarning: invalid escape sequence '\O'
+C:\Users\isaias\AppData\Local\Temp\ipykernel_33004\151874914.py:19: SyntaxWarning: invalid escape sequence '\O'
+  plt.plot(caja_x, caja_y, color='blue', linewidth=2, linestyle='-', label='$\Omega = [0,1]^2$')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="A5_metodos_optimizacion_files/figure-html/cell-9-output-2.png" class="quarto-figure quarto-figure-center figure-img" width="846" height="508"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="resultados-de-convergencia" class="level3">
+<h3 class="anchored" data-anchor-id="resultados-de-convergencia">Resultados de convergencia</h3>
+<p>Bajo condiciones similares a las del método sin restricciones, el método proyectado también garantiza convergencia del valor de la función objetivo.</p>
+<div class="teorema">
+<p><strong>Teorema 5.</strong> (Lema del descenso por gradiente proyectado) Sea <span class="math inline">\(f:\RR^n\to\RR\)</span> una función <span class="math inline">\(L\)</span>-suave. Entonces, para cualquier <span class="math inline">\(0 &lt; \eta \leq \frac{1}{L}\)</span>, cada paso del método de descenso por gradiente proyectado garantiza</p>
+<p><span class="math display">\[
+f(\xx_{t+1}) \leq f(\xx_{t}) - \frac{\eta}{2} \|\nabla f(\xx_{t})\|_{2}^{2}+\frac{1}{2\eta}\|\yy_{t+1}-\xx_{t+1}\|_2^2.
+\]</span></p>
+</div>
+<details>
+<summary>
+Mostrar detalles
+</summary>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Demostración</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<p>Como en la demostración del Teorema 2, partimos de la cota superior cuadrática del Teorema 1 para <span class="math inline">\(\xx=\xx_t\)</span> y <span class="math inline">\(\yy=\xx_{t+1}\)</span>: <span class="math display">\[
+f(\xx_{t+1})\leq f(\xx_t)+\nabla f(\xx_t)\cdot(\xx_{t+1}-\xx_t)+\frac{L}{2}\|\xx_{t+1}-\xx_t\|_2^2.
+\]</span></p>
+<p>En este caso, utilizaremos la fórmula <span class="math inline">\(\yy_{t+1}=\xx_t+\eta\nabla f(\xx_t)\)</span> para sustituir <span class="math inline">\(\nabla f(\xx_t)\)</span> en el segundo término de la suma, obteniendo</p>
+<p><span class="math display">\[
+f(\xx_{t+1})\leq f(\xx_t)-\frac{1}{\eta}(\yy_{t+1}-\xx_t)\cdot(\xx_{t+1}-\xx_t)+\frac{L}{2}\|\xx_{t+1}-\xx_t\|_2^2.
+\]</span></p>
+<p>Ahora, en <span class="math inline">\((\yy_{t+1}-\xx_t)\cdot(\xx_{t+1}-\xx_t)\)</span> usaremos la identidad <span class="math inline">\(\uu\cdot\vv=\frac{1}{2}\left(\|\uu\|_2^2+\|\vv\|_2^2-\|\uu-\vv\|_2^2\right)\)</span>. Además, para el último término usaremos que <span class="math inline">\(L\leq \frac{1}{\eta}\)</span>. Resulta</p>
+<span class="math display">\[
+\begin{align*}
+f(\xx_{t+1})&amp;\leq f(\xx_t)-\frac{1}{2\eta}\left(\|\yy_{t+1}-\xx_t\|_2^2+\|\xx_{t+1}-\xx_t\|_2^2-\|\yy_{t+1}-\xx_{t+1}\|_2^2\right)+\frac{1}{2\eta}\|\xx_{t+1}-\xx_t\|_2^2\\
+&amp;=f(\xx_t)-\frac{1}{2\eta}\left(\|\yy_{t+1}-\xx_t\|_2^2-\|\yy_{t+1}-\xx_{t+1}\|_2^2\right)\\
+&amp;\leq f(\xx_t)-\frac{1}{2\eta}\left(\eta^2\|\nabla f(\xx_t)\|_2^2-\|\yy_{t+1}-\xx_{t+1}\|_2^2\right)\\
+&amp;=f(\xx_t)-\frac{\eta}{2}\|\nabla f(\xx_t)\|_2^2+\frac{1}{2\eta}\|\yy_{t+1}-\xx_{t+1}\|_2^2.
+\end{align*}
+\]</span>
+<div style="text-align: right;">
+<span class="math inline">\(\blacksquare\)</span>
+</div>
+</div>
+</div>
+</div>
+</details>
+<p>A pesar de que en este lema, en relación con el lema del descenso por gradiente (Teorema 2), aparece el término adicional <span class="math inline">\(\frac{1}{2\eta}\|\yy_{t+1}-\xx_{t+1}\|_2^2\)</span>, este puede ser cancelado al hacer la suma sobre <span class="math inline">\(t\)</span>, derivando en el mismo resultado de convergencia del Teorema 4 para este método:</p>
+<div class="teorema">
+<p><strong>Teorema 6.</strong> Sea <span class="math inline">\(f:\RR^n\to\RR\)</span> una función convexa y <span class="math inline">\(L\)</span>-suave, con minimizador <span class="math inline">\(\xx^\star\in\Omega\)</span>, donde <span class="math inline">\(\Omega\subset\RR^n\)</span> es un conjunto cerrado y convexo, y sea <span class="math inline">\(0&lt;\eta\leq\frac{1}{L}\)</span>. El método de descenso por gradiente proyectado verifica</p>
+<p><span class="math display">\[
+f(\xx_t) - f(\xx^\star) \leq \frac{\|\xx_0 - \xx^\star\|_2^2}{2\eta t}, \qquad \forall t\in\NN.
+\]</span></p>
+</div>
+</section>
+<section id="método-de-descenso-por-gradiente-estocástico" class="level3">
+<h3 class="anchored" data-anchor-id="método-de-descenso-por-gradiente-estocástico">Método de descenso por gradiente estocástico</h3>
+<p>Presentaremos una variante del descenso por gradiente que resulta particularmente útil cuando la función objetivo se expresa como una suma de muchas funciones, es decir,</p>
+<p><span class="math display">\[
+f(\xx) = \frac{1}{N} \sum_{i=1}^{N} f_i(\xx).
+\]</span></p>
+<p>Esto sucede habitualmente en problemas de aprendizaje supervisado, donde la función a optimizar es un costo que puede definirse como suma de los costos individuales de cada dato.</p>
+<p>El método de descenso por gradiente requiere calcular el gradiente completo <span class="math inline">\(\nabla f(\xx)\)</span> en cada paso. En cambio, la versión estocástica reemplaza ese gradiente por una estimación basada en una muestra, lo cual reduce drásticamente el costo computacional por iteración. Esto lo vuelve especialmente atractivo en contextos con grandes volúmenes de datos (<em>big data</em>), donde calcular el gradiente total puede ser inviable.</p>
+<p><br></p>
+<div class="highlight">
+<p><span class="badge bg-dark">Método de descenso por gradiente estocástico</span></p>
+<hr>
+<p>Dado un punto inicial <span class="math inline">\(\xx_0\)</span> y una tasa de aprendizaje <span class="math inline">\(\eta\)</span>:</p>
+<div style="margin-left: 1em">
+<p><strong>repetir</strong> para <span class="math inline">\(t = 0,1,2,\dots\)</span>:</p>
+<blockquote class="blockquote">
+<p><strong>1°</strong> Elegir un índice <span class="math inline">\(i_t\)</span> al azar de <span class="math inline">\(\{1,\dots,N\}\)</span>.</p>
+<p><strong>2°</strong> Calcular el gradiente estocástico <span class="math inline">\(\nabla f_{i_t}(\xx_t)\)</span>.</p>
+<p><strong>3°</strong> Actualizar <span class="math inline">\(\xx_{t+1} := \xx_t - \eta \nabla f_{i_t}(\xx_t)\)</span>.</p>
+</blockquote>
+<p><strong>hasta</strong> que se satisfaga un criterio de parada.</p>
+</div>
+<hr>
+</div>
+<div class="alert alert-light text-dark" role="important">
+<p><span class="badge bg-warning text-dark">Importante</span></p>
+<p>Otra variante ampliamente utilizada en la práctica es el <em>descenso por gradiente mini-batch</em>, donde en lugar de usar un único índice <span class="math inline">\(i_t\)</span>, se toma un subconjunto aleatorio (<em>mini-batch</em>) de índices para estimar el gradiente mediante el promedio de los gradientes evaluados en ese lote. Es decir, el 2° paso del algoritmo anterior adopta la forma</p>
+<p><span class="math display">\[
+\frac{1}{\#(B_t)}\sum_{i\in B_t}\nabla f_i(\xx_t),
+\]</span></p>
+<p>donde <span class="math inline">\(\#(B_t)\)</span> denota el tamaño del <em>mini-batch</em>.</p>
+<p>Esto permite un equilibrio entre la alta varianza del método estocástico y el alto costo computacional del método de descenso por gradiente completo. Además, el uso de mini-batches es especialmente adecuado para estrategias computacionales tales como la programación paralela.</p>
+</div>
+</section>
+</section>
+<section id="métodos-de-segundo-orden" class="level2">
+<h2 class="anchored" data-anchor-id="métodos-de-segundo-orden">Métodos de segundo orden</h2>
+<p>Vamos a iniciar el estudio de los métodos de <em>segundo orden</em>, que además del gradiente utilizan también la <em>Hessiana</em> (la segunda derivada) de la función objetivo.</p>
+<section id="método-de-newton" class="level3">
+<h3 class="anchored" data-anchor-id="método-de-newton">Método de Newton</h3>
+<p>Para el caso sin restricciones,</p>
+<p><span class="math display">\[
+\min_{x\in\RR^n} f(x),
+\]</span></p>
+<p>asumimos que <span class="math inline">\(f\)</span> es una función dos veces diferenciable. En este caso, podemos analizar qué sucede si, en lugar de la aproximación de Taylor de primer orden, usamos la expansión de <em>segundo orden</em> alrededor de un punto <span class="math inline">\(\xx_t\)</span>:</p>
+<p><span class="math display">\[f(\xx)\sim f(\xx_t)+\nabla f(\xx_t)\cdot(\xx-\xx_t)+\frac{1}{2}(\xx-\xx_t)\cdot \nabla^2 f(\xx_t)(\xx-\xx_t),\]</span></p>
+<p>donde <span class="math inline">\(\nabla^2 f(\xx_t)\)</span> es la matriz Hessiana de <span class="math inline">\(f\)</span> en <span class="math inline">\(\xx_t\)</span>.</p>
+<p>Teniendo en cuenta que la aproximación anterior es una función de <span class="math inline">\(\xx\)</span>, al analizar <span class="math inline">\(\nabla f(\xx)=\mathbf{0}\)</span> se obtiene inmediatamente la ecuación <span class="math display">\[
+\nabla f(\xx_t)+\nabla^2 f(\xx_t)(\xx-\xx_t)=\mathbf{0},
+\]</span></p>
+<p>tal que</p>
+<p><span class="math display">\[
+\xx=\xx_t-\left[\nabla^2f(\xx_t)\right]^{-1}\nabla f(\xx_t).
+\]</span></p>
+<p>Comparando esto con el método de descenso por gradiente, vemos que al usar una aproximación de Taylor de segundo orden la dirección de descenso cambia a <span class="math inline">\(-\left[\nabla^2f(\xx_t)\right]^{-1}\nabla f(\xx_t)\)</span>, lo cual requiere la suposición de que la matriz Hessiana <span class="math inline">\(\nabla^2 f(\xx_t)\)</span> sea invertible.</p>
+<p>El cambio de <span class="math inline">\(-\nabla f(\xx_t)\)</span> del método de descenso por gradiente a <span class="math inline">\(-\left[\nabla^2f(\xx_t)\right]^{-1}\nabla f(\xx_t)\)</span> se conoce como <em>precondicionamiento</em> del gradiente por la Hessiana. Esto permite definir la generalización natural del método de descenso por gradiente al contexto de segundo orden.</p>
+<div class="highlight">
+<p><span class="badge bg-dark">Método de Newton (de paso reducido)</span></p>
+<hr>
+<p>Dado un punto inicial <span class="math inline">\(\xx_0 \in \mathrm{dom}\, f\)</span> y una tasa de aprendizaje <span class="math inline">\(\eta &gt;0\)</span>:</p>
+<div style="margin-left: 1em">
+<p><strong>repetir</strong> para <span class="math inline">\(t=0,1,2,\dots\)</span>:</p>
+<blockquote class="blockquote">
+<p><strong>1°</strong> Calcular la matriz Hessiana <span class="math inline">\(\nabla^2 f(\xx_t)\)</span> y el gradiente <span class="math inline">\(\nabla f(\xx_t)\)</span>.</p>
+<p><strong>2°</strong> Actualizar <span class="math inline">\(\xx_{t+1} := \xx_t-\eta\left[\nabla^2 f(\xx_t)\right]^{-1}\nabla f(\xx_t)\)</span>.</p>
+</blockquote>
+<p><strong>hasta</strong> que se cumpla un criterio de parada.</p>
+</div>
+<hr>
+<p>Si <span class="math inline">\(\eta=1\)</span>, se denomina simplemente <em>método de Newton</em>.</p>
+</div>
+<p><br></p>
+<p>En este caso, la implementación en Python requiere el argumento adicional:</p>
+<ul>
+<li><code>hess_f</code>: función Hessiana de <span class="math inline">\(f\)</span>.</li>
+</ul>
+<div id="975d10a9" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> newton_method(f, grad_f, hess_f, x_inicial, lr<span class="op">=</span><span class="fl">0.1</span>,         </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                  max_iter<span class="op">=</span><span class="dv">100</span>, tol_grad<span class="op">=</span><span class="va">None</span>, tol_x<span class="op">=</span><span class="va">None</span>, verbose<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.array(x_inicial, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    x_iter <span class="op">=</span> [x.copy()]</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    f_iter <span class="op">=</span> [f(x)]</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, max_iter <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>      grad <span class="op">=</span> grad_f(x)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>      hess <span class="op">=</span> hess_f(x)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Criterio de parada por norma del gradiente:</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> tol_grad <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> np.linalg.norm(grad) <span class="op">&lt;</span> tol_grad:</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> verbose:</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>          <span class="bu">print</span>(<span class="ss">f"Parada en iteración </span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">: |grad_f| &lt; </span><span class="sc">{</span>tol_grad<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        t <span class="op">=</span> t<span class="op">-</span><span class="dv">1</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>      <span class="cf">try</span>:</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> <span class="op">-</span>np.linalg.solve(hess, grad) </span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>      <span class="cf">except</span> np.linalg.LinAlgError:</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> verbose:</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>          <span class="bu">print</span>(<span class="ss">f"Hessiana no invertible en iteración </span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>      x_new <span class="op">=</span> x <span class="op">+</span> lr <span class="op">*</span> p</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Criterio de parada por norma de diferencia entre iteraciones:</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> tol_x <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> np.linalg.norm(x_new <span class="op">-</span> x) <span class="op">&lt;</span> tol_x:</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> verbose:</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>          <span class="bu">print</span>(<span class="ss">f"Parada en iteración </span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">: |x_t - x_(t+1)| &lt; </span><span class="sc">{</span>tol_x<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x_new</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>        x_iter.append(x.copy())</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>        f_iter.append(f(x))</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>      x <span class="op">=</span> x_new</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>      x_iter.append(x.copy())</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>      f_iter.append(f(x))</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> verbose:</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>      <span class="bu">print</span>(<span class="ss">f"Iteración final: </span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>      <span class="bu">print</span>(<span class="ss">f"Último punto: </span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>      <span class="bu">print</span>(<span class="ss">f"Valor de f: </span><span class="sc">{</span>f(x)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x_iter, f_iter</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout-example">
+<p><span class="badge bg-primary">Ejemplo 3</span> Vamos a utilizar el método de Newton para aproximarnos al valor mínimo de</p>
+<p><span class="math display">\[
+f(x,y)=2(x-2)^2+5(y-3)^2,
+\]</span></p>
+<p>para poder comparar con el Ejemplo 1. La Hessiana es</p>
+<p><span class="math display">\[
+\nabla^2 f(x,y) = \begin{pmatrix} 4&amp;0\\0&amp;10 \end{pmatrix}.
+\]</span></p>
+<div id="e059b73e" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Función y gradiente:</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x):</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">2</span><span class="op">*</span>(x[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">5</span><span class="op">*</span>(x[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">3</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> grad_f(x):</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([<span class="dv">4</span> <span class="op">*</span> (x[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">2</span>), <span class="dv">10</span> <span class="op">*</span> (x[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">3</span>)])</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hess_f(x):</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([[<span class="dv">4</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">10</span>]]) </span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Parámetros:</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>x_inicial <span class="op">=</span> (<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>lr <span class="op">=</span> <span class="fl">0.05</span>               </span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>max_iter <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>tol_grad <span class="op">=</span> <span class="fl">1e-3</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>tol_x <span class="op">=</span> <span class="fl">1e-3</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejecutar Newton:</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>x_iter, f_iter <span class="op">=</span> newton_method(f, grad_f, hess_f, x_inicial, lr, max_iter, tol_grad, tol_x)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteración final: 100
+Último punto: [1.98815894 2.98223841]
+Valor de f: 0.0018577913111879544</code></pre>
+</div>
+</div>
+<p>La secuencia de valores obtenidas es:</p>
+<div id="a3fa7704" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x_arr <span class="op">=</span> np.array(x_iter)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>x_vals <span class="op">=</span> x_arr[:, <span class="dv">0</span>]</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>y_vals <span class="op">=</span> x_arr[:, <span class="dv">1</span>]</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>tabla <span class="op">=</span> pd.DataFrame({<span class="st">'x'</span>: x_vals, <span class="st">'y'</span>: y_vals})</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tabla)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>            x         y
+0    0.000000  0.000000
+1    0.100000  0.150000
+2    0.195000  0.292500
+3    0.285250  0.427875
+4    0.370988  0.556481
+..        ...       ...
+96   1.985462  2.978193
+97   1.986189  2.979284
+98   1.986880  2.980320
+99   1.987536  2.981304
+100  1.988159  2.982238
+
+[101 rows x 2 columns]</code></pre>
+</div>
+</div>
+<p>Por último, vamos a realizar la gráfica en el dominio <span class="math inline">\(\RR^2\)</span> de la función.</p>
+<div id="d5ebca62" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grilla para graficar:</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.5</span>, <span class="dv">7</span>, <span class="dv">100</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">0.5</span>, <span class="dv">5</span>, <span class="dv">100</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>X, Y <span class="op">=</span> np.meshgrid(x, y)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f_xy(x, y):</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> f(np.array([x, y]))</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> f_xy(X, Y)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co"># GRAFICA:</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Curvas de nivel:</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>contours <span class="op">=</span> plt.contour(X, Y, Z, levels<span class="op">=</span><span class="dv">30</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>plt.clabel(contours, inline<span class="op">=</span><span class="va">True</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Ruta de descenso por gradiente:</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>plt.plot(x_vals, y_vals, marker<span class="op">=</span><span class="st">'o'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'red'</span>, label<span class="op">=</span><span class="st">'Iteraciones'</span>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>plt.scatter(<span class="dv">2</span>, <span class="dv">3</span>, color<span class="op">=</span><span class="st">'blue'</span>, label<span class="op">=</span><span class="st">'Mínimo'</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'x'</span>)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'y'</span>)</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>plt.xlim(<span class="op">-</span><span class="fl">0.2</span>, <span class="dv">4</span>)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="op">-</span><span class="fl">0.2</span>, <span class="dv">5</span>)</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">'upper right'</span>, facecolor<span class="op">=</span><span class="st">'white'</span>, framealpha<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="A5_metodos_optimizacion_files/figure-html/cell-13-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="810" height="508"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Observar que los puntos iterados son colineales. Esto ocurre en problemas cuadráticos, debido a que la matriz Hessiana es constante. Veamos qué pasa si aplicamos el método de Newton clásico (<span class="math inline">\(eta=1\)</span>).</p>
+<div id="027bf6d2" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Función y gradiente:</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x):</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">2</span><span class="op">*</span>(x[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">2</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">5</span><span class="op">*</span>(x[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">3</span>)<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> grad_f(x):</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([<span class="dv">4</span> <span class="op">*</span> (x[<span class="dv">0</span>] <span class="op">-</span> <span class="dv">2</span>), <span class="dv">10</span> <span class="op">*</span> (x[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">3</span>)])</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hess_f(x):</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([[<span class="dv">4</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">10</span>]]) </span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Parámetros:</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>x_inicial <span class="op">=</span> (<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>lr <span class="op">=</span> <span class="dv">1</span>            </span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>max_iter <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>tol_grad <span class="op">=</span> <span class="fl">1e-3</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>tol_x <span class="op">=</span> <span class="fl">1e-3</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejecutar Newton:</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>x_iter, f_iter <span class="op">=</span> newton_method(f, grad_f, hess_f, x_inicial, lr, max_iter, tol_grad, tol_x)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parada en iteración 2: |grad_f| &lt; 0.001
+Iteración final: 1
+Último punto: [2. 3.]
+Valor de f: 0.0</code></pre>
+</div>
+</div>
+<div id="fb79a447" class="cell" data-execution_count="14">
+<details class="code-fold">
+<summary>Mostrar código</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>x_arr <span class="op">=</span> np.array(x_iter)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>x_vals <span class="op">=</span> x_arr[:, <span class="dv">0</span>]</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>y_vals <span class="op">=</span> x_arr[:, <span class="dv">1</span>]</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>tabla <span class="op">=</span> pd.DataFrame({<span class="st">'x'</span>: x_vals, <span class="st">'y'</span>: y_vals})</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tabla)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>     x    y
+0  0.0  0.0
+1  2.0  3.0</code></pre>
+</div>
+</div>
+</div>
+<section id="garantías-de-convergencia-local" class="level4">
+<h4 class="anchored" data-anchor-id="garantías-de-convergencia-local">Garantías de convergencia local</h4>
+</section>
+</section>
+<section id="variantes-y-extensiones-del-método-de-newton" class="level3">
+<h3 class="anchored" data-anchor-id="variantes-y-extensiones-del-método-de-newton">Variantes y extensiones del método de Newton</h3>
+<p>Además del método de Newton clásico, existen otras variantes y extensiones importantes que vale la pena mencionar:</p>
+<ul>
+<li><p><strong>Métodos Quasi-Newton</strong>, como BFGS o L-BFGS, evitan calcular e invertir la matriz Hessiana directamente. En su lugar, construyen una aproximación a la Hessiana (o su inversa) utilizando información de los gradientes computados en iteraciones previas. Estos métodos ofrecen un equilibrio entre eficiencia computacional y velocidad de convergencia, especialmente en problemas de gran dimensión.</p></li>
+<li><p><strong>Métodos de segundo orden con restricciones</strong>, como el <em>método de Newton proyectado</em> o los <em>métodos de barrera</em>, están diseñados para problemas con restricciones sobre el dominio. Aunque requieren un tratamiento más sofisticado, representan una extensión natural de los métodos de segundo orden al caso restringido. Su análisis y aplicación se exploran habitualmente en cursos avanzados de optimización convexa.</p></li>
+</ul>
+<p><br><br></p>
+</section>
+</section>
+<section id="actividades" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="actividades">Actividades</h2>
+✏️ <strong>Conceptuales</strong><br>
+
+<hr class="linea-corta">
+<ol type="1">
+<li>…</li>
+</ol>
+<div style="margin-top:2em;">
+
+</div>
+💻 <strong>Prácticas</strong><br>
+
+<hr class="linea-corta">
+<ol type="1">
+<li>…</li>
+</ol>
+<div style="margin-top: 5em;">
+
+</div>
+<div class="refs">
+<p><span style="color: #444;"><strong>Referencias</strong></span></p>
+<p>Farina, G. Apuntes del curso MIT 6.7220: <em>Nonlinear Optimization</em>. Lecciones 12, 14 y 15 (2025) y Lección 12 (2024). Disponible en la <a href="https://www.mit.edu/~gfarina/notes/">página del curso</a>.</p>
+<p>Flammarion, N. Apuntes del curso EPFL CS-439: <em>Optimization for machine learning</em>, Lecciones 2, 3, 5 y 7. Disponible en <a href="https://github.com/epfml/OptML_course">este repositorio GitHub</a>.</p>
+</div>
+
+
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../CAPITULO_1";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/isaiasibanez\.github\.io\/OML2\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../CAPITULO_1/A4_condiciones_optimalidad.html" class="pagination-link" aria-label="1.4 Condiciones de optimalidad">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">1.4 Condiciones de optimalidad</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../CAPITULO_2/B1_regresion_lineal_logistica.html" class="pagination-link" aria-label="2.1 Regresión lineal y regresión logística">
+        <span class="nav-page-text">2.1 Regresión lineal y regresión logística</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

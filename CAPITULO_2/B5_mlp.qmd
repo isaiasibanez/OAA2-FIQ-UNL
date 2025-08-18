@@ -1,0 +1,36 @@
+---
+title: "Introducción a redes neuronales"
+subtitle: "Capítulo 2 - Sección 5"
+---
+
+<hr style="border: 1px solid rgba(50, 0, 0, 1);">
+
+{{< include ../macros.qmd >}}
+
+<span style="color:darkred;">Perceptrón multicapa. Backpropagation. Derivación automática</span>
+
+
+
+
+
+
+
+
+
+
+<br><br>
+
+## Actividades {.unnumbered}
+
+✏️ **Conceptuales**  
+<hr class="linea-corta">
+
+1. …
+
+
+<div style="margin-top:2em;"></div>
+
+💻 **Prácticas**  
+<hr class="linea-corta">
+
+1. …

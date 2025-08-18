@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Máquinas de vectores soporte – Optimización y Aprendizaje Automático II</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../CAPITULO_2/B3_ridge_lasso.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-327735d1480bff6f7510335fe22ad292.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../CAPITULO_2/B1_regresion_lineal_logistica.html">2. MODELOS DISCRIMINATIVOS</a></li><li class="breadcrumb-item"><a href="../CAPITULO_2/B4_svm.html">2.4 Máquinas de vectores soporte</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Optimización y Aprendizaje Automático II</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">1. OPTIMIZACIÓN MATEMÁTICA</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A1_intro_optimizacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.1 Introducción a la optimización</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A2_optimizacion_convexa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.2 Optimización convexa</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A3_resolucion_computacional.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.3 Resolución computacional con CVXPY y SciPy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A4_condiciones_optimalidad.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.4 Condiciones de optimalidad</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A5_metodos_optimizacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.5 Métodos de optimización</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">2. MODELOS DISCRIMINATIVOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B1_regresion_lineal_logistica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.1 Regresión lineal y regresión logística</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B2_glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.2 Modelos lineales generalizados</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B3_ridge_lasso.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.3 Métodos de regularización</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B4_svm.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">2.4 Máquinas de vectores soporte</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#hiperplano-separador-óptimo" id="toc-hiperplano-separador-óptimo" class="nav-link active" data-scroll-target="#hiperplano-separador-óptimo">Hiperplano separador óptimo</a>
+  <ul class="collapse">
+  <li><a href="#formulación-clásica" id="toc-formulación-clásica" class="nav-link" data-scroll-target="#formulación-clásica">Formulación clásica</a></li>
+  <li><a href="#aplicación-de-condiciones-kkt-y-dualidad" id="toc-aplicación-de-condiciones-kkt-y-dualidad" class="nav-link" data-scroll-target="#aplicación-de-condiciones-kkt-y-dualidad">Aplicación de condiciones KKT y dualidad</a></li>
+  </ul></li>
+  <li><a href="#variables-de-holgura-y-margen-suave" id="toc-variables-de-holgura-y-margen-suave" class="nav-link" data-scroll-target="#variables-de-holgura-y-margen-suave">Variables de holgura y margen suave</a>
+  <ul class="collapse">
+  <li><a href="#aplicación-de-condiciones-kkt-y-dualidad-1" id="toc-aplicación-de-condiciones-kkt-y-dualidad-1" class="nav-link" data-scroll-target="#aplicación-de-condiciones-kkt-y-dualidad-1">Aplicación de condiciones KKT y dualidad</a></li>
+  </ul></li>
+  <li><a href="#núcleos-reproductores" id="toc-núcleos-reproductores" class="nav-link" data-scroll-target="#núcleos-reproductores">Núcleos reproductores</a></li>
+  <li><a href="#máquinas-de-vectores-soporte-no-lineal" id="toc-máquinas-de-vectores-soporte-no-lineal" class="nav-link" data-scroll-target="#máquinas-de-vectores-soporte-no-lineal">Máquinas de vectores soporte no lineal</a></li>
+  <li><a href="#ejemplos-de-aplicación" id="toc-ejemplos-de-aplicación" class="nav-link" data-scroll-target="#ejemplos-de-aplicación">Ejemplos de aplicación</a></li>
+  <li><a href="#actividades" id="toc-actividades" class="nav-link" data-scroll-target="#actividades">Actividades</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../CAPITULO_2/B1_regresion_lineal_logistica.html">2. MODELOS DISCRIMINATIVOS</a></li><li class="breadcrumb-item"><a href="../CAPITULO_2/B4_svm.html">2.4 Máquinas de vectores soporte</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Máquinas de vectores soporte</h1>
+<p class="subtitle lead">Capítulo 2 - Sección 4</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr style="border: 1px solid rgba(50, 0, 0, 1);">
+<div class="hidden">
+<p><span class="math display">\[
+\def\NN{\mathbb{N}}
+\def\ZZ{\mathbb{Z}}
+\def\RR{\mathbb{R}}
+\def\media{\mathbb{E}}
+\def\calL{\mathcal{L}}
+\def\calG{\mathcal{G}}
+\def\calD{\mathcal{D}}
+\def\aa{{\bf a}}
+\def\bb{{\bf b}}
+\def\cc{{\bf c}}
+\def\dd{{\bf d}}
+\def\hh{{\bf h}}
+\def\qq{{\bf q}}
+\def\xx{{\bf x}}
+\def\yy{{\bf y}}
+\def\zz{{\bf z}}
+\def\uu{{\bf u}}
+\def\vv{{\bf v}}
+\def\XX{{\bf X}}
+\def\TT{{\bf T}}
+\def\SS{{\bf S}}
+\def\bfg{{\bf g}}
+\def\bftheta{\boldsymbol{\theta}}
+\def\bfmu{\boldsymbol{\mu}}
+\def\bfxi{\boldsymbol{\xi}}
+\def\bflambda{\boldsymbol{\lambda}}
+\def\bfgamma{\boldsymbol{\gamma}}
+\def\bfbeta{\boldsymbol{\beta}}
+\def\bfalpha{\boldsymbol{\alpha}}
+\def\bfeta{\boldsymbol{\eta}}
+\def\bfmu{\boldsymbol{\mu}}
+\def\bfnu{\boldsymbol{\nu}}
+\def\bfSigma{\boldsymbol{\Sigma}}
+\def\bfone{\mathbf{1}}
+\def\bfzero{\mathbf{0}}
+\def\argmin{\mathop{\mathrm{arg\,min\,}}}
+\def\argmax{\mathop{\mathrm{arg\,max\,}}}
+\]</span></p>
+</div>
+<p>En esta sección vamos a estudiar un algoritmo de aprendizaje supervisado ampliamente utilizado para problemas de clasificación, que ha demostrado ser especialmente efectivo en tareas donde se requiere obtener fronteras de decisión robustas y con buena capacidad de generalización. Su construcción sigue una secuencia natural de conceptos: en primer lugar, se aborda la formulación básica basada en hiperplanos separadores óptimos, cuyo objetivo es maximizar el margen de separación entre clases perfectamente separables; luego, se incorpora el uso de <em>variables de holgura</em> para tratar datos no separables; y, finalmente, se presenta la generalización mediante <em>núcleos reproductores</em>, lo que permite obtener fronteras de decisión no lineales.</p>
+<p>Una característica distintiva de estos métodos es que su desarrollo se apoya fuertemente en la formulación dual de problemas de optimización y en las condiciones de Karush-Kuhn-Tucker (KKT), lo que proporciona una interpretación clara en términos de vectores soporte y explica su gran potencial.</p>
+<div style="margin-top:2em;">
+
+</div>
+<hr>
+<p>En lo que sigue, vamos a asumir que estamos trabajando con un conjunto de datos de entrenamiento <span class="math inline">\(\{(\xx_i,y_i)\}_{i=1}^n\)</span> de un problema de clasificación binaria cuya variable respuesta, por cuestiones de simplicidad, se considera <span class="math inline">\(Y\in\{-1,+1\}\)</span>.</p>
+<div style="margin-top:2em;">
+
+</div>
+<section id="hiperplano-separador-óptimo" class="level2">
+<h2 class="anchored" data-anchor-id="hiperplano-separador-óptimo">Hiperplano separador óptimo</h2>
+<p>El caso más simple de análisis surge de suponer que las clases <span class="math inline">\(\{\xx_i \mid y_i=-1\}\)</span> y <span class="math inline">\(\{\xx_i \mid y_i=+1\}\)</span> pueden ser separados totalmente por una frontera lineal.</p>
+<div class="definicion">
+<p><strong>Definición 1.</strong> (Separabilidad lineal) Un conjunto de datos <span class="math inline">\(\{(\xx_i,y_i)\}_{i=1}^n\)</span>, con <span class="math inline">\(y_i\in\{-1,+1\}\)</span>, se dice que es <em>linealmente separable</em> si existen <span class="math inline">\(\bfbeta\in\RR^p\)</span> y <span class="math inline">\(\beta_0\in\RR\)</span> tales que <span class="math display">\[
+y_i=\text{sign}(\bfbeta^\top\xx_i+\beta_0)\qquad \forall i=1,\ldots,n.
+\tag{1}
+\]</span></p>
+<p>El hiperplano <span class="math inline">\(\bfbeta^\top\xx+\beta_0=0\)</span> se denomina <em>hiperplano separador</em> y la función <span class="math inline">\(f:\RR^p\to\RR\)</span> definida por <span class="math inline">\(f(\xx)=\bfbeta^\top\xx+\beta_0\)</span> se conoce como <em>función score</em>.</p>
+</div>
+<div style="margin-top:1em;">
+
+</div>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br> Pruebe que <span class="math inline">\(\bfbeta\)</span> es el vector normal al hiperplano <span class="math inline">\(\bfbeta^\top\xx+\beta_0=0\)</span>.</p>
+</div>
+</div>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/svm_01.png" alt="…" width="500px" class="figure-img">
+<figcaption>
+<strong>Figura 1</strong>. Datos totalmente separables y algunos hiperplanos separadores.
+</figcaption>
+</figure>
+<div style="margin-top:2em;">
+
+</div>
+<p>Observar que la expresión (1) es equivalente a requerir <span class="math display">\[
+y_i(\bfbeta^\top\xx_i+\beta_0)&gt;0\qquad\forall i=1,\ldots, n.
+\tag{2}
+\]</span></p>
+<p>Algo intuitivo (ver Figura 1) es que si las clases son totalmente separables, existen infinitos hiperplanos separadores. Por lo tanto, resulta necesario definir un criterio que permita seleccionar un hiperplano único y óptimo.</p>
+<div class="myhighlight2">
+<span style="font-size:0.8em;"><em>Primer principio</em></span>
+<div style="margin-top:0em;">
+
+</div>
+<p>Cada vector <span class="math inline">\(\bfbeta\in\RR^p\)</span> puede definir un único hiperplano separador.</p>
+</div>
+<p>Dado <span class="math inline">\(\bfbeta\in\RR^p\)</span>, asociamos a él el hiperplano separador con vector normal <span class="math inline">\(\bfbeta\)</span> que <em>equidista</em> a ambas clases. Para poder caracterizar esto matemáticamente, necesitamos antes imponer una restricción de normalización, debido a que la distancia de un punto al hiperplano depende de <span class="math inline">\(\|\bfbeta\|_2\)</span>.</p>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br> Pruebe que la distancia entre un punto <span class="math inline">\(\xx_0\in\RR^p\)</span> y el hiperplano <span class="math inline">\(\bfbeta^\top\xx+\beta_0=0\)</span> es igual a <span class="math inline">\(|f(\xx_0)|/\|\bfbeta\|_2\)</span>.</p>
+</div>
+</div>
+</div>
+<div class="myhighlight2">
+<span style="font-size:0.8em;"><em>Segundo principio</em></span>
+<div style="margin-top:0em;">
+
+</div>
+<p>Se restringe la elección de <span class="math inline">\(\bfbeta\)</span> a aquellos vectores que cumplen <span class="math inline">\(\|\bfbeta\|_2=1\)</span>.</p>
+</div>
+<p>Bajo estas condiciones, la distancia entre cualquier punto <span class="math inline">\(\xx_i\)</span> y el hiperplano <span class="math inline">\(\bfbeta^\top\xx+\beta_0=0\)</span> está dada por <span class="math display">\[
+|f(\xx_i)|=y_i(\bfbeta^\top\xx_i+\beta_0),
+\]</span> lo cual significa que decir que un hiperplano <span class="math inline">\(\bfbeta^\top\xx+\beta_0=0\)</span> equidista a ambas clases es equivalente a afirmar que existe una <em>distancia mínima</em> <span class="math inline">\(M\in\RR\)</span> tal que <span class="math display">\[
+y_i(\bfbeta^\top\xx_i+\beta_0)\geq M\qquad\forall i=1,\ldots,n,
+\tag{3}
+\]</span> con igualdad para al menos un punto de cada clase. Los puntos para los cuales se cumple la igualdad en la restricción son los que caracterizan al hiperplano y se conocen como sus <mark>puntos soporte</mark>.</p>
+<div style="margin-top:2em;">
+
+</div>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/svm_02.png" alt="…" width="500px" class="figure-img">
+<figcaption>
+<strong>Figura 2</strong>. Hiperplanos separadores y sus margenes asociados.
+</figcaption>
+</figure>
+<div style="margin-top:2em;">
+
+</div>
+<p>Ya estamos en condiciones de determinar qué consideraremos como hiperplano separador óptimo.</p>
+<div class="definicion">
+<p><strong>Definición 2.</strong> (Hiperplano separador óptimo) Sea <span class="math inline">\(\{(\xx_i,y_i)\}_{i=1}^n\)</span>, con <span class="math inline">\(y_i\in\{-1,+1\}\)</span>, un conjunto de datos linealmente separable. El <em>hiperplano separador óptimo</em> es aquel que maximiza el <em>margen</em> <span class="math inline">\(M\)</span>, definido como la distancia mínima entre el hiperplano y cada clase.</p>
+</div>
+<p>En base a lo descrito, la búsqueda del hiperplano separador óptimo queda determinada por el siguiente problema de optimización:</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\text{maximizar } &amp; M\\
+\text{sujeto a }  &amp; y_i(\bfbeta^\top\xx_i+\beta_0)\geq M,\qquad i=1,\ldots,n,\\
+                  &amp; \|\bfbeta\|_2=1.
+\end{array}
+\tag{4}
+\]</span></p>
+<p>Por supuesto, las variables de optimización son <span class="math inline">\(\bfbeta\in\RR^p\)</span> y <span class="math inline">\(\beta_0\in\RR\)</span>. Si bien esta formulación refleja directamente la intención de maximizar el margen, vamos a ajustarla para obtener una formulación clásica más conveniente.</p>
+<section id="formulación-clásica" class="level3">
+<h3 class="anchored" data-anchor-id="formulación-clásica">Formulación clásica</h3>
+<p>La restricción <span class="math inline">\(\|\bfbeta\|_2=1\)</span> permite interpretar a <span class="math inline">\(M\)</span> como la distancia mínima de los puntos al hiperplano. Si se relaja dicha condición, dicha interpretación sigue siendo cierta si se escribe <span class="math display">\[
+\frac{y_i(\bfbeta^\top\xx_i+\beta_0)}{\|\bfbeta\|_2}\geq M,\qquad i=1,\ldots,n.
+\]</span></p>
+<p>En consecuencia, el problema (4) se puede reescribir como <span class="math display">\[
+\begin{array}{ll}
+\text{maximizar } &amp; M\\
+\text{sujeto a }  &amp; y_i(\bfbeta^\top\xx_i+\beta_0)\geq \|\bfbeta\|_2M,\qquad i=1,\ldots,n,
+\end{array}
+\tag{5}
+\]</span> con una pequeña diferencia: dado un punto óptimo <span class="math inline">\(\bfbeta^\star\)</span>, ahora habrán infinitos puntos óptimos <span class="math inline">\(k\bfbeta^\star\)</span>, con <span class="math inline">\(k\in\RR\)</span>. De todos ellos, nos interesa particularmente aquel que verifica <span class="math display">\[
+\|\bfbeta^\star\|_2=\frac{1}{M^\star},
+\]</span> donde <span class="math inline">\(M^\star\)</span> es el margen óptimo. Esta idea nos va a permitir reformular el problema de optimización:</p>
+<div class="myhighlight">
+<p>Para cada valor <span class="math inline">\(M\)</span> de la función objetivo, elegimos como vector normal del hiperplano separador asociado a aquel <span class="math inline">\(\bfbeta\)</span> que verifica <span class="math inline">\(\|\bfbeta\|_2=1/M\)</span>.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Claramente, bajo estas condiciones, maximizar <span class="math inline">\(M\)</span> es equivalente a minimizar <span class="math inline">\(\|\bfbeta\|_2\)</span> y, convenientemente, también equivalente a minimizar <span class="math inline">\(\frac{1}{2}\|\bfbeta\|_2^2\)</span>. De esta manera, retomando (5), podemos redefinir el problema de optimización (4) como sigue: <span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; \frac{1}{2}\|\bfbeta\|_2^2\\
+\text{sujeto a }  &amp; y_i(\bfbeta^\top\xx_i+\beta_0)\geq 1,\qquad i=1,\ldots,n.
+\end{array}
+\tag{6}
+\]</span></p>
+<div style="margin-top:2em;">
+
+</div>
+<div class="myhighlight">
+<p>El problema (6) es un problema de optimización convexa cuyo conjunto factible es un poliedro.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>El Corolario 5 del <a href="A4_condiciones_optimalidad.html#el-caso-particular-de-restricciones-afines">C1-S4</a> nos asegura que las condiciones de Karush-Kuhn-Tucker (KKT) son suficientes y necesarias para la optimalidad. Más aún, gracias al Teorema 7 de dicha sección, podemos afirmar que se cumple la dualidad fuerte, asegurando que el valor óptimo del problema primal coincide con el del problema dual.</p>
+</section>
+<section id="aplicación-de-condiciones-kkt-y-dualidad" class="level3">
+<h3 class="anchored" data-anchor-id="aplicación-de-condiciones-kkt-y-dualidad">Aplicación de condiciones KKT y dualidad</h3>
+<p>Las condiciones KKT son <span class="math display">\[
+\begin{array}{cl}
+y_i((\bfbeta^\star)^\top\xx_i+\beta_0^\star)-1\geq 0\qquad\forall i=1,\ldots,n\qquad&amp;\text{(Factibilidad primal)}\\[3pt]
+\lambda_i^\star\geq 0\qquad\forall i=1,\ldots,n\qquad &amp;\text{(Factibilidad dual)}\\[3pt]
+\lambda_i^\star\left[y_i((\bfbeta^\star)^\top\xx_i+\beta_0^\star)-1\right]=0\qquad\forall i=1,\ldots,n\qquad&amp;\text{(Holgura complementaria)}\\[3pt]
+\bfbeta^\star=\sum_{i=1}^n\lambda_i^\star y_i\xx_i,\quad 0=\sum_{i=1}^n\lambda_i^\star y_i\qquad&amp;\text{(Estacionariedad)}
+\end{array}
+\]</span></p>
+<div style="margin-top:2em;">
+
+</div>
+<p>Si bien las condiciones KKT permiten caracterizar completamente la solución óptima, no proporcionan un método directo y eficiente para calcular <span class="math inline">\(\bflambda^\star\)</span>. Por ello, resulta conveniente formular el problema dual de Lagrange, cuya resolución es computacionalmente más sencilla, esto último debido a que resulta ser un problema de optimización cuadrática.</p>
+<p>El Lagrangiano asociado al problema (6) es <span class="math inline">\(\calL:\RR^p\times\RR^n\)</span> definido por <span class="math display">\[
+\calL(\bfbeta,\bflambda)=\frac{1}{2}\|\bfbeta\|_2^2-\sum_{i=1}^n\lambda_i\left[y_i(\bfbeta^\top\xx_i+\beta_0)-1\right].
+\]</span></p>
+<p>Como ya sabemos, la ecuación <span class="math inline">\(\nabla\calL=\bfzero\)</span> conduce a las condiciones de estacionariedad de las KKT. Por lo tanto, la función dual <span class="math display">\[
+\calG(\bflambda):=\inf_{\bfbeta}\calL(\bfbeta,\bflambda)
+\]</span> resulta de sustituir dichas condiciones en el Lagrangiano. Es decir, <span class="math display">\[
+\begin{align}
+\calG(\bflambda)&amp;=\frac{1}{2}\left\|\sum_{i=1}^n\lambda_iy_i\xx_i\right\|_2^2-\sum_{i=1}^n\lambda_iy_i\left(\sum_{j=1}^n\lambda_jy_j\xx_j\right)^\top\xx_i-\beta_0\underbrace{\sum_{i=1}^n\lambda_iy_i}_{=0}+\sum_{i=1}^n\lambda_i\\
+&amp;=\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\lambda_i\lambda_j y_iy_j \xx_i^\top\xx_i-\sum_{i=1}^n\sum_{j=1}^n\lambda_i\lambda_j y_i y_j\xx_j^\top\xx_i+\sum_{i=1}^n\lambda_i\\
+&amp;=\sum_{i=1}^n\lambda_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\lambda_i\lambda_j y_iy_j\xx_j^\top\xx_i.
+\end{align}
+\]</span></p>
+<p>Por lo tanto, el problema dual es <span class="math display">\[
+\begin{array}{ll}
+\text{maximizar } &amp; \sum_{i=1}^n\lambda_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\lambda_i\lambda_j y_iy_j\xx_j^\top\xx_i\\
+\text{sujeto a }  &amp; \bflambda\succeq\bfzero.
+\end{array}
+\tag{7}
+\]</span></p>
+<div style="margin-top:2em;">
+
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Interpretación de KKT</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Procedimiento</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Pongamos foco en la factibilidad primal y la holgura complementaria:</p>
+<p><span class="math display">\[
+\begin{array}{cl}
+y_i((\bfbeta^\star)^\top\xx_i+\beta_0^\star)-1\geq 0\qquad\forall i=1,\ldots,n\qquad&amp;\text{(Factibilidad primal)}\\[3pt]
+\lambda_i^\star\left[y_i((\bfbeta^\star)^\top\xx_i+\beta_0^\star)-1\right]=0\qquad\forall i=1,\ldots,n\qquad&amp;\text{(Holgura complementaria)}\\[3pt]
+\end{array}
+\]</span></p>
+<p>Si <span class="math inline">\(\lambda_i^\star&gt;0\)</span>, entonces <span class="math display">\[
+y_i((\bfbeta^\star)^\top\xx_i+\beta_0^\star)=1,
+\]</span> lo cual significa que <span class="math inline">\(\xx_i\)</span> es un punto soporte (es decir, está sobre el <em>borde</em> del margen). O lo que es lo mismo:</p>
+<div class="myhighlight">
+<p>Si <span class="math inline">\(\xx_i\)</span> no es un punto soporte, entonces <span class="math inline">\(\lambda_i^\star=0\)</span>.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/svm_03.png" alt="…" width="500px" class="figure-img">
+<figcaption>
+<strong>Figura 3</strong>. Puntos soporte de un hiperplano separador óptimo.
+</figcaption>
+</figure>
+<p>Por lo tanto, de la condición de estacionariedad, podemos afirmar que el punto óptimo <span class="math inline">\(\bfbeta^\star\)</span> está totalmente determinado por los puntos soporte. Podemos escribir <span class="math display">\[
+\bfbeta^\star=\sum_{\substack{i=1\\\lambda_i^\star\neq 0}}^n\lambda_i^\star y_i\xx_i.
+\]</span></p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p><span class="badge bg-success">Hiperplano separador óptimo</span></p>
+<p>Para obtener el hiperplano separador óptimo de un conjunto de datos linealmente separable:</p>
+<ol type="1">
+<li><p>Se resuelve el problema dual (6) para obtener <span class="math inline">\(\bflambda^\star\)</span>.</p></li>
+<li><p>Se obtiene el punto óptimo <span class="math inline">\(\bfbeta^\star\)</span> mediante la condición de estacionariedad <span class="math display">\[
+\bfbeta^\star=\sum_{\substack{i=1\\\lambda_i^\star\neq 0}}^n\lambda_i^\star y_i\xx_i.
+\]</span></p></li>
+<li><p>Se calcula el intercepto <span class="math inline">\(\beta_0^\star\)</span>, promediando sobre los puntos soporteel valor <span class="math display">\[
+\beta_0^\star=y_i-\bfbeta^\top\xx_i,
+\]</span> que resulta de despejar <span class="math inline">\(\beta_0^\star\)</span> de la condición de holgura complementaria.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Una vez obtenidos los puntos óptimos <span class="math inline">\(\bfbeta^\star\)</span> y <span class="math inline">\(\beta_0^\star\)</span>, resultan:</p>
+<table style="margin-left:auto; margin-right:auto; border-collapse: collapse; text-align: center; background-color: #f7faf7;">
+<tbody><tr style="border-bottom: 1px solid #cccccc;">
+<td style="padding: 16px 8px;">
+Hiperplano separador óptimo
+</td>
+<td style="padding: 16px 8px;">
+<span class="math inline">\((\bfbeta^\star)^\top\xx+\beta_0^\star=0\)</span>
+</td>
+</tr>
+<tr style="border-bottom: 1px solid #cccccc;">
+<td style="padding: 16px 8px;">
+Función score
+</td>
+<td style="padding: 16px 8px;">
+<span class="math inline">\(\hat{f}(\xx)=(\bfbeta^\star)^\top\xx+\beta_0^\star\)</span>
+</td>
+</tr>
+<tr>
+<td style="padding: 16px 8px;">
+Clasificador
+</td>
+<td style="padding: 16px 8px;">
+<span class="math inline">\(\hat{G}(\xx)=\text{sign}(\hat{f}(\xx))\)</span>
+</td>
+</tr>
+</tbody></table>
+</section>
+</section>
+<section id="variables-de-holgura-y-margen-suave" class="level2">
+<h2 class="anchored" data-anchor-id="variables-de-holgura-y-margen-suave">Variables de holgura y margen suave</h2>
+<p>En la formulación del hiperplano separador óptimo, se asume que el conjunto de datos <span class="math inline">\(\{(\xx_i,y_i)\}_{i=1}^n\)</span> es linealmente separable. Sin embargo, en la práctica lo habitual es que exista solapamiento entre las clases. Para extender el análisis del apartado anterior, la estrategia consiste en introducir <em>variables de holgura</em>, simbolizadas con <span class="math inline">\(\boldsymbol{\xi}\in\RR^n\)</span>, que permitan que algunos puntos violen el margen o incluso queden mal clasificados. Este enfoque, conocido como <em>margen suave</em> (<em>soft-margin</em>, en inglés), es lo que desarrollaremos a continuación.</p>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/svm_04.png" alt="…" width="500px" class="figure-img">
+<figcaption>
+<strong>Figura 4</strong>. Variables de holgura.
+</figcaption>
+</figure>
+<p>Partimos de la formulación primal del problema (6). Para incorporar las variables de holgura <span class="math inline">\(\bfxi\)</span>, esta se modifica de la siguiente manera:</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; \frac{1}{2}\|\bfbeta\|_2^2\\
+\text{sujeto a }  &amp; y_i(\bfbeta^\top\xx_i+\beta_0)\geq 1-\xi_i,\qquad i=1,\ldots,n,\\
+                  &amp; \bfxi\succeq\bfzero,\;\sum_{i=1}^n\xi_i\leq\text{cte}.
+\end{array}
+\tag{8}
+\]</span></p>
+<p>Este nuevo problema de optimización tiene variables <span class="math inline">\(\bfbeta\in\RR^p\)</span>, <span class="math inline">\(\beta_0\in\RR\)</span> y <span class="math inline">\(\bfxi\in\RR^{n}\)</span>. La restricción <span class="math inline">\(\sum_{i=1}^n=\xi_i\leq\text{cte}\)</span> permite controlar el grado de tolerancia a puntos que están dentro o del lado incorrecto del margen. Este control es más natural pensarlo como una penalización en la función objetivo, tal como vimos en los métodos de regularización en el capítulo anterior. En consecuencia, es conveniente usar una forma alternativa de (8):</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; \frac{1}{2}\|\bfbeta\|_2^2+C\sum_{i=1}^n\xi_i\\
+\text{sujeto a }  &amp; y_i(\bfbeta^\top\xx_i+\beta_0)\geq 1-\xi_i,\qquad i=1,\ldots,n,\\
+                  &amp; \bfxi\succeq\bfzero.
+\end{array}
+\tag{9}
+\]</span></p>
+<p>A <span class="math inline">\(C&gt;0\)</span> se lo conoce como <mark><em>hiperparámetro de costo</em></mark>. Cuanto mayor es su valor, mayor es la penalización que el modelo impone sobre las violaciones del margen, lo que conduce a un clasificador más estricto que busca minimizar los errores de clasificación a costa de un margen posiblemente más estrecho.</p>
+<div style="margin-top:2em;">
+
+</div>
+<div class="myhighlight">
+<p>El problema (9) es un problema de optimización convexa cuyo conjunto factible es un poliedro.</p>
+</div>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br> Justifique la afirmación anterior.</p>
+</div>
+</div>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Estamos en condiciones de aplicar nuevamente las condiciones de Karush-Kuhn-Tucker (KKT) y la dualidad para caracterizar la solución de este problema. De ahora en adelante, nos referiremos al método construido hasta aquí como <mark>Máquinas de Vectores Soporte (SVM) lineales </mark>.</p>
+<section id="aplicación-de-condiciones-kkt-y-dualidad-1" class="level3">
+<h3 class="anchored" data-anchor-id="aplicación-de-condiciones-kkt-y-dualidad-1">Aplicación de condiciones KKT y dualidad</h3>
+<p>Es importante remarcar que el problema de optimización (9) tiene <span class="math inline">\(2n\)</span> restricciones de desigualdad, pues se han agregado <span class="math display">\[
+\xi_i\geq 0\qquad\forall i=1,\ldots,n.
+\]</span></p>
+<p>Distinguiremos los multiplicadores asociados a estas restricciones con la notación <span class="math inline">\(\bfmu=(\mu_1,\ldots,\mu_n)\)</span>. Las condiciones KKT son <span class="math display">\[
+\begin{array}{cl}
+y_i((\bfbeta^\star)^\top\xx_i+\beta_0^\star)-(1-\xi_i^\star)\geq 0\qquad\forall i=1,\ldots,n\qquad&amp;\text{(Factibilidad primal)}\\[3pt]
+\lambda_i^\star\geq 0,\;\mu_i^\star\geq 0\qquad\forall i=1,\ldots,n\qquad &amp;\text{(Factibilidad dual)}\\[3pt]
+\lambda_i^\star\left[y_i((\bfbeta^\star)^\top\xx_i+\beta_0^\star)-(1-\xi_i^\star)\right]=0,\quad\mu_i^\star\xi_i^\star=0\qquad\forall i=1,\ldots,n\qquad&amp;\text{(Holgura complementaria)}\\[3pt]
+\bfbeta^\star=\sum_{i=1}^n\lambda_i^\star y_i\xx_i,\quad 0=\sum_{i=1}^n\lambda_i^\star y_i,\quad C=\lambda_i^\star+\mu_i^\star\;(\forall i)\qquad&amp;\text{(Estacionariedad)}
+\end{array}
+\]</span></p>
+<div style="margin-top:2em;">
+
+</div>
+<p>Como antes, es conveniente formular el problema dual de Lagrange, el cual es un problema de optimización cuadrática. El Lagrangiano asociado al problema (8) es <span class="math inline">\(\calL:\RR^p\times\RR^n\times\RR^n\)</span> definido por <span class="math display">\[
+\calL(\bfbeta,\bflambda,\bfmu)=\frac{1}{2}\|\bfbeta\|_2^2+C\sum_{i=1}^n\xi_i-\sum_{i=1}^n\lambda_i\left[y_i(\bfbeta^\top\xx_i+\beta_0)-(1-\xi_i)\right]-\sum_{i=1}^n\mu_i\xi_i.
+\]</span></p>
+<p>Sustituimos las condiciones de estacionariedad para obtener la función dual: <span class="math display">\[
+\begin{align}
+\calG(\bflambda)&amp;=\frac{1}{2}\left\|\sum_{i=1}^n\lambda_iy_i\xx_i\right\|_2^2+C\sum_{i=1}^n\xi_i-\sum_{i=1}^n\lambda_iy_i\left(\sum_{j=1}^n\lambda_jy_j\xx_j\right)^\top\xx_i-\beta_0\underbrace{\sum_{i=1}^n\lambda_iy_i}_{=0}+\sum_{i=1}^n\lambda_i-\sum_{i=1}^n\underbrace{(\lambda_i+\mu_i)}_{=C}\xi_i\\
+&amp;=\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\lambda_i\lambda_j y_iy_j \xx_i^\top\xx_i-\sum_{i=1}^n\sum_{j=1}^n\lambda_i\lambda_j y_i y_j\xx_j^\top\xx_i+\sum_{i=1}^n\lambda_i\\
+&amp;=\sum_{i=1}^n\lambda_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\lambda_i\lambda_j y_iy_j\xx_j^\top\xx_i.
+\end{align}
+\]</span></p>
+<p>Hemos obtenido la misma función dual que para el caso sin variables de holgura. Sin embargo, el problema dual no es el mismo, puesto que hay que considerar la restricción <span class="math inline">\(\bfmu\succeq \bfzero\)</span>. Resulta: <span class="math display">\[
+\begin{array}{ll}
+\text{maximizar } &amp; \sum_{i=1}^n\lambda_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\lambda_i\lambda_j y_iy_j\xx_j^\top\xx_i\\
+\text{sujeto a }  &amp; \bflambda\succeq\bfzero,\;\bfmu\succeq\bfzero.
+\end{array}
+\]</span></p>
+<p>De la condición de estacionariedad <span class="math inline">\(C=\lambda_i+\mu_i\)</span>, podemos combinar las restricciones de no negatividad escribiendo <span class="math inline">\(0\leq \lambda_i\leq C\)</span>. Finalmente, el problema de optimización dual es <span class="math display">\[
+\begin{array}{ll}
+\text{maximizar } &amp; \sum_{i=1}^n\lambda_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\lambda_i\lambda_j y_iy_j\xx_j^\top\xx_i\\
+\text{sujeto a }  &amp; 0\leq \lambda_i\leq C,\quad i=1,\ldots,n.
+\end{array}
+\tag{10}
+\]</span></p>
+<div style="margin-top:2em;">
+
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Interpretación de KKT</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Procedimiento</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>Nuevamente pongamos foco en la factibilidad primal y la holgura complementaria:</p>
+<p><span class="math display">\[
+\begin{array}{cl}
+y_i((\bfbeta^\star)^\top\xx_i+\beta_0^\star)-(1-\xi_i)\geq 0\qquad\forall i=1,\ldots,n\qquad&amp;\text{(Factibilidad primal)}\\[3pt]
+\lambda_i^\star\left[y_i((\bfbeta^\star)^\top\xx_i+\beta_0^\star)-(1-\xi_i)\right]=0\qquad\forall i=1,\ldots,n\qquad&amp;\text{(Holgura complementaria)}\\[3pt]
+\end{array}
+\]</span></p>
+<p>Si <span class="math inline">\(\lambda_i^\star&gt;0\)</span>, entonces <span class="math display">\[
+y_i((\bfbeta^\star)^\top\xx_i+\beta_0^\star)=1-\xi_i^\star.
+\]</span></p>
+<p>Si, además, <span class="math inline">\(\xi_i^\star=0\)</span>, podemos afirmar que <span class="math inline">\(\xx_i\)</span> es un punto soporte (es decir, está sobre el <em>borde</em> del margen). Si, por el contrario, <span class="math inline">\(\xi_i&gt;0\)</span>, entonces <span class="math inline">\(\xx_i\)</span> viola el margen.</p>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br> Analice en qué caso un punto soporte queda mal clasificado.</p>
+</div>
+</div>
+</div>
+<p>Dado que queremos identificar como puntos soporte únicamente aquellos datos que realmente influyen en la solución del problema, definimos formalmente:</p>
+<div class="definicion">
+<p><strong>Definición 1.</strong> (Vector soporte) Un dato <span class="math inline">\(\xx_i\)</span> se denomina <em>vector soporte</em> si el multiplicador asociado <span class="math inline">\(\lambda_i\)</span> es estrictamente positivo.</p>
+</div>
+<div class="myhighlight">
+<p>Todo vector soporte se encuentra en una de las siguientes posiciones respecto al margen: en el borde, dentro del margen o fuera del margen pero mal clasificado.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/svm_05.png" alt="…" width="500px" class="figure-img">
+<figcaption>
+<strong>Figura 5</strong>. Puntos soporte de un hiperplano óptimo con margen suave.
+</figcaption>
+</figure>
+<div style="margin-top:2em;">
+
+</div>
+<p>Por otro lado, si <span class="math inline">\(y_i((\bfbeta^\star)^\top\xx_i+\beta_0^\star)&gt;1-\xi_i^\star\)</span>, la holgura complementaria indica que debe ocurrir <span class="math inline">\(\lambda_i^\star=0\)</span>. ¡Atención! Esto no descarta que pueden existir puntos con holgura positiva que no sean vectores soporte. Por ese motivo, analicemos la siguiente pregunta:</p>
+<div class="myhighlight3">
+<p>¿Qué característica tienen los puntos con holgura positiva?</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Si <span class="math inline">\(\xi_i^\star&gt;0\)</span>, la condición de holgura complementaria <span class="math inline">\(\mu_i^\star\xi_i^\star=0\)</span> junto a la condición de estacionariedad <span class="math inline">\(C=\lambda_i^\star+\mu_i^\star\)</span>, nos permiten deducir que se verifica <span class="math display">\[
+\lambda_i^\star=C.
+\]</span></p>
+<p>Dado que asumimos <span class="math inline">\(C&gt;0\)</span>, concluimos que:</p>
+<div class="myhighlight">
+<p>Todo punto con holgura positiva es un vector soporte.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>A continuación, resumamos las posibilidades para un punto <span class="math inline">\(\xx_i\)</span> con multiplicador <span class="math inline">\(\lambda_i^\star\)</span>.</p>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<span style="font-size: 1.3em;">📝</span><br>
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+
+  th {
+    color: black;
+  }
+
+  tr {
+    border-bottom: 1px solid lightgray;
+  }
+
+  td:first-child, th:first-child {
+    white-space: nowrap;
+    text-align: center;
+  }
+</style>
+<table>
+<thead>
+<tr>
+<th>
+Multiplicador
+</th>
+<th>
+¿Es vector soporte?
+</th>
+<th>
+¿Tiene holgura positiva?
+</th>
+<th>
+Posición respecto al margen
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<span class="math inline">\(\lambda_i^\star=0\)</span>
+</td>
+<td>
+<input type="checkbox" name="afin1">
+</td>
+<td>
+<input type="checkbox" name="cono1">
+</td>
+<td>
+<select name="miSelect1"> <option value="" disabled="" selected="">Seleccioná una opción…</option> <option value="opcion1">En el borde, bien clasificado.</option> <option value="opcion2">En el borde o fuera, pero bien clasificado.</option> <option value="opcion3">Viola el margen, mal clasificado.</option> <option value="opcion4">Viola el margen, bien o mal clasificado.</option> <option value="opcion5">Fuera, bien clasificado</option> <option value="opcion6">Fuera, mal clasificado</option> </select>
+</td>
+</tr>
+<tr>
+<td>
+<span class="math inline">\(0&lt;\lambda_i^\star&lt;C\)</span>
+</td>
+<td>
+<input type="checkbox" name="afin2">
+</td>
+<td>
+<input type="checkbox" name="cono2">
+</td>
+<td>
+<select name="miSelect2"> <option value="" disabled="" selected="">Seleccioná una opción…</option> <option value="opcion1">En el borde, bien clasificado.</option> <option value="opcion2">En el borde o fuera, pero bien clasificado.</option> <option value="opcion3">Viola el margen, mal clasificado.</option> <option value="opcion4">Viola el margen, bien o mal clasificado.</option> <option value="opcion5">Fuera, bien clasificado</option> <option value="opcion6">Fuera, mal clasificado</option> </select>
+</td>
+</tr>
+<tr>
+<td>
+<span class="math inline">\(\lambda_i^\star=C\)</span>
+</td>
+<td>
+<input type="checkbox" name="afin2">
+</td>
+<td>
+<input type="checkbox" name="cono2">
+</td>
+<td>
+<select name="miSelect3"> <option value="" disabled="" selected="">Seleccioná una opción…</option> <option value="opcion1">En el borde, bien clasificado.</option> <option value="opcion2">En el borde o fuera, pero bien clasificado.</option> <option value="opcion3">Viola el margen, mal clasificado.</option> <option value="opcion4">Viola el margen, bien o mal clasificado.</option> <option value="opcion5">Fuera, bien clasificado</option> <option value="opcion6">Fuera, mal clasificado</option> </select>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p><span class="badge bg-success">SVM lineal</span></p>
+<p>Para obtener el hiperplano óptimo de un conjunto de datos:</p>
+<ol type="1">
+<li><p>Se resuelve el problema dual (10) para obtener <span class="math inline">\(\bflambda^\star\)</span>.</p></li>
+<li><p>Se obtiene el punto óptimo <span class="math inline">\(\bfbeta^\star\)</span> mediante la condición de estacionariedad <span class="math display">\[
+\bfbeta^\star=\sum_{\substack{i=1\\\lambda_i^\star\neq 0}}^n\lambda_i^\star y_i\xx_i.
+\]</span></p></li>
+<li><p>Se calcula el intercepto <span class="math inline">\(\beta_0^\star\)</span>, promediando sobre los vectores soporte con holgura nula el valor <span class="math display">\[
+\beta_0^\star=y_i-\bfbeta^\top\xx_i,
+\]</span> que resulta de despejar <span class="math inline">\(\beta_0^\star\)</span> de la condición de holgura complementaria.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Tal como antes, una vez obtenidos los puntos óptimos <span class="math inline">\(\bfbeta^\star\)</span> y <span class="math inline">\(\beta_0^\star\)</span>, resultan:</p>
+<table style="margin-left:auto; margin-right:auto; border-collapse: collapse; text-align: center; background-color: #f7faf7;">
+<tbody><tr style="border-bottom: 1px solid #cccccc;">
+<td style="padding: 16px 8px;">
+Hiperplano de decisión
+</td>
+<td style="padding: 16px 8px;">
+<span class="math inline">\((\bfbeta^\star)^\top\xx+\beta_0^\star=0\)</span>
+</td>
+</tr>
+<tr style="border-bottom: 1px solid #cccccc;">
+<td style="padding: 16px 8px;">
+Función score
+</td>
+<td style="padding: 16px 8px;">
+<span class="math inline">\(\hat{f}(\xx)=(\bfbeta^\star)^\top\xx+\beta_0^\star\)</span>
+</td>
+</tr>
+<tr>
+<td style="padding: 16px 8px;">
+Clasificador
+</td>
+<td style="padding: 16px 8px;">
+<span class="math inline">\(\hat{G}(\xx)=\text{sign}(\hat{f}(\xx))\)</span>
+</td>
+</tr>
+</tbody></table>
+</section>
+</section>
+<section id="núcleos-reproductores" class="level2">
+<h2 class="anchored" data-anchor-id="núcleos-reproductores">Núcleos reproductores</h2>
+</section>
+<section id="máquinas-de-vectores-soporte-no-lineal" class="level2">
+<h2 class="anchored" data-anchor-id="máquinas-de-vectores-soporte-no-lineal">Máquinas de vectores soporte no lineal</h2>
+</section>
+<section id="ejemplos-de-aplicación" class="level2">
+<h2 class="anchored" data-anchor-id="ejemplos-de-aplicación">Ejemplos de aplicación</h2>
+<p><br><br></p>
+</section>
+<section id="actividades" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="actividades">Actividades</h2>
+✏️ <strong>Conceptuales</strong><br>
+
+<hr class="linea-corta">
+<ol type="1">
+<li>…</li>
+</ol>
+<div style="margin-top:2em;">
+
+</div>
+💻 <strong>Prácticas</strong><br>
+
+<hr class="linea-corta">
+<ol type="1">
+<li>…</li>
+</ol>
+<div style="margin-top: 5em;">
+
+</div>
+<div class="refs">
+<p><span style="color: #444;"><strong>Referencias</strong></span></p>
+<p>Hastie, T., Tibshirani, R., &amp; Friedman, J. (2009). <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction</em> (2nd ed.). Capítulo 4, Sección 5 y Capítulo 12. Springer.</p>
+</div>
+
+
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../CAPITULO_2";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/isaiasibanez\.github\.io\/OML2\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../CAPITULO_2/B3_ridge_lasso.html" class="pagination-link" aria-label="2.3 Métodos de regularización">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">2.3 Métodos de regularización</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

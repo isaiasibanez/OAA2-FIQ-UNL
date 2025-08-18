@@ -1,25 +1,40 @@
 ::: {.hidden} 
 $$
+\def\NN{\mathbb{N}}
+\def\ZZ{\mathbb{Z}}
 \def\RR{\mathbb{R}}
 \def\media{\mathbb{E}}
 \def\calL{\mathcal{L}}
 \def\calG{\mathcal{G}}
+\def\calD{\mathcal{D}}
+\def\aa{{\bf a}}
 \def\bb{{\bf b}}
+\def\cc{{\bf c}}
+\def\dd{{\bf d}}
+\def\hh{{\bf h}}
+\def\qq{{\bf q}}
 \def\xx{{\bf x}}
 \def\yy{{\bf y}}
+\def\zz{{\bf z}}
+\def\uu{{\bf u}}
 \def\vv{{\bf v}}
 \def\XX{{\bf X}}
 \def\TT{{\bf T}}
 \def\SS{{\bf S}}
-\def\bfa{\boldsymbol{a}}
-\def\bfb{\boldsymbol{b}}
+\def\bfg{{\bf g}}
 \def\bftheta{\boldsymbol{\theta}}
+\def\bfmu{\boldsymbol{\mu}}
+\def\bfxi{\boldsymbol{\xi}}
 \def\bflambda{\boldsymbol{\lambda}}
+\def\bfgamma{\boldsymbol{\gamma}}
+\def\bfbeta{\boldsymbol{\beta}}
+\def\bfalpha{\boldsymbol{\alpha}}
 \def\bfeta{\boldsymbol{\eta}}
 \def\bfmu{\boldsymbol{\mu}}
 \def\bfnu{\boldsymbol{\nu}}
 \def\bfSigma{\boldsymbol{\Sigma}}
 \def\bfone{\mathbf{1}}
+\def\bfzero{\mathbf{0}}
 \def\argmin{\mathop{\mathrm{arg\,min\,}}}
 \def\argmax{\mathop{\mathrm{arg\,max\,}}}
 $$ 

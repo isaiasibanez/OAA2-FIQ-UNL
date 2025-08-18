@@ -1,5 +1,6 @@
 ---
-title: "Introducción a la Optimización"
+title: "Introducción a la optimización"
+subtitle: "Capítulo 1 - Sección 1"
 ---
 
 <hr style="border: 1px solid rgba(50, 0, 0, 1);">
@@ -7,736 +8,675 @@ title: "Introducción a la Optimización"
 {{< include ../macros.qmd >}}
 
 
-# Conjuntos convexos
 
-Una gran parte del éxito de los métodos de optimización convexa radica en una idea geométrica simple pero poderosa: la convexidad del conjunto de soluciones factibles.
-
-Un conjunto convexo es, en pocas palabras, un conjunto en el cual, si tomamos dos puntos cualesquiera, el segmento que los une queda completamente contenido dentro del conjunto. Esta propiedad, que a primera vista parece modesta, es en realidad central para garantizar que los problemas de optimización tengan buen comportamiento.
-
-Para entender y construir modelos de optimización robustos, necesitamos comprender cómo son estos conjuntos y cómo se comportan bajo transformaciones y operaciones comunes. A continuación, vamos a introducir esta base teórica con precisión y describir ejemplos relevantes.
+La optimización es una herramienta fundamental en matemática aplicada, ciencia de datos y otras disciplinas. En términos generales, el objetivo de un problema de optimización es encontrar el valor de una *variable* (o conjunto de variables) que *minimice* o *maximice* una determinada *función*, posiblemente bajo ciertas *restricciones*.
 
 
-## Definiciones básicas
 
-En esta sección introduciremos tres tipos fundamentales de conjuntos que aparecen en optimización: conjuntos afines, conjuntos convexos y conos. Antes, es necesario recordar la forma parámetrica de *rectas* y *segmentos de recta*. 
-
-Sean $\xx_{1} \neq \xx_{2}$ dos puntos en $\RR^{n}$. La recta que pasa por $\xx_1$ y $\xx_2$ queda determinada por 
-$$
-\yy = \theta \xx_{1} + (1 - \theta) \xx_{2},\qquad \theta\in\RR.
-$$
-
-Mientras que, si restringimos el valor del parámetro a $0\leq \theta\leq 1$, obtenemos el segmento de recta (cerrado) entre ambos puntos. Una expresión alternativa es
-
-$$
-\yy=\xx_2+\theta(\xx_1-\xx_2),
-$$
-
-la cual permite interpretar a $\yy$ en términos del punto inicial $\xx_2$ y la dirección $\xx_1-\xx_2$. Así, $\theta$ indica la fracción del camino desde $\xx_2$ hasta $\xx_1$ donde se encuentra $\yy$. Esto se ilustra en la (<span style="color: red;">figura 2.1</span>).
-
-### Conjuntos afines
-
-::: {.definicion}
-**Definición 1.** (Conjunto afín) Un conjunto $C \subseteq \RR^{n}$ es *afín* si la línea que pasa por cualquier par de puntos distintos en $C$ está contenida en $C$. Es decir, si se verifica
-$$
-\theta \xx_1+(1-\theta)\xx_2\in C\qquad\forall \xx_1,\xx_2\in C, \forall\theta\in\RR.
-$$
-:::
-
-
-Observar que $\theta \xx_1+(1-\theta)\xx_2$ es una combinación lineal entre los puntos $\xx_1$ y $\xx_2$ que verifica que la suma de sus coeficientes sea uno. Esta idea se puede generalizar a más de dos puntos: un punto de la forma
-$$
-\theta_1\xx_1+\cdots+\theta_k\xx_k,\qquad \sum_{i=1}^k\theta_i=1
-$$
-se denomina *combinación afín* de los puntos $\xx_1,\ldots,\xx_k$. Es fácil ver que un conjunto afín $C$ contiene todas las combinaciones afines de sus puntos.
-
-Por otro lado, dado un conjunto afín $C$ y un punto $\xx_0\in C$, el conjunto
-$$
-V:= C-\xx_0=\{\xx-\xx_0 \mid \xx\in C\}
-$$
-
-es un subespacio vectorial, que permite expresar el conjunto afín $C$ como
-$$
-C=V+\xx_0=\{v+\xx_0 \mid v\in V\}.
-$$
-
-
-El subespacio $V$ asociado con el conjunto afín $C$ no depende de la elección de $x_{0}$, por lo que $x_{0}$ puede elegirse como cualquier punto en $C$. Definimos la *dimensión* de $C$ como
-$$
-\dim C:=\dim V=\dim C-\xx_0,\quad \xx_0\in C.
-$$
-
-
- 
-### Conjuntos convexos
-
-::: {.definicion}
-**Definición 1.** (Conjunto convexo) Un conjunto $C \subseteq \RR^{n}$ es *convexo* si el segmento de línea entre cualquier par de puntos distintos en $C$ está contenido en $C$. Es decir, si se verifica
-$$
-\theta \xx_1+(1-\theta)\xx_2\in C\qquad\forall \xx_1,\xx_2\in C, \forall\theta\in[0,1].
-$$
-:::
-
-Claramente, todo conjunto afín también es convexo, ya que contiene toda la recta que pasa por cualquier par de puntos distintos en él y, por lo tanto, también el segmento de línea entre los puntos. La (<span style="color: red;">figura 2.2</span>) ilustra algunos conjuntos convexos y no convexos en $\RR^{2}$.
-
-
-Llamamos *combinación convexa* a un punto de la forma 
-$$
-\theta_{1} \xx_{1} + \cdots + \theta_{k} \xx_{k},\qquad \sum_{i=1}^k\theta_i = 1, \theta_{i} \geq 0.
-$$
-
-A diferencia de una combinación afín, una combinación convexa requiere la no negatividad de los coeficientes $\theta_i$, lo cual significa que puede ser interpretada como un *promedio ponderado* de los puntos $\xx_i$.
-
-::: {.definicion}
-**Definición 1.** (Envolvente convexa) La *envolvente convexa* de un conjunto $C$ es el conjunto de todas las combinaciones convexas de puntos en $C$. Esto es
-$$
-\text{conv}\, C = \left\{\theta_{1} x_{1} + \cdots + \theta_{k} x_{k}\;\Big|\; x_{i} \in C, \theta_{i} \geq 0, \sum_{i=1}^k\theta_{i} = 1\right\}.
-$$
-:::
-
-Como su nombre lo indica, la envolvente convexa $\text{conv}\, C$ es siempre un conjunto convexo. Más aún, es el conjunto convexo más pequeño que contiene a $C$: si $B$ es cualquier conjunto convexo que contiene a $C$, entonces $\text{conv}\, C \subseteq B$. La (<span style="color: red;">figura 2.3</span>) ilustra la definición de casco convexo.
-
-### Conos
-
-::: {.definicion}
-**Definición 1.** (Cono) Un conjunto $C\in\RR^n$ se denomina *cono* si verifica
-$$
-\theta\xx\in C,\qquad\forall \xx\in C, \forall \theta\geq 0.
-$$
-:::
-
-Un conjunto $C$ es un *cono convexo* si es convexo y es un cono, lo que significa que 
-$$
-\theta_1\xx_1+\theta_2\xx_2\in C,\qquad\forall \xx_1,\xx_2\in C, \forall \theta_1, \theta_2\geq 0.
-$$
-
-Los puntos de esta forma pueden describirse geométricamente como formando una "rebanada de pastel" bidimensional con vértice en $0$ y bordes que pasan por $x_{1}$ y $x_{2}$. (<span style="color: red;">figura 2.4</span>).
-
-Llamamos *combinación cónica* a un punto de la forma
-$$
-\theta_1\xx_1+\cdot+\theta_k\xx_j,\qquad \theta_i\geq 0.
-$$ 
+## Optimización matemática
 
 
 ::: {.definicion}
-**Definición 1.** (Envolvente cónica) La *envolvente cónica* de un conjunto $C$ es el conjunto de todas las combinaciones cónicas de puntos en $C$. Esto es
+**Definición 1.** (Problema de optimización) Un *problema de optimización matemática* tiene la forma
 $$
-\text{cone}\, C = \left\{\theta_{1} \xx_{1} + \cdots + \theta_{k} \xx_{k}\;\Big|\; x_{i} \in C, \theta_{i} \geq 0\right\}.
+\begin{array}{ll}
+\text{minimizar } & f(\xx)\\
+\text{sujeto a } & \xx\in\Omega.
+\end{array}
+\tag{1}
 $$
-:::
 
+donde:
 
-De manera análoga a la envolvente convexa, la envolvente cónica de un conjunto $C$ es el conjunto de todas las combinación cónicas de puntos en $C$ y, además, es el cono convexo más pequeño que contiene a $C$. <span style="color: red;">figura 2.5</span>)
+- $f:\RR^p\to\RR$ es la *función objetivo*.
 
+- $\xx=(x_1,\ldots, x_p)$ son las *variables de optimización*.
 
+- $\Omega\subset\RR^p$ es el *conjunto factible* o *conjunto de restricciones*.
 
-<div style="height:10cm;"></div>
+<div style="margin-top:2em;"></div>
 
-
-
-## Operaciones que preservan convexidad
-
-En esta sección describimos algunas operaciones que preservan la convexidad de conjuntos o nos permiten construir conjuntos convexos a partir de otros. Estas operaciones, junto con los ejemplos simples descritos en §2.2, forman un cálculo de conjuntos convexos que es útil para determinar o establecer la convexidad de conjuntos.
-
-
-### Intersección
-
-La convexidad se preserva bajo intersección: si $S_{1}$ y $S_{2}$ son convexos, entonces $S_{1} \cap S_{2}$ es convexo. Esta propiedad se extiende a la intersección de un número infinito de conjuntos: si $S_{\alpha}$ es convexo para cada $\alpha \in \mathcal{A}$, entonces $\bigcap_{\alpha \in \mathcal{A}} S_{\alpha}$ es convexo. (Los subespacios, conjuntos afines y conos convexos también son cerrados bajo intersecciones arbitrarias). Como ejemplo simple, un poliedro es la intersección de semiespacios e hiperplanos (que son convexos), y por lo tanto es convexo.
-
-**Ejemplo 2.7**: El cono semidefinido positivo $\mathbb{S}^{n}_{+}$ puede expresarse como
-
-$$
-\bigcap_{z \neq 0} \{X \in \mathbb{S}^{n} \mid z^{T} X z \geq 0\}.
-$$
-
-Para cada $z \neq 0$, $z^{T} X z$ es una función lineal (no idénticamente cero) de $X$, por lo que los conjuntos
-
-$$
-\{X \in \mathbb{S}^{n} \mid z^{T} X z \geq 0\}
-$$
-
-son, de hecho, semiespacios en $\mathbb{S}^{n}$. Por lo tanto, el cono semidefinido positivo es la intersección de un número infinito de semiespacios, y por lo tanto es convexo.
-
-**Ejemplo 2.8**: Consideramos el conjunto
-
-$$
-S = \{x \in \mathbf{R}^{m} \mid |p(t)| \leq 1 \text{ para } |t| \leq \pi/3\}, \quad (2.10)
-$$
-
-donde $p(t) = \sum_{k=1}^{m} x_{k} \cos kt$. El conjunto $S$ puede expresarse como la intersección de un número infinito de **lajas**: $S = \bigcap_{|t| \leq \pi/3} S_{t}$, donde
-
-$$
-S_{t} = \{x \mid -1 \leq (\cos t, \ldots, \cos mt)^{T} x \leq 1\},
-$$
-
-y por lo tanto es convexo. La definición y el conjunto se ilustran en las figuras 2.13 y 2.14, para $m = 2$.
-
-En los ejemplos anteriores establecemos la convexidad de un conjunto expresándolo como una intersección (posiblemente infinita) de semiespacios. Veremos en §2.5.1 que se cumple lo contrario: **todo** conjunto convexo cerrado $S$ es una intersección (generalmente infinita) de semiespacios. De hecho, un conjunto convexo cerrado $S$ es la intersección de todos los semiespacios que lo contienen:
-
-$$
-S = \bigcap \{\mathcal{H} \mid \mathcal{H} \text{ semiespacio, } S \subseteq \mathcal{H}\}.
-$$
-
-### 2.3.2 Funciones afines
-
-Recordemos que una función $f: \mathbf{R}^{n} \rightarrow \mathbf{R}^{m}$ es **afín** si es una suma de una función lineal y una constante, es decir, si tiene la forma $f(x) = A x + b$, donde $A \in \mathbf{R}^{m \times n}$ y $b \in \mathbf{R}^{m}$. Supongamos que $S \subseteq \mathbf{R}^{n}$ es convexo y $f: \mathbf{R}^{n} \rightarrow \mathbf{R}^{m}$ es una función afín. Entonces, la imagen de $S$ bajo $f$,
-
-
-![](2-10-1.png){fig-align="center" width=70%}
-
-
-$$
-f(S) = \{f(x) \mid x \in S\},
-$$
-
-es convexa. De manera similar, si $f: \mathbf{R}^{k} \rightarrow \mathbf{R}^{n}$ es una función afín, la **imagen inversa** de $S$ bajo $f$,
-
-$$
-f^{-1}(S) = \{x \mid f(x) \in S\},
-$$
-
-es convexa.
-
-Dos ejemplos simples son la **escalación** y la **traslación**. Si $S \subseteq \mathbf{R}^{n}$ es convexo, $\alpha \in \mathbf{R}$, y $a \in \mathbf{R}^{n}$, entonces los conjuntos $\alpha S$ y $S + a$ son convexos, donde
-
-$$
-\alpha S = \{\alpha x \mid x \in S\}, \qquad S + a = \{x + a \mid x \in S\}.
-$$
-
-La **proyección** de un conjunto convexo sobre algunas de sus coordenadas es convexa: si $S \subseteq \mathbf{R}^{m} \times \mathbf{R}^{n}$ es convexo, entonces
-
-$$
-T = \{x_{1} \in \mathbf{R}^{m} \mid (x_{1}, x_{2}) \in S \text{ para algún } x_{2} \in \mathbf{R}^{n}\}
-$$
-
-es convexo.
-
-La **suma** de dos conjuntos se define como
-
-$$
-S_{1} + S_{2} = \{x + y \mid x \in S_{1}, y \in S_{2}\}.
-$$
-
-Si $S_{1}$ y $S_{2}$ son convexos, entonces $S_{1} + S_{2}$ es convexo. Para ver esto, si $S_{1}$ y $S_{2}$ son convexos, entonces el producto directo o cartesiano
-
-$$
-S_{1} \times S_{2} = \{(x_{1}, x_{2}) \mid x_{1} \in S_{1}, x_{2} \in S_{2}\}
-$$
-
-también es convexo. La imagen de este conjunto bajo la función lineal $f(x_{1}, x_{2}) = x_{1} + x_{2}$ es la suma $S_{1} + S_{2}$.
-
-También podemos considerar la **suma parcial** de $S_{1}, S_{2} \in \mathbf{R}^{n} \times \mathbf{R}^{m}$, definida como
-
-$$
-S = \{(x, y_{1} + y_{2}) \mid (x, y_{1}) \in S_{1}, (x, y_{2}) \in S_{2}\},
-$$
-
-donde $x \in \mathbf{R}^{n}$ y $y_{i} \in \mathbf{R}^{m}$. Para $m = 0$, la suma parcial da la intersección de $S_{1}$ y $S_{2}$; para $n = 0$, es la suma de conjuntos. Las sumas parciales de conjuntos convexos son convexas (ver ejercicio 2.16).
-
-**Ejemplo 2.9**: *Poliedro*. El poliedro $\{x \mid A x \preceq b, C x = d\}$ puede expresarse como la imagen inversa del producto cartesiano del ortante no negativo y el origen bajo la función afín $f(x) = (b - A x, d - C x)$:
-
-$$
-\{x \mid A x \preceq b, C x = d\} = \{x \mid f(x) \in \mathbf{R}_{+}^{m} \times \{0\}\}.
-$$
-
-**Ejemplo 2.10**: *Conjunto solución de una desigualdad matricial lineal*. La condición
-
-$$
-A(x) = x_{1} A_{1} + \cdots + x_{n} A_{n} \preceq B, \quad (2.11)
-$$
-
-donde $B, A_{i} \in \mathbf{S}^{m}$, se llama **desigualdad matricial lineal** (LMI) en $x$ (nota la similitud con una desigualdad lineal ordinaria,
-
-$$
-a^{T} x = x_{1} a_{1} + \cdots + x_{n} a_{n} \leq b,
-$$
-
-con $b, a_{i} \in \mathbf{R}$).
-
-El conjunto solución de una desigualdad matricial lineal, $\{x \mid A(x) \preceq B\}$, es convexo. De hecho, es la imagen inversa del cono semidefinido positivo bajo la función afín $f: \mathbf{R}^{n} \rightarrow \mathbf{S}^{m}$ dada por $f(x) = B - A(x)$.
-
-### 2.3.3 Funciones lineales-fraccionales y perspectivas
-
-En esta sección exploramos una clase de funciones, llamadas **lineales-fraccionales**, que es más general que las funciones afines pero aún preserva la convexidad.
-
-
-![](2-11-1.png){fig-align="center" width=70%}
-
-#### Función perspectiva
-
-Definimos la **función perspectiva** $P: \mathbf{R}^{n+1} \rightarrow \mathbf{R}^{n}$, con dominio $\mathbf{dom}\, P = \mathbf{R}^{n} \times \mathbf{R}_{++}$, como $P(z, t) = z / t$. (Aquí $\mathbf{R}_{++}$ denota el conjunto de números positivos: $\mathbf{R}_{++} = \{x \in \mathbf{R} \mid x > 0\}$). La función perspectiva escala o normaliza vectores de modo que la última componente sea uno, y luego elimina la última componente.
-
-**Observación 2.1**: Podemos interpretar la función perspectiva como la acción de una **cámara estenopeica**. Una cámara estenopeica (en $\mathbf{R}^{3}$) consiste en un plano horizontal opaco $x_{3} = 0$, con un único agujero en el origen, a través del cual puede pasar la luz, y un plano de imagen horizontal $x_{3} = -1$. Un objeto en $x$, por encima de la cámara (es decir, con $x_{3} > 0$), forma una imagen en el punto $-(x_{1} / x_{3}, x_{2} / x_{3}, 1)$ en el plano de imagen. Eliminando la última componente del punto de imagen (ya que siempre es $-1$), la imagen de un punto en $x$ aparece en $y = -(x_{1} / x_{3}, x_{2} / x_{3}) = -P(x)$ en el plano de imagen. Esto se ilustra en la figura 2.15.
-
-Si $C \subseteq \mathbf{dom}\, P$ es convexo, entonces su imagen
-
-$$
-P(C) = \{P(x) \mid x \in C\}
-$$
-
-
-![](12.png){fig-align="center" width=70%}
-
-es convexa. Este resultado es ciertamente intuitivo: un objeto convexo, visto a través de una cámara estenopeica, produce una imagen convexa. Para establecer este hecho, mostramos que los segmentos de línea se mapean a segmentos de línea bajo la función perspectiva. (Esto también tiene sentido: un segmento de línea, visto a través de una cámara estenopeica, produce una imagen de segmento de línea). Supongamos que $x = (\tilde{x}, x_{n+1})$, $y = (\tilde{y}, y_{n+1}) \in \mathbf{R}^{n+1}$ con $x_{n+1} > 0$, $y_{n+1} > 0$. Entonces, para $0 \leq \theta \leq 1$,
-
-$$
-P(\theta x + (1 - \theta) y) = \frac{\theta \tilde{x} + (1 - \theta) \tilde{y}}{\theta x_{n+1} + (1 - \theta) y_{n+1}} = \mu P(x) + (1 - \mu) P(y),
-$$
-
-donde
-
-$$
-\mu = \frac{\theta x_{n+1}}{\theta x_{n+1} + (1 - \theta) y_{n+1}} \in [0, 1].
-$$
-
-Esta correspondencia entre $\theta$ y $\mu$ es monótona: a medida que $\theta$ varía entre 0 y 1 (lo que recorre el segmento de línea $[x, y]$), $\mu$ varía entre 0 y 1 (lo que recorre el segmento de línea $[P(x), P(y)]$). Esto muestra que $P([x, y]) = [P(x), P(y)]$.
-
-Ahora supongamos que $C$ es convexo con $C \subseteq \mathbf{dom}\, P$ (es decir, $x_{n+1} > 0$ para todo $x \in C$), y $x, y \in C$. Para establecer la convexidad de $P(C)$, necesitamos mostrar que el segmento de línea $[P(x), P(y)]$ está en $P(C)$. Pero este segmento de línea es la imagen del segmento de línea $[x, y]$ bajo $P$, y por lo tanto está en $P(C)$.
-
-La imagen inversa de un conjunto convexo bajo la función perspectiva también es convexa: si $C \subseteq \mathbf{R}^{n}$ es convexo, entonces
-
-$$
-P^{-1}(C) = \{(x, t) \in \mathbf{R}^{n+1} \mid x / t \in C, t > 0\}
-$$
-
-es convexo. Para mostrar esto, supongamos que $(x, t) \in P^{-1}(C)$, $(y, s) \in P^{-1}(C)$, y $0 \leq \theta \leq 1$. Necesitamos mostrar que
-
-$$
-\theta (x, t) + (1 - \theta) (y, s) \in P^{-1}(C),
-$$
-
-es decir, que
-
-$$
-\frac{\theta x + (1 - \theta) y}{\theta t + (1 - \theta) s} \in C
-$$
-
-($\theta t + (1 - \theta) s > 0$ es obvio). Esto se sigue de
-
+El *valor óptimo* del problema es
 $$
-\frac{\theta x + (1 - \theta) y}{\theta t + (1 - \theta) s} = \mu (x / t) + (1 - \mu) (y / s),
+p^\star:=\inf\{f(\xx) \mid \xx\in\text{dom}\,f\;\land\;\xx\in\Omega\}.
 $$
 
-donde
-
-$$
-\mu = \frac{\theta t}{\theta t + (1 - \theta) s} \in [0, 1].
-$$
-
-#### Funciones lineales-fraccionales
-
-Una **función lineal-fraccional** se forma componiendo la función perspectiva con una función afín. Supongamos que $g: \mathbf{R}^{n} \rightarrow \mathbf{R}^{m+1}$ es afín, es decir,
-
-$$
-g(x) = \left[\begin{array}{c}A\\ c^{T}\end{array}\right] x + \left[\begin{array}{c}b\\ d\end{array}\right], \quad (2.12)
-$$
-
-donde $A \in \mathbf{R}^{m \times n}$, $b \in \mathbf{R}^{m}$, $c \in \mathbf{R}^{n}$, y $d \in \mathbf{R}$. La función $f: \mathbf{R}^{n} \rightarrow \mathbf{R}^{m}$ dada por $f = P \circ g$, es decir,
-
-$$
-f(x) = (A x + b) / (c^{T} x + d), \qquad \mathbf{dom}\, f = \{x \mid c^{T} x + d > 0\}, \quad (2.13)
-$$
-
-se llama **función lineal-fraccional** (o **proyectiva**). Si $c = 0$ y $d > 0$, el dominio de $f$ es $\mathbf{R}^{n}$, y $f$ es una función afín. Por lo tanto, podemos pensar en las funciones afines y lineales como casos especiales de funciones lineales-fraccionales.
-
-**Observación 2.2**: *Interpretación proyectiva*. A menudo es conveniente representar una función lineal-fraccional como una matriz
-
-$$
-Q = \left[\begin{array}{cc}A & b\\ c^{T} & d\end{array}\right] \in \mathbf{R}^{(m+1) \times (n+1)} \quad (2.14)
-$$
-
-que actúa sobre (multiplica) puntos de la forma $(x, 1)$, lo que produce $(A x + b, c^{T} x + d)$. Este resultado se escala o normaliza de modo que su última componente sea uno, lo que produce $(f(x), 1)$.
-
-Esta representación puede interpretarse geométricamente asociando $\mathbf{R}^{n}$ con un conjunto de rayos en $\mathbf{R}^{n+1}$ de la siguiente manera. Con cada punto $z$ en $\mathbf{R}^{n}$ asociamos el rayo (abierto) $\mathcal{P}(z) = \{(t z, 1) \mid t > 0\}$ en $\mathbf{R}^{n+1}$. La última componente de este rayo toma valores positivos. A la inversa, cualquier rayo en $\mathbf{R}^{n+1}$, con base en el origen y última componente que toma valores positivos, puede escribirse como $\mathcal{P}(v) = \{t (v, 1) \mid t \geq 0\}$ para algún $v \in \mathbf{R}^{n}$. Esta correspondencia (proyectiva) $\mathcal{P}$ entre $\mathbf{R}^{n}$ y el semiespacio de rayos con última componente positiva es biyectiva.
-
-La función lineal-fraccional (2.13) puede expresarse como
-
-$$
-f(x) = \mathcal{P}^{-1}(Q \mathcal{P}(x)).
-$$
-
-Así, comenzamos con $x \in \mathbf{dom}\, f$, es decir, $c^{T} x + d > 0$. Luego formamos el rayo $\mathcal{P}(x)$ en $\mathbf{R}^{n+1}$. La transformación lineal con matriz $Q$ actúa sobre este rayo para producir otro rayo $Q \mathcal{P}(x)$. Dado que $x \in \mathbf{dom}\, f$, la última componente de este rayo asume valores positivos. Finalmente, tomamos la transformación proyectiva inversa para recuperar $f(x)$
-
- 
-Al igual que la función de perspectiva, las funciones lineales-fraccionales preservan la convexidad. Si $C$ es convexo y se encuentra en el dominio de $f$ (\textit{es decir}, $c^T x + d > 0$ para $x \in C$), entonces la imagen $f(C)$ es convexa. Esto se sigue inmediatamente de los resultados anteriores: la imagen de $C$ bajo la transformación afín (2.12) es convexa, y la imagen del conjunto resultante bajo la función de perspectiva $P$, que produce $f(C)$, es convexa. De manera similar, si $C \subseteq \mathbb{R}^m$ es convexo, entonces la imagen inversa $f^{-1}(C)$ es convexa.
-
- 
-
-**Ejemplo 2.13 \quad Probabilidades condicionales.** Supongamos que $u$ y $v$ son variables aleatorias que toman valores en $\{1, \dots, n\}$ y $\{1, \dots, m\}$, respectivamente, y que $p_{ij}$ denota $\operatorname{prob}(u = i, v = j)$. Entonces, la probabilidad condicional $f_{ij} = \operatorname{prob}(u = i | v = j)$ está dada por
-
-$$
-f_{ij} = \frac{p_{ij}}{\sum_{k=1}^{n} p_{kj}}.
-$$
-
-Así, $f$ se obtiene a partir de una transformación lineal-fraccional de $p$.
-
-Se sigue que si $C$ es un conjunto convexo de probabilidades conjuntas para $(u, v)$, entonces el conjunto asociado de probabilidades condicionales de $u$ dado $v$ también es convexo.
-
- 
-
-La Figura 2.16 muestra un conjunto $C \subseteq \mathbb{R}^2$ y su imagen bajo la función lineal-fraccional
-
-$$
-f(x) = \frac{1}{x_1 + x_2 + 1} x,
-$$
-
-$$
-\operatorname{dom} f = \{ (x_1, x_2) \mid x_1 + x_2 + 1 > 0 \}.
-$$
-
- 
-
-
-
-
-
-
-
-
-<div style="height:10cm;"></div>
-
-
-# Funciones convexas
-
-::: {.definicion}
-**Definición 1.** (Función convexa) Una función $f:\RR^n\rightarrow\RR$ es *convexa* si $\text{dom}\,f$ es un conjunto convexo y si verifica
-$$
-f(\theta \xx_1 + (1 - \theta)\xx_2) \leq \theta f(\xx_1) + (1 - \theta)f(\xx_2),\qquad\forall\xx_1,\xx_2\in\text{dom}\,f,\; \forall\theta\in[0,1].
-$$
-
-Si la desigualdad es estricta para $\xx_1\neq \xx_2$ y $0<\theta<1$, se dice que $f$ es *estrictamente convexa*. Además, se dice que $f$ es *cóncava* (o *estrictamente cóncava*) si $-f$ es convexa (o estrictamente convexa).
-:::
-
-
-<details>
-<summary>Mostrar detalles</summary>
-<hr>
-
-::: {.panel-tabset}
-
-### Interpretación geométrica
-
-La desigualdad de la definición significa que el segmento de línea entre los puntos $(\xx_1, f(\xx_1))$ y $(\xx_2, f(\xx_2))$ se encuentra por encima de la gráfica de $f$. 
-
-<figure style="text-align: center;">
-  <img src="figuras/funcion_convexa_01.png" alt="Grafo de una función convexa" width="400px">
-  <figcaption>Grafo de una función convexa.</figcaption>
-</figure>
-
-### Observaciones
-
-- Una función afín verifica la igualdad en la definición, por lo que todas las funciones afínes (y, por lo tanto, también las lineales) son tanto convexas como cóncavas. Recíprocamente, una función que es tanto convexa como cóncava es siempre una función afín.
-
-- Una función es convexa si y solo si, para todo $\xx\in\text{dom}\,f$ y $\vv\in\RR^n$, la restricción $g(t)=f(\xx+t\vv)$ es convexa en su dominio $\{t \mid \xx+t\vv\in\text{dom}\,f\}$.
-
-- El *epígrafo* de una función $f:\RR^n\to\RR$ se define como
-$$
-\text{epi } f = \{(\xx, t) \mid \xx \in \text{dom } f, f(\xx) \leq t\},
-$$
-
-<figure style="text-align: center;">
-  <img src="figuras/epigrafo_01.png" alt="Epígrafo de una función" width="350px">
-  <figcaption>Epígrafo de una función $f$.</figcaption>
-</figure>
-
-La relación entre conjuntos convexos y funciones convexas es a través del epígrafo: Una función es convexa si y solo si su epígrafo es un conjunto convexo. Por su parte, una función es cóncava si y solo si su *hipógrafo*, definido como
-$$
-\text{hypo } f = \{(\xx, t) \mid t \leq f(\xx)\},
-$$
-es un conjunto convexo.
-:::
-<hr>
-</details>
-
-
-
-## Condiciones de convexidad
-
-Para verificar si una función es convexa, además de recurrir a la definición, existen criterios basados en sus derivadas. Estos permiten caracterizar la convexidad en términos del comportamiento local de la función, ya sea a través del gradiente (primera derivada) o de la matriz hessiana (segunda derivada). Para ello, debemos imponer condiciones a $f$ en relación con su diferenciabilidad.
-
-<span class="badge bg-warning text-dark">Importante</span> Diremos que $f$ es *diferenciable* si su gradiente $\nabla f$ existe en todo su dominio, y que es *dos veces diferenciable* si además su hessiana $\nabla^2 f$ existe en todo el dominio. En ambos casos, asumimos que dicho dominio es un conjunto abierto.
-
-
-::: {.teorema}
-**Teorema 1.** (Condición de primer orden para convexidad) 
-Sea $f:\RR^n\to\RR$ una función diferenciable. $f$ es convexa si y solo si $\text{dom}\,f$ es convexo y 
-$$
-f(\xx_2)\geq f(\xx_1)+\langle\nabla f(\xx_1),\xx_2-\xx_1\rangle,\qquad\forall\xx_1,\xx_2\in\text{dom}\,f.
-$$
-:::
-
-
-<details>
-<summary>Mostrar detalles</summary>
-<hr>
-
-::: {.panel-tabset}
-
-### Interpretación geométrica
-
-La función afín de $\xx_2$, definida por $f(\xx_1) + \langle \nabla f(\xx_1), \xx_2 - \xx_1 \rangle$, es la aproximación lineal de $f$ cerca de $\xx_1$. En consecuencia, la desigualdad del teorema implica que la aproximación lineal de $f$ en $\xx_1$ es un *subestimador global* de $f$.
-
-<figure style="text-align: center;">
-  <img src="figuras/condicion_convexidad_01.png" alt="Condición de primer orden para convexidad" width="500px">
-  <figcaption>Grafo de una función convexa $f$ y su aproximación lineal.</figcaption>
-</figure>
-
-### Observaciones
-
-- Observar que, si $\nabla f(\xx_1) = 0$, entonces la desigualdad del teorema implica $f(\xx_2) \geq f(\xx_1)$ para todo $\xx_2 \in \text{dom} f$. Es decir, en tal caso $\xx_1$ es un minimizador global de la función $f$.
-
-- La convexidad estricta también puede caracterizarse por una condición de primer orden: $f$ es estrictamente convexa si y solo si $\text{dom} f$ es convexo y
-$$
-f(\xx_2) > f(\xx_1) + \langle \nabla f(\xx_1), \xx_2 - \xx_1 \rangle
-$$
-para todo $\xx_1, \xx_2 \in \text{dom} f$, con $\xx_1 \neq \xx_2$.
-
-- Para funciones cóncavas, tenemos la caracterización correspondiente: $f$ es cóncava si y solo si $\text{dom} f$ es convexo y
-$$
-f(\xx_2) \leq f(\xx_1) + \langle \nabla f(\xx_1), \xx_2 - \xx_1 \rangle
-$$
-para todo $\xx_1, \xx_2 \in \text{dom} f$.
-
-### Demostración
-
-Supongamos que $f$ es convexa y sean $\xx_1,\xx_2\in\text{dom}\,f$. Entonces, por definición, $\text{dom}\,f$ es convexo; en consecuencia $\xx_1+t(\xx_2-\xx_1)\in\text{dom}\,f$ para todo $0<t\leq 1$. La convexidad de $f$ nos permite escribir
-
-$$
-f(\xx_1+t(\xx_2-\xx_1))=f((1-t)\xx_1+t\xx_2)\leq (1-t)f(\xx_1)+tf(\xx_2).
-$$
-
-Diviendo ambos lados de la desigualdad por $t$, resulta
-
-$$
-f(\xx_2)\geq f(\xx_1)+\frac{f(\xx_1+t(\xx_2-\xx_1))-f(\xx_1)}{t}.
-$$
-
-Al tomar límite cuando $t\to 0$, el cociente incremental del lado derecho es la derivada direccional de $f$ en $\xx_1$ en la dirección del vector $\xx_2-\xx_1$, lo cual es equivalente a $\langle \nabla f(\xx_1),\xx_2-\xx_1\rangle$ en virtud de la diferenciabilidad de $f$. Luego,
-
-$$
-f(\xx_2)\geq f(\xx_1)+\langle\nabla f(\xx_1),\xx_2-\xx_1\rangle.
-$$
-
-
-Para probar la suficiencia, vamos a asumir que sí se cumple para funciones de una variable (se deja como ejercicio). Sean $\xx_1,\xx_2\in\text{dom}\,f$ y $t,\tilde{t}\in(0,1]$. Partimos de la desigualdad
-
-$$
-f(t\xx_2+(1-t)\xx_1)\geq f(\tilde{t}\xx_2+(1-\tilde{t})\xx_1)+\langle \nabla f(\tilde{t}\xx_2+(1-\tilde{t})\xx_1),(\xx_2-\xx_1)\rangle (t-\tilde{t}).
-$$
-
-Si restringimos $f$ a la recta entre $\xx_1$ y $\xx_2$, tenemos la función de una variable $g(t)=f(t\xx_2+(1-t)\xx_1)$. Por regla de la cadena, tenemos $g'(t)\langle \nabla f(t\xx_2+(1-t)\xx_1),\xx_2-\xx_1\rangle$. En consecuencia, la desigualdad anterior puede reescribirse como
-
-$$
-g(t)\geq g(\tilde{t})+g'(\tilde{t})(t-\tilde{t}).
-$$
+Si $\text{dom}\,f\cap\Omega=\emptyset$ (es decir, no hay $\xx\in\RR^p$ *factible*), se dice que el problema es *infactible* y se asume $p^\star=\infty$. Por su parte, si el conjunto $\{f(\xx) \mid \xx\in\text{dom}\,f\;\land\;\xx\in\Omega\}$ no tiene cota inferior, se considera $p^\star=-\infty$.
 
-Luego, $g$ es convexa y, dado que la restricción sobre una recta es arbitraria (ver observaciones de la definición de funciones convexas), $f$ es convexa. $\blacksquare$
+En el caso que $p^\star$ existe y es finito, un vector $\xx^\star\in\Omega$ se denomina *punto óptimo* si $f(\xx^\star)=p^\star$.
 
 :::
 
-<hr>
-</details>
+<span style="display:block; height:0.25em;"></span>
 
 
+En general, se asume que la función objetivo $f$ es continua. Además, a menudo se suele imponer la condición de que también sea diferenciable, ya que facilita el análisis teórico y permite el diseño de métodos de optimización.
 
-::: {.teorema}
-**Teorema 2.** (Condición de segundo orden para convexidad) 
-Sea $f:\RR^n\to\RR$ una función dos veces diferenciable. $f$ es convexa si y solo si $\text{dom}\,f$ es convexo y 
+Por otra parte, son de especial interés los problemas con *restricciones funcionales*, que son aquellos en los cuales el conjunto factible es de la forma
+
 $$
-\nabla^2 f(\xx)\succeq 0,\qquad\forall\xx\in\text{dom}\,f.
+\Omega=\left\{\xx\in\RR^p\left|\begin{array}{cl}
+\; g_i(\xx)\leq 0,& i=1,\cdots,r\\
+\; h_j(\xx)=0, & j=1,\cdots,m
+\end{array}\right.\right\}.
+\tag{2}
 $$
 
+Es decir, $\Omega$ queda definido a partir de un conjunto de *funciones de restricción*, tanto de desigualdad ($g_i:\RR^p\to\RR$) como de igualdad ($h_j:\RR^p\to\RR$). En función de las características de estas funciones, el conjunto factible puede adquirir ciertas propiedades geométricas fundamentales.
+
+<div class="alert alert-light text-dark" role="important">
+<span class="badge bg-warning text-dark">Importante</span>
+
+Un problema de optimización cuyo conjunto factible es de la forma (3) tiene una *restricción implícita*, a saber:
+$$
+\xx\in\mathcal{D}:=\text{dom}\,f\cap\bigcap_{i=1}^r\text{dom}\,g_i\cap\bigcap_{j=1}^m\text{dom}\,h_j.
+$$
+
+Algunas observaciones importantes son:
+
+- $\mathcal{D}$ es el *dominio* del problema.
+
+- Las restricciones funcionales $g_i(\xx)\leq 0$ y $h_i(\xx)=0$ son *restricciones explícitas*.
+
+- Un problema es *sin restricciones* si no tiene restricciones explícitas. Es decir, su dominio es $\mathcal{D}:=\text{dom}\,f$.
+
+</div>
+
+
+Las preguntas que surgen de un problema de optimización son:
+
+<div style="margin-top:1.5em;"></div>
+
+:::{.myhighlight4}
+¿Existe una solución? 
+
+En caso afirmativo: ¿Es única? ¿Podemos calcularla?
 :::
 
-
-<aside>
-$A\succeq 0$ significa que $A$ es *semidefinida positiva*. Esto es, $\xx^T A\xx\geq 0$ para todo $\xx\in\RR^n$.
-</aside>
-
-
-<details>
-<summary>Mostrar detalles</summary>
-<hr>
-
-::: {.panel-tabset}
-
-### Observaciones
-
-- Para funciones de una variable, la condición se reduce a $f''(x)\geq 0$, lo cual implica que la derivada $f'(x)$ es no decreciente.
-
-- La convexidad estricta también puede caracterizarse por una condición de primer orden, pero de manera parcial: si $\text{dom}\,f$ es convexo y $\nabla^2 f\succ 0$ para todo $\xx\in\text{dom}\,f$, entonces $f$ es estrictamente convexa. El recíproco no es cierto: por ejemplo, $f(x)=x^4$ es estrictamente convexa pero $f''(0)=0$.
-
-- Para funciones cóncavas, tenemos la caracterización correspondiente: $f$ es cóncava si y solo si $\text{dom} f$ es convexo y $\nabla^2 f(\xx)\preceq 0$ para todo $\xx\in\text{dom}\,f$.
-
-:::
-<hr>
-</details>
+<div style="margin-top:2em;"></div>
 
 
 ::: {.callout-example}
+<span class="badge bg-primary">Ejemplo 1</span> 
 
-<span class="badge bg-primary">Ejemplo 1</span> Consideremos la función cuadrática $f:\RR^n\to\RR$ definida por
-
+Veamos algunos ejemplos sencillos de problemas de optimización sin restricciones con funciones objetivo de una variable. Es decir, de la forma
 $$
-f(\xx)=\frac{1}{2}\xx^TA\xx+\bb^T\xx+c,
-$$
-
-donde $A\in\SS^n:=\{X\in\RR^{n\times n} \mid X=X^T\}$, $\bb\in\RR^n$ y $c\in\RR$. Dado que $\nabla^2 f(\xx)=A$ para todo $\xx$, podemos afirmar que $f$ es convexa si y sólo si $A\succeq 0$. 
-
-Así, por ejemplo, la función $f:\RR^2\to\RR$ definida por
-
-$$
-f(x,y)=\frac{1}{2}\begin{pmatrix}x&y\end{pmatrix}\begin{pmatrix}2&1\\1&3\end{pmatrix}\begin{pmatrix}x\\ y\end{pmatrix}=\frac{1}{2}(2x^2+2xy+3y^2)
+\text{minimizar } f(x).
 $$
 
-es convexa, ya que $\xx^TA\xx=2x^2+2xy+3y^2=x^2+(x+y)^2+2y^2\geq 0$ para todo $\xx\in\RR^n$, lo cual significa que $A\succeq 0$.
+- $f:\RR^+\to\RR:f(x)=\displaystyle\frac{1}{x}$. El valor óptimo es $p^\star=0$, pero no existe un punto óptimo. En consecuencia, el problema no tiene solución.
+
+- $f:\RR^+\to\RR: f(x)=-\log x$. En este caso, $p^\star=-\infty$, ya que el problema no está acotado inferiormente.
+
+- $f:\RR^+\to\RR: f(x)=x\log x$. El valor óptimo es $p^\star=-e^{-1}$ y ocurre en el único punto óptimo $x^\star=e^{-1}$.
+
+- $f:\RR\to\RR: f(x)=\sin x$. El valor óptimo es $p^\star=-1$ y ocurre en infinitos puntos óptimos, los cuales son de la forma $x^\star=\pi+2k\pi$, con $k\in\ZZ$.
+
+- $f:\RR\to\RR: f(x)=x^3-3x$. Aquí $p^\star=-\infty$, aunque exista un mínimo local en $x=1$.
+
+:::
+
+
+<div style="margin-top:-0.5em;"></div>
+::: {.callout .question}
+<span style="font-size: 1.3em;">📝</span><br>
+Analizar el problema de optimización sin restricciones
+$$
+\text{minimizar } f(x)
+$$
+para cada una de las siguientes funciones:
+
+- $f: \mathbb{R}^+ \to \mathbb{R}: f(x) = x^3.$
+
+- $f: \mathbb{R} \to \mathbb{R}: f(x) = xe^x.$
+
+- $f: \mathbb{R} \to \mathbb{R}: f(x) = |x^2-1|.$
+
+- $f: (-1,1) \to \mathbb{R}: f(x) = \displaystyle\frac{1}{1-x^2}.$
+
+:::
+
+
+
+<div style="margin-top:2em;"></div>
+
+
+Generalmente, consideramos familias o clases de problemas de optimización, caracterizadas por formas particulares de las funciones objetivo y de las funciones de restricción. Algunos ejemplos importantes son:
+
+- **Programa lineal**: Un problema de optimización es un *programa lineal* si tanto la función objetivo $f$ como las funciones de restricción $g_i$ y $h_j$ son funciones lineales; esto es, son funciones $\varphi:\RR^p\to\RR$ que satisfacen la igualdad:
+$$
+\varphi(\alpha\xx+\beta\yy)=\alpha\,\varphi(\xx)+\beta\,\varphi(\yy),
+$$
+para todo $\xx,\yy\in\RR^p$ y para todo $\alpha,\beta\in\RR$.
+
+
+- **Optimización convexa**: Un problema de *optimización convexa* es aquel en el que tanto la función objetivo como las funciones de restricción son funciones convexas; esto es, son funciones $\varphi:\RR^p\to\RR$ que satisfacen la desigualdad:
+$$
+\varphi(\alpha \xx+\beta \yy)\leq \alpha\,\varphi(\xx)+\beta\,\varphi(\yy),
+$$
+para todo $\xx,\yy\in\RR^p$ y para todo $\alpha,\beta\in[0,1]$ con $\alpha+\beta=1$.
+
+
+Comparando los dos ejemplos anteriores, vemos que la convexidad es más general que la linealidad: la desigualdad reemplaza la igualdad más restrictiva, y además la desigualdad debe cumplirse solo para ciertos valores de $\alpha$ y $\beta$. Por lo tanto, cualquier programa lineal es un problema de optimización convexa. 
+
+El estudio de los problemas de optimización convexa lo realizaremos en [C1-S2](A2_optimizacion_convexa.html). Respecto a programación lineal, veremos un ejemplo básico en esta misma sección más adelante, y otros ejemplos de aplicación se presentarán en [C1-S3](A3_resolucion_computacional.html) cuando exploremos un par de librerías de Python útiles para resolver problemas de optimización.
+
+
+Por lo pronto, veamos a continuación algunos ejemplos básicos de ejercicios de optimización, que seguramente les resultarán familiares de cursos previos.
+
+
+::: {.callout-example}
+<span class="badge bg-primary">Ejemplo 2</span> 
+
+$$
+\begin{array}{ll}
+\text{minimizar } & x^2-4x+5.
+\end{array}
+$$
+
+<div style="float: right; width: 30%; margin-left: 1em; margin-bottom: 1em;">
+  <img src="figuras/ej_basico_1.png" alt="Ejemplo" style="width: 100%;">
+</div>
+
+
+En este problema no se imponen restricciones sobre el valor de $x$, más allá de pedirle que pertenezca al dominio de la función. En estos casos, se dice que es un *problema sin restricciones*. 
+
+La función objetivo es $f(x)=x^2-4x+5$. Al ser una función cuadrática con coeficiente cuadrático positivo, sabemos que el punto óptimo ocurre en su vértice. Es decir,
+$$
+x^\star=-\frac{-4}{2\cdot 1}=2.
+$$
+
+Luego, el valor óptimo es $f(2)=2^2-4\cdot 2+5=1$.
+
+:::
+
+<span style="display:block; height:0.25em;"></span>
+
+
+::: {.callout-example}
+<span class="badge bg-primary">Ejemplo 3</span> 
+
+$$
+\begin{array}{ll}
+\text{minimizar } & x^3-3x+y^2.
+\end{array}
+$$
+
+
+<div style="float: right; width: 30%; margin-left: 1em; margin-bottom: 1em;">
+  <img src="figuras/ej_basico_2.png" alt="Ejemplo" style="width: 100%;">
+</div>
+
+
+En este problema de optimización, la función objetivo es $f(x,y)=x^3-3x+y^2$. Dado que no hay restricciones, podemos obtener en primer lugar los *puntos críticos* que anulan el vector gradiente. Así, a partir de 
+$$
+\nabla f(x,y)=(3x^2-3,2y)=(0,0)
+$$
+obtenemos los candidatos $(-1,0)$ y $(1,0)$. Para determinar la condición de estos puntos, tenemos como herramienta el *criterio del Hessiano*, el cual inspecciona la matriz de derivadas de segundo orden:
+$$
+H(x,y)=\begin{pmatrix}6x&0\\0&2\end{pmatrix}.
+$$
+
+Al aplicar dicho criterio, resulta que en $(1,0)$ hay un mínimo local, mientras que $(-1,0)$ se descarta por ser punto silla (verificar). No obstante, esto no quiere decir que hallamos encontrado el punto óptimo, ya que nuestro problema de optimización requiere que el valor óptimo sea global.
+
+Es importante remarcar lo siguiente:
+
+::: {.myhighlight}
+Ser mínimo local es una condición necesaria, pero no suficiente, para ser mínimo global.
+:::
+
+<div style="margin-top:1.5em;"></div>
+
+De hecho, para este problema no hay un punto óptimo, puesto que la función no está acotada inferiormente, tal como se puede apreciar en su gráfica. Analíticamente, notar que para $y=0$  ocurre que $\lim_{x\to-\infty}(x^3-3x)=-\infty$.
+
+:::
+
+<span style="display:block; height:0.25em;"></span>
+
+
+::: {.callout-example}
+<span class="badge bg-primary">Ejemplo 4</span> 
+
+$$
+\begin{array}{ll}
+\text{minimizar } & x^2+y^2\\
+\text{sujeto a } & xy=1.
+\end{array}
+$$
+
+
+<div style="float: right; width: 25%; margin-left: 1em; margin-bottom: 1em;">
+  <img src="figuras/ej_basico_3_2.png" alt="Ejemplo" style="width: 100%;">
+</div>
+
+<div style="float: right; width: 25%; margin-left: 1em; margin-bottom: 1em;">
+  <img src="figuras/ej_basico_3.png" alt="Ejemplo" style="width: 100%;">
+</div>
+
+
+En este caso, tenemos una restricción funcional de igualdad definida por $h(x,y)=xy-1$. Este problema se puede resolver aplicando el método de *multiplicadores de Lagrange*, el cual consiste en analizar la ecuación
+$$
+\begin{align*}
+\nabla f(x,y)-\lambda\nabla h(x,y)&=(0,0)\\
+(2x-\lambda y,2y-\lambda x)&=(0,0).
+\end{align*}
+$$
+
+Los puntos críticos son $(1,1)$ y $(-1,-1)$, ambos con $\lambda=2$ (verificar). Al valuar la función objetivo, se obtiene
+$$
+f(1,1)=f(-1,-1)=2.
+$$
+
+Este es el valor óptimo de la función objetivo en el conjunto factible (¿por qué?). En consecuencia, tanto $(1,1)$ como $(-1,-1)$ son puntos óptimos. 
+
+Observar que este problema se puede interpretar geométricamente como *el punto de la hipérbola $xy=1$ más cercano al origen*. Esto se deduce del hecho que la distancia de un punto $(x,y)$ al origen es
+$$
+\|(x,y)-(0,0)\|_2=\sqrt{x^2+y^2}.
+$$
+ 
+:::
+
+<span style="display:block; height:0.25em;"></span>
+
+
+Los ejemplos anteriores buscan conectar la idea de los problemas de optimización con los ejercicios clásicos de Cálculo, en los que se busca el valor mínimo (o máximo) de una función. Sin embargo, estudiar optimización no se limita a resolver este tipo de ejercicios, sino que implica aprender a formular problemas, comprender sus componentes fundamentales y desarrollar herramientas teóricas y computacionales para abordarlos, incluso cuando no tienen solución analítica o presentan múltiples soluciones.
+
+
+La optimización matemática es una herramienta poderosa para tomar la mejor decisión posible al elegir un vector $\xx$ dentro de un conjunto de opciones, bajo ciertas restricciones que representan requisitos firmes, y buscando minimizar un costo o maximizar una utilidad. Algunas aplicaciones son:
+
+- **Optimización de portafolios financieros**: Se busca la mejor manera de invertir un determinado capital entre distintos activos. La variable $x_i$ representa la inversión en el $i$-ésimo activo, y las restricciones pueden representar un límite en el presupuesto, el requisito de que las inversiones sean no negativas y/o un valor mínimo aceptable de rendimiento esperado. La función objetivo podría ser una medida del riesgo total de la cartera.
+
+- **Ajuste de modelos a datos (*data fitting*)**: La tarea es encontrar un modelo, dentro de una familia de modelos potenciales, que se ajuste mejor a un conjunto de datos observados. Aquí, las variables son los parámetros del modelo, y las restricciones pueden representar información previa o límites requeridos en los parámetros. La función objetivo puede ser una medida de error de predicción entre los datos observados y los valores predichos por el modelo.
+
+- **Optimización en logística**: Se busca determinar la mejor forma de mover productos a través de una cadena de suministro o rutas de distribución. Las variables representan las cantidades transportadas entre diferentes puntos, y las restricciones pueden incluir la capacidad de los vehículos, los horarios de entrega y la demanda de los clientes. La función objetivo suele minimizar costos totales, tiempos de transporte o ambas cosas a la vez.
+
+
+Estas aplicaciones son solo una pequeña muestra de la enorme variedad de problemas prácticos que pueden plantearse como problemas de optimización, presentes en áreas como ingeniería, control automático, diseño, finanzas, logística, redes, entre otras.
+
+
+
+## Mínimos cuadrados y programación lineal
+
+Vamos a introducir dos subclases muy conocidas y ampliamente utilizadas de optimización convexa: los problemas de mínimos cuadrados y la programación lineal.
+
+
+::: {.definicion}
+**Definición 2.** (Problema de mínimos cuadrados) Un *problema de mínimos cuadrados* es de la forma
+$$
+\begin{array}{ll}
+\text{minimizar } & \|A\xx-\bb\|_2^2=\sum_{i=1}^k(\aa_i^{\top}\xx-b_i)^2,
+\end{array}
+\tag{3}
+$$
+donde $A\in\RR^{k\times p}$ ($k\geq p$), $\aa_i^{\top}$ son las filas de $A$ y $\bb\in\RR^k$. La variable de optimización es $\xx\in\RR^p$.
+
+:::
+
+
+<details>
+<summary>Mostrar detalles</summary>
+
+::: {.panel-tabset}
+
+### <span style="font-size: 1.25em;">&#x2460;</span>
+
+- Es un problema de optimización sin restricciones y su función objetivo es una suma de cuadrados de términos de la forma $\aa_i^{\top}\xx-b_i$.
+
+- Se puede reducir a resolver un conjunto de ecuaciones lineales:
+$$
+(A^{\top}A)\xx = A^{\top}\bb.
+$$
+En consecuencia, si $A$ es de rango completo (esto es, $\text{rango}\,A=p$), el problema <mark>tiene solución analítica</mark>:
+$$
+\xx^\star=(A^{\top}A)^{-1}A^{\top}\bb.
+$$
+En caso de que $\text{rango}\,A<p$, la matriz $A^\top A$ no es invertible. No obstante, el problema de mínimos cuadrados tiene solución, pero no es única. La solución de mínima norma está dada $\xx^\star=A^+\bb$, donde $A^+$ es la *pseudoinversa de Moore-Penrose* de $A$.
+
+### <span style="font-size: 1.25em;">&#x2461;</span>
+
+- Existen algoritmos para resolver el problema con alta precisión, con un tiempo aproximadamente proporcional a $n^2k$, con constante conocida.
+
+- Para aumentar su flexibilidad en las aplicaciones, se utilizan varias técnicas estándar. Por ejemplo, en los *mínimos cuadrados ponderados* se minimiza
+$$
+\sum_{i=1}^k w_i(\aa_i^{\top}\xx-b_i)^2,
+$$
+donde $w_i$ son pesos positivos. Otra técnica es la *regularización*, que consiste en agregar términos adicionales a la función objetivo para controlar ciertas propiedades de la solución. El caso más simple es
+$$
+\sum_{i=1}^{k}(\aa_{i}^{\top}\xx - b_{i})^{2} + \lambda \sum_{i=1}^{n}x_{i}^{2}.
+$$
+En el Capítulo 2 exploraremos con mayor detalle las técnicas de regularización y sus variantes.
+
+:::
+</details>
+
+<div style="margin-top:2em;"></div>
+
+
+::: {.callout-example}
+<span class="badge bg-primary">Ejemplo 4</span> 
+
+<div style="float: right; width: 30%; margin-left: 1em; margin-bottom: 1em;">
+  <img src="figuras/ej_minimos_cuadrados.png" alt="Ejemplo" style="width: 100%;">
+</div>
+
+Dados los puntos $(1,2)$, $(2,2.5)$ y $(3,3.7)$, consideremos el problema de hallar la recta $y = mx + b$ que mejor los aproxime en el sentido de mínimos cuadrados. Esto define en el problema
+$$
+\begin{array}{ll}
+\text{minimizar } & \sum_{i=1}^3 (m x_i + b - y_i)^2.
+\end{array}
+$$
+
+Cuidado: las variables de optimización son los parámetros $m\in\RR$ y $b\in\RR$, mientras que $(x_i,y_i)$ son los datos conocidos. La función objetivo es la *suma de los cuadrados de los errores* (RSS). Matricialmente resulta en
+$$
+\begin{array}{ll}
+\text{minimizar } & \left\|A\begin{pmatrix}m\\b\end{pmatrix}-\yy\right\|_2^2,
+\end{array}
+$$
+con
+$$
+A = \begin{pmatrix}
+1 & 1\\
+2 & 1\\
+3 & 1
+\end{pmatrix},\qquad
+\yy=\begin{pmatrix}
+2\\
+2.5\\
+3.7
+\end{pmatrix}.
+$$
+
+La solución analítica es
+$$
+\begin{pmatrix}
+m^{\star}\\
+b^{\star}
+\end{pmatrix}=\left[\begin{pmatrix}
+1 & 1\\
+2 & 1\\
+3 & 1
+\end{pmatrix}^{\top}\begin{pmatrix}
+1 & 1\\
+2 & 1\\
+3 & 1
+\end{pmatrix}\right]^{-1}\begin{pmatrix}
+1 & 1\\
+2 & 1\\
+3 & 1
+\end{pmatrix}^{\top}
+\begin{pmatrix}
+2\\
+2.5\\
+3.7
+\end{pmatrix}
+= \begin{pmatrix}
+17/20 \\
+31/30
+\end{pmatrix}.
+$$
+
+Por lo tanto, la recta ajustada es 
+$$
+\hat{y} = \frac{17}{20}x+\frac{31}{30}.
+$$
+
+Esto permite obtener el vector de valores ajustados
+$$
+\hat{\yy}=\begin{pmatrix}
+\frac{17}{20}\cdot 1+\frac{31}{30}\\
+\frac{17}{20}\cdot 2+\frac{31}{30}\\
+\frac{17}{20}\cdot 3+\frac{31}{30}
+\end{pmatrix}
+=
+\begin{pmatrix}
+113/60\\
+51/30\\
+43/12
+\end{pmatrix}
+\approx
+\begin{pmatrix}
+1.88\\
+2.73\\
+3.58
+\end{pmatrix}.
+$$
+
+
+Por último, calculamos el valor de la función objetivo, que interpretamos como el error del ajuste obtenido:
+
+$$
+\text{RSS}=\|\hat{\yy}-\yy\|_2^2\approx (1.88-2)^2+(2.73-2.5)^2+3.58-3.7)^2=0.0817.
+$$
+
+<br>
+
+En Python, podemos resolver problemas de mínimos cuadrados con la función [`numpy.linalg.lstsq`](https://numpy.org/doc/stable/reference/generated/numpy.linalg.lstsq.html).
+
+```{python}
+#| code-summary: "Mostrar código"
+#| code-fold: false
+#| fig-align: "center"
+
+import numpy as np
+
+# Datos:
+x_data = np.array([1, 2, 3])
+y_data = np.array([2, 2.5, 3.7])
+
+# Matriz A:
+A = np.vstack([np.ones_like(x_data), x_data]).T
+
+# Resolución:
+coeffs, residuals, *_ = np.linalg.lstsq(A, y_data, rcond=None)
+b, m = coeffs  # Ordenamos como y = mx + b
+
+
+# 📋:
+print(f"Recta ajustada: y = {m:.4f}x + {b:.4f}")
+print(f"RSS: {residuals}")
+```
+
+:::
+
+
+::: {.callout .question}
+<span style="font-size: 1.3em;">📝</span><br>
+
+Ajuste por mínimos cuadrados una parábola $y = ax^2 + bx + c$ a los puntos $(0, 2)$, $(1, 1)$, $(2, 3)$ y $(3, 8)$. Resuelva a mano y luego corrobore su resultado utilizando `np.linalg.lstsq`.
+
+```{pyodide-python}
+# Verifique la solución aquí.
+``` 
+
+:::
+
+<div style="margin-top:2em;"></div>
+
+
+
+::: {.definicion}
+**Definición 3.** (Programación lineal) Un *problema de programación lineal* es de la forma
+$$
+\begin{array}{ll}
+\text{minimizar } & \cc^{\top}\xx\\
+\text{sujeto a } & \aa_i^{\top}\xx\leq b_i,\quad i=1,\ldots,m.
+\end{array}
+\tag{2}
+$$
+donde $\cc,\aa_1,\ldots,\aa_m\in\RR^p$ y $b_1,\ldots,b_m\in\RR$. La variable de optimización es $\xx\in\RR^p$.
+
+:::
+
+
+<details>
+<summary>Mostrar detalles</summary>
+
+::: {.panel-tabset}
+
+### <span style="font-size: 1.25em;">&#x2460;</span>
+
+- No existe una fórmula analítica simple para la solución, pero hay una variedad de métodos muy efectivos para resolver el problema, como el método simplex de Datnzig y los métodos de punto interior.
+
+- En la práctica, la complejidad es del orden de $n^2m$ (asumiento $m\geq n$), pero con una constante que está menos caracterizada que en el caso de mínimos cuadrados.
+
+### <span style="font-size: 1.25em;">&#x2461;</span>
+
+En muchos casos, el problema de optimización original no tiene una forma estándar de programa lineal, pero puede transformarse en un programa lineal equivalente. Por ejemplo, el *problema de aproximación de Chebyshev*:
+$$
+\begin{array}{ll}
+\text{minimizar } & \max_{i=1,\ldots,k} |\aa_{i}^{\top}\xx- b_{i}|,
+\end{array}
+$$ 
+con variable $\xx\in\RR^p$, puede ser resuelto a través del programa lineal
+$$
+\begin{array}{ll}
+\text{minimizar } & t\\
+\text{sujeto a } & \aa_i^{\top}\xx-t\leq b_i,\quad i=1,\ldots,k\\
+      & -\aa_i^{\top}\xx-t\leq -b_i,\quad i=1,\ldots,k,
+\end{array}
+$$ 
+con variables $\xx\in\RR^p$ y $t\in\RR$.
+
+:::
+</details>
+
+<div style="margin-top:2em;"></div>
+
+
+::: {.callout-example}
+<span class="badge bg-primary">Ejemplo 5</span> 
+
+Una fábrica produce dos productos, en cantidades que definimos como $x_1$ y $x_2$, los cuales generan ganancias de 3 y 5 unidades monetarias, respectivamente. Producir una unidad de cualquiera de los productos requiere 1 hora de tiempo de producción. Además, la producción de una unidad del primer producto consume 1 unidad de materia prima, mientras que para producir una unidad del segundo producto se necesitan 3 unidades de materia prima. Queremos maximizar la ganancia, teniendo en cuenta que se dispone de 5 horas de producción y 9 unidades de materia prima.
+
+La formulación del problema es
+
+$$
+\begin{array}{ll}
+\text{maximizar } & 3x_1+5x_2\\
+\text{sujeto a }  & x_1+x_2\leq 5,\\
+                  & x_1+3x_2\leq 9,\\
+                  & x_1\geq 0,\; x_2\geq 0. 
+\end{array}
+$$
+
+Una forma de obtener la solución gráficamente es analizando las curvas de nivel de la función objetivo $f(x_1,x_2)=3x_1+5x_2$, las cuales tienen la particularidad de ser rectas paralelas. La idea es controlar el valor del nivel $z$, con $z=3x_1+5x_2$, e ir aumentándolo progresivamente sin salirse de la región factible, hasta alcanzar el último punto de contacto. Ese último punto de contacto es el punto óptimo, que como puede verse gráficamente es uno de los vértices definidos por el polígono factible.
+
+<figure style="text-align: center;">
+  <img src="figuras/ej_prog_lineal.png" alt="..." width="500px">
+</figure>
+
+La ganancia máxima es 19 y ocurre cuando $x_1=3$ y $x_2=2$. 
+
+La relación geométrica en este ejemplo no es casual: en programación lineal, el óptimo (si existe) se alcanza siempre en alguno de los vértices de la región factible. Este hecho constituye la base del método del simplex y de otros algoritmos clásicos.
+
+<br>
+
+En Python, se pueden resolver problemas de este tipo utilizando [`scipy.optimize.linprog`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.linprog.html).
 
 
 ```{python}
 #| code-summary: "Mostrar código"
+#| code-fold: false
 #| fig-align: "center"
 
+from scipy.optimize import linprog
 
-import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D  # para 3D
+# Coeficientes de la función objetivo (negativos porque linprog minimiza):
+c = [-3, -5]
 
-# Definir la matriz A (simétrica)
-A = np.array([[2, 1],
-              [1, 3]])
+# Coeficientes de las restricciones (Ax <= b):
+A = [
+    [1, 1],    # x1 + x2 <= 5
+    [1, 3]     # x1 + 3x2 <= 9
+]
+b = [5, 9]
 
-# Crear una malla de puntos en R^2
-x = np.linspace(-3, 3, 100)
-y = np.linspace(-3, 3, 100)
-X, Y = np.meshgrid(x, y)
+# Restricciones de no negatividad:
+bounds = [(0, None), (0, None)]  # x1 >= 0, x2 >= 0
 
-# Evaluar la función f(x) = 1/2 x^T A x
-Z = 0.5 * (A[0,0]*X**2 + (A[0,1] + A[1,0])*X*Y + A[1,1]*Y**2)
+# Resolución:
+res = linprog(c, A_ub=A, b_ub=b, bounds=bounds, method='highs')
 
-# Graficar
-fig = plt.figure(figsize=(8,6))
-ax = fig.add_subplot(111, projection='3d')
-ax.plot_surface(X, Y, Z, cmap='viridis', alpha=0.8)
-ax.set_xlabel('x')
-ax.set_ylabel('y')
-plt.show()
+# 📋:
+print("Éxito:", res.success)
+print("x1 =", res.x[0])
+print("x2 =", res.x[1])
+print("Ganancia máxima =", -res.fun)
 ```
+
+:::
+
+
+::: {.callout .question}
+<span style="font-size: 1.3em;">📝</span><br>
+
+Formule el problema y resuélvalo geométricamente. Luego, verifique su resultado utilizando `scipy.optimize.linprog.`.
+
+Una nutricionista debe diseñar una dieta usando dos alimentos, A y B. El alimento A cuesta $2 por unidad y contiene 3g de proteína y 1g de carbohidratos por unidad. El alimento B cuesta $3 por unidad y contiene 2g de proteína y 2g de carbohidratos por unidad. La dieta debe contener al menos 60g de proteína y 30g de carbohidratos. ¿Cuántas unidades de cada alimento debe incluir para minimizar el costo?
+
+```{pyodide-python}
+# Grafique aquí.
+``` 
+
+```{pyodide-python}
+# Verifique la solución aquí.
+``` 
+
 :::
 
 
 
-## Operaciones que preservan convexidad
-
-En esta sección describimos algunas operaciones que preservan la convexidad o concavidad de funciones, o que permiten construir nuevas funciones convexas y cóncavas. Las verificaciones se dejan como ejercicio.
-
-- **Sumas ponderadas no negativas**. Si $f$ es una función convexa y $\alpha \geq 0$, entonces la función $\alpha f$ es convexa. Si $f_1$ y $f_2$ son ambas funciones convexas, entonces su suma $f_1 + f_2$ también lo es. Combinando estas dos propiedades, se obtiene que el conjunto de funciones convexas es en sí mismo un cono convexo: una suma ponderada no negativa de funciones convexas,
-$$
-f = w_1 f_1 + \cdots + w_m f_m,
-$$
-es convexa. De manera similar, una suma ponderada no negativa de funciones cóncavas es cóncava. 
-
-- **Composición con una aplicación afín**. Sean $f:\RR^n\to\RR$, $A\in\RR^{n\times m}$ y $\bb\in\RR^n$. Definimos $g:\RR^m\to\RR$ como
-$$
-g(\xx):=f(A\xx+\bb)
-$$
-con $\text{dom}\,g = \{\xx \mid A\xx + \bb \in \text{dom}\, f\}$. Entonces, $g$ conserva la convexidad o concavidad de $f$.
-
-- **Máximo puntual**. Si $f_1$ y $f_2$ son funciones convexas, entonces su *máximo puntual* $f$, definido por
-$$
-f(\xx) = \max\{f_1(\xx), f_2(\xx)\},
-$$
-con $\text{dom}\,f = \text{dom}\,f_1 \cap \text{dom}\,f_2$, también es convexa. Además, este resultado se puede extender a: si $f_1,\dots,f_m$ son funciones convexas, entonces su máximo puntual, definido por $f(\xx)=\max\{f_1(\xx), \ldots, f_m(\xx)\}$, también lo es.
-
-- **Supremo puntual**. La propiedad del máximo puntual se extiende al supremo puntual sobre un conjunto infinito de funciones convexas. Si para $i\in\mathcal{A}, donde $\mathcal{A}$ es un conjunto de índices, se tiene que $f_i(\xx)$ es convexa, entonces la función $f$ definida por
-$$
-f(\xx) = \sup_{i \in \mathcal{A}} f_i(\xx)
-$$
-también es convexa en $\xx$. Aquí, el dominio de $f$ es
-$$
-\text{dom}\, f = \{\xx \mid \xx \in \text{dom}\, f_i \text{ para todo } i \in \mathcal{A}, \sup_{i \in \mathcal{A}} f_i(\xx) < \infty\}.
-$$
-De manera similar, el ínfimo puntual de un conjunto de funciones cóncavas es una función cóncava. 
-
-
-
-# Problemas de optimización convexa
-
-
-
-
-
-<div style="height:10cm;"></div>
 
 
 
 
 
 
+<br><br>
+
+## Actividades {.unnumbered}
 
 
+✏️ **Conceptuales**  
+<hr class="linea-corta">
+
+1. Dé ejemplos de problemas que haya resuelto en cursos anteriores que involucren maximizar o minimizar alguna cantidad. Para cada ejemplo, identifique sus elementos: función objetivo, variables de optimización, conjunto de restricciones.
 
 
-<br>
-<hr style="border: 2.5px solid black;">
-
-<h2>Ejercicios</h2>
-
-1. Mostrar que un conjunto afin contiene cualquier combinación afin de sus puntos.
-
-1. Probar que, si $C$ es un conjunto afín y $\xx_0\in C$, entonces $V:= C-\xx_0$ es un subespacio vectorial que no depende de la elección de $\xx_0\in C$.
-
-1. Mostrar que un conjunto es convexo contiene cualquier combinación convexa de sus puntos.
-
-1. Probar que el conjunto solución de un sistema de ecuaciones lineales,
-$$
-C=\{x \mid A\xx=\bb\},\qquad A\in\RR^{m\times n}, \bb\in\RR^m,
-$$
-es un conjunto afin.
-
-1. Probar que decir que un conjunto $C$ es un cono convexo es equivalente a la condición
-$$
-\theta_1\xx_1+\theta_2\xx_2\in C,\qquad\forall \xx_1,\xx_2\in C, \forall \theta_1, \theta_2\geq 0.
-$$
-
-1. Mostrar que un cono convexo contiene cualquier combinación cónica de sus puntos.
-
-1. Probar la suficiencia de la condición de primer orden del Teorema 1 para funciones de una variable. [*Ayuda: para $x_1\neq x_2$ arbitrarios y $0\leq \theta\leq 1$, defina $x_3=\theta x_1+(1-\theta) x_2$ y aplique la condición tanto a $(x_3,x_1)$ como a $(x_3,x_2)$*].
+1. Muestre que efectivamente el problema de mínimos cuadrados se reduce a $(A^{\top} A)\xx=A^{\top}\bb$.
 
 
-1. El requisito separado de que $\text{dom}\, f$ sea convexo no puede eliminarse de las caracterizaciones de primer o segundo orden de convexidad y concavidad de $f$. Analice el caso $f(x)=1/x^2$.
+1. Reescriba el problema de mínimos cuadrados ponderados como un problema de mínimos cuadrados estándar.
 
 
-1. Dada la función cuadrática $f:\RR^2\to\RR$ definida por
-$$
-f(x)=\frac{1}{2}\xx^T A\xx,
-$$
-proponga distintas matrices $A$, grafique la función y decida si $A$ es semidefinida positiva, negativa o indefinida. Además, calcule los autovalores de $A$ y explique qué relación observa.
+1. Justifique cómo se reescribe el problema de aproximación de Chebyshev como un programa lineal.
 
 
-1. La desigualdad de Jensen establece que si $\xx\in\text{dom}\,f$ y $f$ es una función convexa, entonces
-$$
-f(\media \xx)\leq \media f(\xx),
-$$
-siempre que la esperanza exista. Hallar una variable aleatoria $\XX$ que permita recuperar la desigualdad básica de la definición de función convexa a partir de la desigualdad de Jensen.
+<div style="margin-top:2em;"></div>
 
 
-1. Verifique que las operaciones presentadas efectivamente preservan la convexidad de las funciones. [*Ayuda: para el caso de supremo puntual, muestre que $\text{epi}\,f=\bigcap_{i\in\mathcal{A}}\text{epi}\,f_i$*.]
+💻 **Prácticas**  
+<hr class="linea-corta">
+
+<span style="color:darkred;">Ejercicios de mínimos cuadrados y programación lineal.</span>
+
+1. Encuentre la recta que pasa por el origen que mejor ajusta, en el sentido de mínimos cuadrados, a los puntos $(1, 2)$, $(2, 3)$ y $(3, 6)$.
 
 
-1. Determine cuáles de las operaciones que preservan la convexidad siguen preservándola en el caso de funciones estrictamente convexas, ajustando las hipótesis cuando sea necesario.
+1. Dado el vector $\bb=(4,2,5)$ y los vectores $\vv_1=(1,0,1)$, $\vv_2=(0,1,1)$, encuentre la combinación lineal $\alpha_1\vv_1+\alpha_2\vv_2$ que mejor aproxime a $\bb$, utilizando mínimos cuadrados.
 
 
-1. Sean $C\subset\RR^n$ y $\|\cdot\|$ una norma en $\RR^n$. La *distancia al punto más lejano* de $C$ está dada por
-$$
-f(\xx)=\sup_{\yy\in C}\|\xx-\yy\|.
-$$
-Probar que $f$ es convexa.
+1. Una carpintería produce mesas y sillas. Cada mesa requiere 3 horas de trabajo y 2 metros de madera, generando una ganancia de $40. Cada silla requiere 1 hora de trabajo y 1 metro de madera, generando una ganancia de $15. La carpintería dispone de 18 horas de trabajo y 12 metros de madera por día. ¿Cuántas mesas y sillas debe producir para maximizar la ganancia?
 
 
-1. Mostrar que la función $f:\mathbf{S}^n\to\RR$, definida por
-$$
-f(X)=\lambda_{\text{max}}(X),
-$$ 
-donde $\lambda_{\text{max}}$ es el *valor propio máximo* de $X$, es convexa.
+1. Una empresa tiene 2 fábricas (F1 y F2) que producen 100 y 150 unidades respectivamente. Debe abastecer a 3 almacenes (A1, A2, A3) con demandas de 80, 90 y 80 unidades respectivamente. Los costos de transporte por unidad son:
+
+   |     | A1  | A2  | A3  |
+   |-----|-----|-----|-----|
+   | F1  | $4  | $6  | $8  |
+   | F2  | $5  | $3  | $7  |
+
+   Determine el plan de transporte de costo mínimo.
 
 
 
@@ -744,3 +684,16 @@ donde $\lambda_{\text{max}}$ es el *valor propio máximo* de $X$, es convexa.
 
 
 
+
+
+
+<div style="margin-top: 5em;"></div>
+
+::: {.refs}
+<span style="color: #444;"><strong>Referencias</strong></span>
+
+Boyd, S., & Vandenberghe, L. (2004). *Convex Optimization*. Capítulo 1. Cambridge University Press.
+
+Farina, G. Apuntes del curso MIT 6.7220: *Nonlinear Optimization*. Lección 1(2025). Disponible en la [página del curso](https://www.mit.edu/~gfarina/notes/).
+
+:::

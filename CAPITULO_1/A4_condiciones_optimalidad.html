@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Condiciones de optimalidad – Optimización y Aprendizaje Automático II</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../CAPITULO_1/A5_metodos_optimizacion.html" rel="next">
+<link href="../CAPITULO_1/A3_resolucion_computacional.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-327735d1480bff6f7510335fe22ad292.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../CAPITULO_1/A1_intro_optimizacion.html">1. OPTIMIZACIÓN MATEMÁTICA</a></li><li class="breadcrumb-item"><a href="../CAPITULO_1/A4_condiciones_optimalidad.html">1.4 Condiciones de optimalidad</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Optimización y Aprendizaje Automático II</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">1. OPTIMIZACIÓN MATEMÁTICA</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A1_intro_optimizacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.1 Introducción a la optimización</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A2_optimizacion_convexa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.2 Optimización convexa</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A3_resolucion_computacional.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.3 Resolución computacional con CVXPY y SciPy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A4_condiciones_optimalidad.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">1.4 Condiciones de optimalidad</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_1/A5_metodos_optimizacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1.5 Métodos de optimización</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">2. MODELOS DISCRIMINATIVOS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B1_regresion_lineal_logistica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.1 Regresión lineal y regresión logística</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B2_glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.2 Modelos lineales generalizados</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B3_ridge_lasso.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.3 Métodos de regularización</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B4_svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.4 Máquinas de vectores soporte</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#condiciones-de-optimalidad-de-primer-orden" id="toc-condiciones-de-optimalidad-de-primer-orden" class="nav-link active" data-scroll-target="#condiciones-de-optimalidad-de-primer-orden">Condiciones de optimalidad de primer orden</a>
+  <ul class="collapse">
+  <li><a href="#optimización-sin-restricciones" id="toc-optimización-sin-restricciones" class="nav-link" data-scroll-target="#optimización-sin-restricciones">Optimización sin restricciones</a></li>
+  <li><a href="#optimización-con-restricciones" id="toc-optimización-con-restricciones" class="nav-link" data-scroll-target="#optimización-con-restricciones">Optimización con restricciones</a></li>
+  </ul></li>
+  <li><a href="#condiciones-de-karush-kuhn-tucker-kkt" id="toc-condiciones-de-karush-kuhn-tucker-kkt" class="nav-link" data-scroll-target="#condiciones-de-karush-kuhn-tucker-kkt">Condiciones de Karush-Kuhn-Tucker (KKT)</a>
+  <ul class="collapse">
+  <li><a href="#el-caso-particular-de-restricciones-afines" id="toc-el-caso-particular-de-restricciones-afines" class="nav-link" data-scroll-target="#el-caso-particular-de-restricciones-afines">El caso particular de restricciones afines</a></li>
+  <li><a href="#generalización" id="toc-generalización" class="nav-link" data-scroll-target="#generalización">Generalización</a></li>
+  <li><a href="#cualificación-de-restricciones" id="toc-cualificación-de-restricciones" class="nav-link" data-scroll-target="#cualificación-de-restricciones">Cualificación de restricciones</a></li>
+  </ul></li>
+  <li><a href="#dualidad" id="toc-dualidad" class="nav-link" data-scroll-target="#dualidad">Dualidad</a>
+  <ul class="collapse">
+  <li><a href="#función-dual-de-lagrange" id="toc-función-dual-de-lagrange" class="nav-link" data-scroll-target="#función-dual-de-lagrange">Función dual de Lagrange</a></li>
+  <li><a href="#el-problema-dual-de-lagrange" id="toc-el-problema-dual-de-lagrange" class="nav-link" data-scroll-target="#el-problema-dual-de-lagrange">El problema dual de Lagrange</a></li>
+  <li><a href="#relación-entre-dualidad-y-kkt" id="toc-relación-entre-dualidad-y-kkt" class="nav-link" data-scroll-target="#relación-entre-dualidad-y-kkt">Relación entre dualidad y KKT</a></li>
+  </ul></li>
+  <li><a href="#actividades" id="toc-actividades" class="nav-link" data-scroll-target="#actividades">Actividades</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../CAPITULO_1/A1_intro_optimizacion.html">1. OPTIMIZACIÓN MATEMÁTICA</a></li><li class="breadcrumb-item"><a href="../CAPITULO_1/A4_condiciones_optimalidad.html">1.4 Condiciones de optimalidad</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Condiciones de optimalidad</h1>
+<p class="subtitle lead">Capítulo 1 - Sección 4</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr style="border: 1px solid rgba(50, 0, 0, 1);">
+<div class="hidden">
+<p><span class="math display">\[
+\def\NN{\mathbb{N}}
+\def\ZZ{\mathbb{Z}}
+\def\RR{\mathbb{R}}
+\def\media{\mathbb{E}}
+\def\calL{\mathcal{L}}
+\def\calG{\mathcal{G}}
+\def\calD{\mathcal{D}}
+\def\aa{{\bf a}}
+\def\bb{{\bf b}}
+\def\cc{{\bf c}}
+\def\dd{{\bf d}}
+\def\hh{{\bf h}}
+\def\qq{{\bf q}}
+\def\xx{{\bf x}}
+\def\yy{{\bf y}}
+\def\zz{{\bf z}}
+\def\uu{{\bf u}}
+\def\vv{{\bf v}}
+\def\XX{{\bf X}}
+\def\TT{{\bf T}}
+\def\SS{{\bf S}}
+\def\bfg{{\bf g}}
+\def\bftheta{\boldsymbol{\theta}}
+\def\bfmu{\boldsymbol{\mu}}
+\def\bfxi{\boldsymbol{\xi}}
+\def\bflambda{\boldsymbol{\lambda}}
+\def\bfgamma{\boldsymbol{\gamma}}
+\def\bfbeta{\boldsymbol{\beta}}
+\def\bfalpha{\boldsymbol{\alpha}}
+\def\bfeta{\boldsymbol{\eta}}
+\def\bfmu{\boldsymbol{\mu}}
+\def\bfnu{\boldsymbol{\nu}}
+\def\bfSigma{\boldsymbol{\Sigma}}
+\def\bfone{\mathbf{1}}
+\def\bfzero{\mathbf{0}}
+\def\argmin{\mathop{\mathrm{arg\,min\,}}}
+\def\argmax{\mathop{\mathrm{arg\,max\,}}}
+\]</span></p>
+</div>
+<p>En un problema de optimización general con restricciones funcionales, de la forma <span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; f(\xx)\\
+\text{sujeto a } &amp; \xx\in\left\{\xx\in\RR^p\left|\begin{array}{cl}
+g_i(\xx)\leq 0,&amp; i=1,\cdots,r.\\
+h_j(\xx)=0, &amp; j=1,\cdots,m.
+\end{array}\right.\right\},
+\end{array}
+\]</span></p>
+<p>las condiciones de optimalidad definen los requisitos que deben cumplir los puntos óptimos. En lo que sigue, <mark>asumiremos que trabajamos con funciones diferenciables</mark>.</p>
+<div style="margin-top:2.5em;">
+
+</div>
+<section id="condiciones-de-optimalidad-de-primer-orden" class="level2">
+<h2 class="anchored" data-anchor-id="condiciones-de-optimalidad-de-primer-orden">Condiciones de optimalidad de primer orden</h2>
+<section id="optimización-sin-restricciones" class="level3">
+<h3 class="anchored" data-anchor-id="optimización-sin-restricciones">Optimización sin restricciones</h3>
+<p>De cursos anteriores recordemos que, cuando se pretende optimizar una función <span class="math inline">\(f\)</span> en su dominio, una condición necesaria (siempre que <span class="math inline">\(\text{dom}\,f\)</span> sea un conjunto abierto) para que un punto sea óptimo es que verifique <span class="math display">\[
+\nabla f(\xx)=\mathbf{0}.
+\tag{1}
+\]</span></p>
+<details>
+<summary>
+Mostrar detalles
+</summary>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page"><span style="font-size: 1.25em;">①</span></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false"><span style="border: 1px solid #ddd; padding: 2px 6px; border-radius: 4px;"><em>Prueba</em></span></a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>La condición <span class="math inline">\(\nabla f(\xx)=\bfzero\)</span> no caracteriza únicamente puntos óptimos en un sentido global, sino también a aquellos donde <span class="math inline">\(f\)</span> alcanza un extremo local. De hecho, la prueba puede adaptarse a tal caso escribiendo <span class="math display">\[
+f(\xx + t\dd) \geq f(\xx) \quad \text{para todo } 0\leq t&lt;\varepsilon,
+\]</span> donde <span class="math inline">\(\xx\)</span> es un punto de extremo local, <span class="math inline">\(\dd\)</span> es una dirección arbitraria y <span class="math inline">\(\varepsilon&gt;0\)</span> es lo suficientemente pequeño como para que <span class="math inline">\(\xx+t\dd\)</span> permanezca en un entorno donde se verifica la definición de mínimo local.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Sea <span class="math inline">\(\xx^\star\in\RR^p\)</span> un minimizador de la función <span class="math inline">\(f: \RR^p \to \RR\)</span> y sea <span class="math inline">\(\dd\in\RR^p\)</span> una dirección arbitraria. Entonces se cumple</p>
+<p><span class="math display">\[
+f(\xx^\star + t \cdot \dd) \geq f(\xx) \qquad\forall t\in\RR.
+\]</span></p>
+<p>Así, tenemos que <span class="math display">\[
+\lim_{t \to 0^-} \frac{f(\xx^\star + t\dd) - f(\xx^\star)}{t} \leq 0
+\quad\mbox{y}\quad
+\lim_{t \to 0^+} \frac{f(\xx^\star + t\dd) - f(\xx^\star)}{t} \geq 0.
+\]</span></p>
+<p>En consecuencia, como <span class="math inline">\(f\)</span> es diferenciable, la derivada direccional de <span class="math inline">\(f\)</span> en <span class="math inline">\(\xx\)</span> a lo largo de <span class="math inline">\(\dd\)</span> existe y debe ser</p>
+<p><span class="math display">\[
+\frac{\partial f}{\partial \dd}(\xx^\star):= \lim_{t \to 0} \frac{f(\xx^\star + t\dd) - f(\xx^\star)}{t} = 0.
+\]</span></p>
+<p>Usando la propiedad <span class="math inline">\(\frac{\partial f}{\partial \dd}(\xx)=\langle \nabla f(\xx), \dd \rangle\)</span>, se deduce <span class="math display">\[
+\langle \nabla f(\xx^\star), \dd \rangle = 0.
+\]</span></p>
+<p>Finalmente, dado que <span class="math inline">\(\dd\)</span> es arbitrario, concluimos que <span class="math inline">\(\nabla f(\xx^\star)=\mathbf{0}\)</span>. <span class="math inline">\(\qquad\blacksquare\)</span></p>
+</div>
+</div>
+</div>
+</details>
+<div style="margin-top:2em;">
+
+</div>
+<p>Pero cuidado: lo anterior es <em>solo una condición necesaria</em> que todos los puntos óptimos deben cumplir, pero no implica que cualquier punto que la satisfaga sea automáticamente óptimo. En otras palabras, las soluciones de <span class="math inline">\(\nabla f(\xx) = \bfzero\)</span> forman una lista de puntos candidatos para minimizar, llamados <em>puntos críticos</em>.</p>
+<p>De inmediato surgen dos preguntas claves:</p>
+<div class="myhighlight4">
+<p>¿Cuál es la generalización de la condición necesaria <span class="math inline">\(\nabla f(\xx) = 0\)</span> cuando enfrentamos un problema de optimización con restricciones?</p>
+<p>¿Bajo qué circunstancias <span class="math inline">\(\nabla f(\xx) = \bfzero\)</span> también se convierte en una condición suficiente para la optimalidad?</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Para el caso de optimización sin restricciones, podemos responder a la segunda pregunta con un resultado muy importante dentro de la optimización convexa.</p>
+<div class="teorema">
+<p><strong>Teorema 1.</strong> (Condición suficiente y necesaria de optimalidad de primer orden sin restricciones para funciones convexas) Sea <span class="math inline">\(f:\RR^p\to\RR\)</span> una función diferenciable y convexa. Entonces <span class="math inline">\(\xx^\star\in \text{dom}\,f\)</span> es un minimizador de <span class="math inline">\(f\)</span> si y solo si <span class="math display">\[
+\nabla f(\xx^\star)=\bfzero.
+\]</span></p>
+</div>
+<div style="margin-top:2.5em;">
+
+</div>
+</section>
+<section id="optimización-con-restricciones" class="level3">
+<h3 class="anchored" data-anchor-id="optimización-con-restricciones">Optimización con restricciones</h3>
+<p>La clave para generalizar la condición necesaria <span class="math inline">\(\nabla f(\xx)=\mathbf{0}\)</span> al caso de optimización con restricciones surge de la prueba anterior, más precisamente de la desigualdad <span class="math display">\[
+\langle\nabla f(\xx),\dd\rangle\geq 0.
+\tag{2}
+\]</span></p>
+<p>Debemos ajustar (2) de manera tal de asegurarnos que las posibles direcciones de movimiento nos permita aproximarnos a puntos factibles <span class="math inline">\(\xx\)</span> sin salirnos del conjunto factible <span class="math inline">\(\Omega\)</span>. Esto conduce a la siguiente reformulación:</p>
+<p><span class="math display">\[
+\langle\nabla f(\xx),\dd\rangle\geq 0\qquad \forall\dd\in\RR^p: \xx+t\dd\in\Omega,
+\tag{3}
+\]</span></p>
+<p>para cualquier <span class="math inline">\(t&gt;0\)</span> lo suficientemente pequeño. A partir de esto:</p>
+<div class="myhighlight3">
+<p>¿Cuáles son las direcciones <span class="math inline">\(\dd\)</span> que nos permiten permanecer en <span class="math inline">\(\Omega\)</span> desde el punto <span class="math inline">\(\xx\)</span>?</p>
+<p>¿Qué implicancias tiene (3) para el vector gradiente <span class="math inline">\(\nabla f(\xx)\)</span>?</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Una idea inicial para caracterizar el conjunto de direcciones permitidas es tomar cualquier otro punto <span class="math inline">\(\yy\in\Omega\)</span> y observar qué sucede con la dirección desde <span class="math inline">\(\xx\)</span> hacia <span class="math inline">\(\yy\)</span>. Esta dirección, <span class="math inline">\(\dd=\yy-\xx\)</span>, será válida siempre que <span class="math inline">\(\Omega\)</span> sea convexo (ver Definición 3 de <a href="A2_optimizacion_convexa.html#definiciones-básicas">C1-S2</a>). Claramente, en tal caso, (3) se verifica trivialmente tomando <span class="math inline">\(t=1\)</span>. Por ese motivo, podemos hacer la primera suposición para formalizar una condición necesaria de optimalidad:</p>
+<div class="myhighlight2">
+<span style="font-size:0.8em;"><em>Primer supuesto</em></span>
+<div style="margin-top:-0.1em;">
+
+</div>
+<p><strong><span class="math inline">\(\Omega\)</span> un conjunto convexo</strong></p>
+</div>
+<div style="margin-top:0.5em;">
+
+</div>
+<p>Bajo esta suposición, tenemos el siguiente resultado, cuya demostración se obtiene directamente de ajustar la prueba vista para (1).</p>
+<div class="teorema">
+<p><strong>Teorema 2.</strong> (Condición necesaria de optimalidad de primer orden para un conjunto factible convexo) Sea <span class="math inline">\(\Omega\subset\RR^p\)</span> convexo y sea <span class="math inline">\(f:\RR^p\to\RR\)</span> una función diferenciable. Si <span class="math inline">\(\xx^\star\in \Omega\)</span> es un minimizador de <span class="math inline">\(f\)</span> sobre <span class="math inline">\(\Omega\)</span>, entonces <span class="math display">\[
+\langle \nabla f(\xx^\star), \yy - \xx^\star\rangle \geq 0 \qquad \forall\yy\in\Omega.
+\]</span></p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/angulo_entre_gradiente_xy.png" alt="…" width="300px" class="figure-img">
+</figure>
+<div style="margin-top:2em;">
+
+</div>
+<p>Como se puede apreciar en la figura, para un punto óptimo <span class="math inline">\(\xx^\star\)</span>, el vector gradiente forma un ángulo agudo (o recto) con todas las direcciones de la forma <span class="math inline">\(\yy-\xx^\star\)</span>. Esto se deduce del hecho que <span class="math display">\[
+\langle \nabla f(\xx^\star), \yy - \xx^\star\rangle=\underbrace{\|\nabla f(\xx^\star)\|_2}_{\geq 0}\underbrace{\|\yy-\xx^\star\|_2}_{\geq 0}\cos \alpha\geq 0
+\]</span></p>
+<p>si y solo si <span class="math inline">\(\cos\alpha\geq 0\)</span> (o equivalentemente, <span class="math inline">\(0\leq\alpha\leq\pi/2\)</span>).</p>
+<p>Ahora bien, nosotros estamos interesados en hallar <span class="math inline">\(\xx^\star\)</span>. Por lo tanto, el Teorema 2 nos da una condición necesaria que nos permite obtener aquellos puntos <span class="math inline">\(\xx\in\Omega\)</span> candidatos a ser óptimos (<mark><em>puntos críticos</em></mark>). Si pensamos en el opuesto del gradiente, <span class="math inline">\(-\nabla f(\xx)\)</span>, la condición se reescribe como <span class="math display">\[
+\langle -\nabla f(\xx),\yy-\xx\rangle\leq 0\qquad \forall\yy\in\Omega.
+\tag{4}
+\]</span></p>
+<p>Esto vincula nuestro análisis con la definición de cono normal (Definición 7 de <a href="A2_optimizacion_convexa.html#conos-normales">C1-S2</a>): la ecuación (4) es equivalente a escribir <span class="math inline">\(-\nabla f(\xx)\in N_{\Omega}(\xx)\)</span>. Así, el Teorema 2 puede ser interpretado en términos de conos normales:</p>
+<div class="myhighlight">
+<p>Bajo las condiciones del Teorema 2, si <span class="math inline">\(\xx^\star\)</span> es un minimizador de <span class="math inline">\(f\)</span> sobre <span class="math inline">\(\Omega\)</span>, entonces <span class="math display">\[
+-\nabla f(\xx^\star)\in N_{\Omega}(\xx^\star).
+\]</span></p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/condicion_optimalidad_gradiente_vs_cono_normal.png" alt="…" width="400px" class="figure-img">
+<figcaption>
+Idea geométrica de la condición del gradiente para tres puntos críticos <span class="math inline">\(\xx_1,\xx_2,\xx_3\in\Omega\)</span> y un punto no crítico <span class="math inline">\(\xx_4\in\Omega\)</span>. En el caso de <span class="math inline">\(\xx_3\)</span>, se tiene <span class="math inline">\(\nabla f(\xx_3)=\bfzero\)</span>.
+</figcaption>
+</figure>
+<div style="margin-top:2em;">
+
+</div>
+<p>En la figura anterior se presenta la geometría derivada de la condición necesaria establecida, para el caso en que <span class="math inline">\(\Omega\)</span> es un poliedro. Las posiciones de los puntos críticos corresponden a los Ejemplos 7-10 de conos normales, vistos en el <a href="A2_optimizacion_convexa.html#conos-normales">C1-S2</a>. En particular, para puntos interiores de <span class="math inline">\(\Omega\)</span>, la condición se reduce a la ecuación <span class="math inline">\(\nabla f(\xx)=\bfzero\)</span>, típica de los problemas sin restricciones.</p>
+<p>Todos los casos están caracterizados por el siguiente hecho:</p>
+<div class="myhighlight">
+<p>Los puntos críticos son aquellos en los cuales el opuesto del gradiente forma ángulos no agudos con todas las direcciones factibles.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Esta es, sin dudas, la idea principal de nuestro análisis, que procuraremos extender a formas más generales de <span class="math inline">\(\Omega\)</span>.</p>
+<p>¡Cuidado! La condición provista por el Teorema 2 es necesaria pero no suficiente. Podemos pensar rápidamente en ejemplos de mínimos locales en el interior de <span class="math inline">\(\Omega\)</span>, tales como el Ejemplo 3 de <a href="A1_intro_optimizacion.html">C1-S1</a>. A continuación, veremos un ejemplo para cuando el punto crítico ocurre en la frontera de <span class="math inline">\(\Omega\)</span>, pero no es cierto que sea un punto óptimo.</p>
+<div class="callout-example">
+<p><span class="badge bg-primary">Ejemplo 1</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Punto crítico pero no óptimo en un poliedro </span></p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\text{maximizar } &amp; -x_1\\
+\text{sujeto a }  &amp; x_1+x_2\leq 1,\\
+                  &amp; x_1\geq 0,\;x_2\geq 0.
+\end{array}
+\]</span></p>
+<p>El conjunto factible <span class="math inline">\(\Omega\)</span> es el triángulo de vértices <span class="math inline">\((0,0)\)</span>, <span class="math inline">\((1,0)\)</span> y <span class="math inline">\((0,1)\)</span>. En el vértice <span class="math inline">\(\xx=(1,0)\)</span> se tiene <span class="math inline">\(\nabla f(0,0)=(-1,0)\)</span>. La condición del Teorema 2 para este punto se expresa como <span class="math display">\[
+\langle (-1,0),\yy-(1,0)\rangle=1-y_1\geq 0\qquad\forall \yy\in\Omega.
+\]</span></p>
+<p>Esto es cierto, pues no existe punto factible <span class="math inline">\(\yy\in\Omega\)</span> con coordenada <span class="math inline">\(y_1&gt;1\)</span>. Sin embargo, <span class="math inline">\((1,0)\)</span> no es óptimo óptimo, pues claramente los puntos óptimos son todos aquellos en el segmento entre <span class="math inline">\((0,0)\)</span> y <span class="math inline">\((0,1)\)</span>; es decir <span class="math display">\[
+\xx^\star=(0,t),\qquad 0\leq t\leq 1.
+\]</span></p>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/ej_grad_cono_fail.png" alt="…" width="350px" class="figure-img">
+<figcaption>
+<span class="math inline">\(-\nabla f(1,0)\in N_{\Omega}(1,0)\)</span>, pero <span class="math inline">\((1,0)\)</span> no es un punto óptimo del problema.
+</figcaption>
+</figure>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<div class="myhighlight2">
+<span style="font-size:0.8em;"><em>Segundo supuesto</em></span>
+<div style="margin-top:-0.1em;">
+
+</div>
+<p><strong><span class="math inline">\(f\)</span> una función convexa</strong></p>
+</div>
+<div style="margin-top:0.5em;">
+
+</div>
+<p>Para el notable caso de las <mark>funciones convexas</mark> (<a href="A2_optimizacion_convexa.html#funciones-convexas">Definición 8 de C1-S2</a>) la condición establecida en el Teorema 2 sí es suficiente.</p>
+<div class="teorema">
+<p><strong>Teorema 3.</strong> (Condición suficiente y necesaria de optimalidad de primer orden para un conjunto factible convexo y una función objetivo convexa) Sea <span class="math inline">\(\Omega \subseteq\RR^p\)</span> convexo y sea <span class="math inline">\(f:\RR^p\to\RR\)</span> una función diferenciable convexa. Entonces <span class="math inline">\(\xx^\star\)</span> es un minimizador de <span class="math inline">\(f\)</span> en <span class="math inline">\(\Omega\)</span> si y solo si se verifica <span class="math display">\[
+-\nabla f(\xx^\star)\in N_{\Omega}(\xx^\star).
+\tag{5}
+\]</span></p>
+</div>
+<details>
+<summary>
+Mostrar detalles
+</summary>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true"><span style="font-size: 1.25em;">①</span></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false"><span style="border: 1px solid #ddd; padding: 2px 6px; border-radius: 4px;"><em>Demostración</em></span></a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>El Teorema 3 se puede aplicar a todo problema de optimización convexa, pero es un resultado más general.</p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>En virtud del Teorema 2, debemos probar únicamente la suficiencia. Sea <span class="math inline">\(\xx\in\Omega\)</span> tal que <span class="math inline">\(-\nabla f(\xx)\in N_{\Omega}(\xx)\)</span>, entonces <span class="math display">\[
+\langle\nabla f(\xx),\yy-\xx\rangle\geq 0\qquad\forall\yy\in\Omega.
+\]</span></p>
+<p>Por condición de primer orden para convexidad (Teorema 1 de <a href="A2_optimizacion_convexa.html#condiciones-de-convexidad">C1-S2</a>), resulta <span class="math display">\[
+f(\yy)\geq f(\xx)+\underbrace{\langle\nabla f(\xx),\yy-\xx\rangle}_{\geq 0}\geq f(\xx)
+\]</span> para todo <span class="math inline">\(\yy\in\Omega\)</span>, lo cual significa que <span class="math inline">\(\xx\)</span> es un minimizador de <span class="math inline">\(f\)</span> en <span class="math inline">\(\Omega\)</span>. <span class="math inline">\(\qquad\blacksquare\)</span></p>
+</div>
+</div>
+</div>
+</details>
+<div style="margin-top:2em;">
+
+</div>
+<div class="callout-example">
+<p><span class="badge bg-primary">Ejemplo 2</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Aplicación de condiciones KKT en un problema de optimización convexa </span></p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; \frac{1}{2}\|A\xx-\bb\|_2^2\\
+\text{sujeto a }  &amp; x_1+x_2\leq 1.5,\\
+                  &amp;x_1\geq 0,\; x_2\geq 0.
+\end{array}
+\]</span></p>
+<p>con <span class="math display">\[
+A=\begin{pmatrix}1&amp;0\\0&amp;2\end{pmatrix}\quad\mbox{y}\quad\bb=\begin{pmatrix}1\\1\end{pmatrix}.
+\]</span></p>
+<p>El conjunto factible <span class="math inline">\(\Omega\)</span> es el triángulo con vértices <span class="math inline">\((0,0)\)</span>, <span class="math inline">\((1.5,0)\)</span> y <span class="math inline">\((0,1.5)\)</span>, por lo tanto es convexo. Respecto a la función objetivo, tenemos <span class="math display">\[
+\nabla f(\xx)=A^\top(A\xx-\bb)=\begin{pmatrix}1&amp;0\\0&amp;2\end{pmatrix}\left[\begin{pmatrix}1&amp;0\\0&amp;2\end{pmatrix}\xx-\begin{pmatrix}1\\1\end{pmatrix}\right]=\begin{pmatrix}x_1-1\\4x_2-2\end{pmatrix},
+\]</span></p>
+<p>y</p>
+<p><span class="math display">\[
+\nabla f^2(\xx)=A^\top A = \begin{pmatrix}1&amp;0\\0&amp;2\end{pmatrix}\begin{pmatrix}1&amp;0\\0&amp;2\end{pmatrix}=\begin{pmatrix}1&amp;0\\0&amp;4\end{pmatrix}
+\]</span></p>
+<p>Claramente <span class="math inline">\(\nabla^2 f(\xx)\succeq 0\)</span>, lo cual significa que <span class="math inline">\(f\)</span> es convexa. Así, por Teorema 3, la condición (5) es suficiente y necesaria para que <span class="math inline">\(\xx\)</span> sea un punto óptimo. Esto nos permite hacer el siguiente análisis:</p>
+<ul>
+<li><p><span class="math inline">\(\nabla f(\xx)\neq \bfzero\)</span> para todo punto interior de <span class="math inline">\(\Omega\)</span>, lo cual implica que no hay puntos óptimos en el interior.</p></li>
+<li><p>En el lado <span class="math inline">\(\{(0,t) \mid 0&lt;t&lt;1.5\}\)</span>, <span class="math inline">\(\nabla f(\xx)=(-1,4t-2)\)</span>. Al no anularse en ningún punto la segunda componente, podemos afirmar que no se cumple la condición (5), ya que el cono normal está determinado por la dirección normal <span class="math inline">\((-1,0)\)</span>. Por lo tanto, no hay puntos óptimos en esta porción de frontera.</p></li>
+<li><p>Tampoco hay puntos óptimos en el lado <span class="math inline">\(\{(t,0)\mid 0&lt;t&lt;1.5\}\)</span>, ya que <span class="math inline">\(\nabla f(\xx)=(t-1,-2)\)</span> y la dirección normal es <span class="math inline">\((0,-1)\)</span>.</p></li>
+<li><p>En el lado <span class="math inline">\(\{(t,1.5-t)\mid 0&lt;t&lt;1.5\}\)</span>, tenemos que <span class="math inline">\(\nabla f(\xx)=(t-1,4-4t)\)</span> y la dirección normal es <span class="math inline">\((1,1)\)</span>. Esto significa que la condición (5) es cierta si ambas componentes del gradiente son iguales: <span class="math display">\[
+\begin{align*}
+t-1&amp;=4-4t\\
+t &amp;= 1
+\end{align*}
+\]</span></p>
+<p>Por lo tanto, el punto <span class="math inline">\((1,0.5)\)</span>, con <span class="math inline">\(\nabla f(1,0.5)=\bfzero\)</span>, es un punto óptimo del problema.</p></li>
+<li><p>Faltan los vértices del triángulo. En la siguiente figura se muestra el comportamiento de <span class="math inline">\(-\nabla f(\xx)\)</span> en cada uno de ellos.</p></li>
+</ul>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/ej_vertices_no_optimos.png" alt="…" width="350px" class="figure-img">
+<figcaption>
+En los vértices de <span class="math inline">\(\Omega\)</span> no se cumple la condición (5), lo cual implica que ninguno de ellos es un punto óptimo.
+</figcaption>
+</figure>
+<p>En conclusión, el único punto óptimo del problema es <span class="math display">\[
+\xx^\star=(1,0.5).
+\]</span></p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+</section>
+</section>
+<section id="condiciones-de-karush-kuhn-tucker-kkt" class="level2">
+<h2 class="anchored" data-anchor-id="condiciones-de-karush-kuhn-tucker-kkt">Condiciones de Karush-Kuhn-Tucker (KKT)</h2>
+<p>Hasta ahora hemos visto que, para <span class="math inline">\(\Omega\)</span> convexo (<em>primer supuesto</em>), una condición necesaria para que un punto <span class="math inline">\(\xx\)</span> sea óptimo es que el vector opuesto al gradiente de la función objetivo pertenezca al cono normal <span class="math inline">\(N_{\Omega}(\xx)\)</span>. Además, si la función objetivo es convexa (<em>segundo supuesto</em>), dicha condición resulta también suficiente.</p>
+<p>Aunque el Teorema 3 es general, y contempla los problemas de optimización convexa, su aplicación práctica puede resultar poco directa. Afortunadamente, cuando el conjunto factible <span class="math inline">\(\Omega\)</span> está definido por restricciones funcionales diferenciables, es posible expresar estas condiciones de manera más estructurada a partir de la caracterización de los conos normales, lo cual conduce a las que se conocen como <em>condiciones de Karush-Kuhn-Tucker</em> (o, simplemente, condiciones KKT).</p>
+<p>Nuestro objetivo es formular dichas condiciones. Comenzaremos analizando el caso particular de restricciones afines, para lograr intuición, y luego generalizaremos al caso de restricciones no lineales.</p>
+<section id="el-caso-particular-de-restricciones-afines" class="level3">
+<h3 class="anchored" data-anchor-id="el-caso-particular-de-restricciones-afines">El caso particular de restricciones afines</h3>
+<div class="myhighlight2">
+<span style="font-size:0.8em;"><em>Caso especial</em></span>
+<div style="margin-top:-0.1em;">
+
+</div>
+<p><strong><span class="math inline">\(\Omega\)</span> un poliedro</strong></p>
+</div>
+<div style="margin-top:0.5em;">
+
+</div>
+<p>Vamos a considerar el caso en que <span class="math inline">\(\Omega\)</span> es un poliedro definido a partir de la intersección de un número finito de semiespacios. Es decir, es de la forma <span class="math display">\[
+\Omega:=\{\xx\in\RR^p \mid A\xx\preceq \bb,\; C\xx=\dd\},
+\tag{6}
+\]</span></p>
+<p>donde <span class="math inline">\(A\in\RR^{r\times p}\)</span>, <span class="math inline">\(C\in\RR^{m\times p}\)</span>, <span class="math inline">\(\bb\in\RR^r\)</span> y <span class="math inline">\(\dd\in\RR^m\)</span>.</p>
+<div class="definicion">
+<p><strong>Definición 1.</strong> (Restricción activa) Una restricción de desigualdad <span class="math inline">\(g(\xx)\leq 0\)</span> se dice que está <em>activa</em> en un punto <span class="math inline">\(\xx_0\)</span> si allí se cumple con igualdad; es decir, si <span class="math display">\[
+g(\xx_0)= 0.
+\]</span></p>
+<p>Esto significa que <span class="math inline">\(\xx_0\)</span> pertenece a la frontera del conjunto <span class="math inline">\(\{\xx\in\RR^p \mid g(\xx)\leq 0\}\)</span>.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>En los ejemplos de <a href="A2_optimizacion_convexa.html#conos-normales">conos normales</a>, analizamos el comportamiento del cono normal según la posición del punto de interés: si <span class="math inline">\(\xx\)</span> es interior a <span class="math inline">\(\Omega\)</span>, resulta simplemente <span class="math inline">\(N_{\Omega}(\xx)=\{\bfzero\}\)</span>, mientras que si <span class="math inline">\(\xx\)</span> pertenece a la frontera de <span class="math inline">\(\Omega\)</span>, el cono normal queda determinado por las direcciones que definen los hiperplanos y semiplanos. Para este último caso, podemos resumirlo de la siguiente manera:</p>
+<div class="myhighlight">
+<p>El cono normal en un punto en la frontera es la envolvente cónica de las direcciones ortogonales a las restricciones activas.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>No obstante, en dichos ejemplos hemos considerado casos particulares de <span class="math inline">\(\Omega\)</span>: un hiperplano, un semiespacio y la intersección de dos semiespacios. Necesitamos extender ese análisis a cualquier poliedro <span class="math inline">\(\Omega\)</span> y caracterizar el cono normal en cualquier punto de <span class="math inline">\(\Omega\)</span>. El siguiente resultado nos proporciona dicha caracterización.</p>
+<div class="teorema">
+<p><strong>Teorema 4.</strong> (Cono normal a un punto de un poliedro) Sea <span class="math inline">\(\Omega\)</span> el poliedro definido por (6). Para <span class="math inline">\(x\in\Omega\)</span>, sea <span class="math inline">\(I(\xx)\)</span> el conjunto de índices de las restricciones activas; esto es <span class="math display">\[
+I(\xx):=\left\{i\in\{1,\cdots,r\} \mid \aa_i^\top\xx=b_i\right\}.
+\]</span> Entonces, el cono normal en <span class="math inline">\(\xx\)</span> está dado por</p>
+<p><span class="math display">\[
+N_{\Omega}(\xx)=\left\{\left.\sum_{i\in I(\xx)}\lambda_i\aa_i+\sum_{j=1}^m\nu_j\cc_j\,\right| \lambda_i\in\RR^+,\;\nu_j\in\RR\right\}.
+\]</span></p>
+</div>
+<details>
+<summary>
+Mostrar detalles
+</summary>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true"><span style="font-size: 1.25em;">①</span></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false"><span style="font-size: 1.25em;">②</span></a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>La suma en la expresión del cono normal puede ser reescrita sin restringir <span class="math inline">\(i\in I(\xx)\)</span>, simplemente imponiendo <span class="math inline">\(\lambda_i=0\)</span> para todo <span class="math inline">\(i\notin I(\xx)\)</span>. Esta imposición queda ímplicita de forma inmediata si se escribe</p>
+<p><span class="math display">\[
+\sum_{i=1}^r\lambda_i\left(\aa_i^\top\xx-b_i\right)=0\qquad\lambda_i\in\RR_0^+.
+\tag{7}
+\]</span></p>
+<p>En forma vectorial, (7) puede escribirse como <span class="math inline">\(\bflambda^\top\left(A\xx-\bb\right)=0\)</span>, donde <span class="math inline">\(\bflambda=(\lambda_1,\cdots,\lambda_m)^\top\)</span>. Con esta notación, podemos escribir el cono normal del Teorema 4 así: <span class="math display">\[
+N_{\Omega}(\xx)=\left\{A^\top\bflambda+C^\top\bfnu \mid \bflambda^\top(A\xx-\bb)=0,\;\bflambda\in(\RR_0^+)^r,\;\bfnu\in\RR^m\right\}.
+\]</span></p>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<p>La condición de optimalidad <span class="math inline">\(-\nabla f(\xx)\in N_{\Omega}(\xx)\)</span> se traduce como <span class="math display">\[
+-\nabla f(\xx)=\sum_{i\in I(\xx)}\lambda_i\aa_i+\sum_{j=1}^m\nu_j\cc_j,\qquad\lambda_i\in\RR^+,\;\nu_j\in\RR.
+\]</span></p>
+<p>O, equivalentemente, <span class="math display">\[
+-\nabla f(\xx)=\sum_{i\in I(\xx)}\lambda_i \nabla g_i(\xx)+\sum_{j=1}^m\nu_j\nabla h_j(\xx),\qquad\lambda_i\in\RR^+,\;\nu_j\in\RR.
+\]</span> donde <span class="math inline">\(g_i(\xx)=\aa_i^\top\xx-b_i\)</span> y <span class="math inline">\(h_j(\xx)=\cc_j^\top\xx-d_i\)</span>. Esta última expresión resulta familiar, ya que los coeficientes <span class="math inline">\(\lambda_i\)</span> y <span class="math inline">\(\nu_j\)</span> son precisamente los <mark><em>multiplicadores de Lagrange</em></mark> asociados a las funciones de restricción.</p>
+</div>
+</div>
+</div>
+</details>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br> Verifique que el resultado del Teorema 4 contempla los ejemplos de conos normales.</p>
+</div>
+</div>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Los Teoremas 1 y 2 pueden ser aplicados en este contexto, dado que <span class="math inline">\(\Omega\)</span> es un poliedro y, en consecuencia, es un conjunto convexo. Obtenemos así el siguiente resultado.</p>
+<div class="teorema">
+<p><strong>Corolario 5.</strong> (Condición necesaria de optimalidad de primer orden para un conjunto factible poliedral) Sea <span class="math inline">\(\Omega\)</span> el poliedro definido por (6), y sea <span class="math inline">\(f:\RR^p\to\RR\)</span> una función diferenciable. Si <span class="math inline">\(\xx^\star\in \Omega\)</span> es un minimizador de <span class="math inline">\(f\)</span> sobre <span class="math inline">\(\Omega\)</span>, entonces existen <span class="math inline">\(\bflambda\in(\RR_0^+)^r\)</span> y <span class="math inline">\(\bfnu\in\RR^m\)</span> tales que <span class="math inline">\(\lambda_i(\aa_i^\top\xx-b_i)=0\)</span> para todo <span class="math inline">\(i=1,\ldots,r\)</span> y <span class="math display">\[
+-\nabla f(\xx^\star)=\sum_{i=1}^r\lambda_i\aa_i+\sum_{j=1}^m \nu_j\cc_j.
+\]</span></p>
+<p>Además, si <span class="math inline">\(f\)</span> es convexa, esta condición es también suficiente.</p>
+</div>
+<div class="alert alert-light text-dark" role="important">
+<p><span class="badge bg-warning text-dark">Importante</span></p>
+<p>Las condiciones del Corolario 5 son conocidas como <em>condiciones de Karush-Kuhn-Tucker</em> (KKT), permiten definir un criterio para obtener puntos críticos. Se formulan a partir de diferentes componentes:</p>
+<ul>
+<li><p><strong>Factibilidad primal</strong>: El punto <span class="math inline">\(\xx\)</span> debe ser un punto factible.</p></li>
+<li><p><strong>Factibilidad dual</strong>: Los multiplicadores de Lagrange asociados a las restricciones de desigualdad deben ser no negativos. <span class="math display">\[
+\lambda_i\geq 0 \quad \forall i=1,\cdots,r.
+\]</span></p></li>
+<li><p><strong>Holgura complementaria</strong>: Los multiplicadores de Lagrange asociados a las restricciones de desigualdad solo pueden ser positivos si la restricción está activa. <span class="math display">\[
+\lambda_i\left(\aa_i^\top\xx-b_i\right)=0 \quad \forall i=1,\cdots,r.
+\]</span></p></li>
+<li><p><strong>Estacionariedad</strong>: El opuesto del vector gradiente debe ser una combinación lineal de los gradientes de las restricciones. <span class="math display">\[
+-\nabla f(\xx)=\sum_{i=1}^{r}\lambda_i\aa_i+\sum_{j=1}^m\nu_j\cc_j.
+\]</span></p></li>
+</ul>
+<div style="margin-top:2em;">
+
+</div>
+<p>En particular, si <span class="math inline">\(\xx\)</span> es un punto interior de <span class="math inline">\(\Omega\)</span>, las condiciones KKT se reducen a <span class="math display">\[
+\nabla f(\xx)=\bfzero.
+\]</span></p>
+</div>
+<p>El resultado anterior permite obtener candidatos a ser puntos óptimos para este caso especial de <span class="math inline">\(\Omega\)</span>. Puede resumirse así:</p>
+<div class="myhighlight">
+<p>Si <span class="math inline">\(\Omega\)</span> es un conjunto convexo de la forma <span class="math display">\[
+\Omega:=\{\xx\in\RR^p \mid A\xx\preceq \bb,\;C\xx=\dd\},
+\]</span> entonces las condiciones KKT son necesarias para que un punto sea óptimo.</p>
+<p>Si, además, <span class="math inline">\(f\)</span> es convexa, las condiciones KKT son también suficientes.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<div class="callout-example">
+<p><span class="badge bg-primary">Ejemplo 3</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Minimización cuadrática convexa con restricciones de igualdad </span></p>
+<p>Sean <span class="math inline">\(P\in\SS_+^p\)</span>, <span class="math inline">\(\mathbf{q}\in\RR^p\)</span>, <span class="math inline">\(c\in\RR\)</span>, <span class="math inline">\(A\in\RR^{m\times p}\)</span> y <span class="math inline">\(\bb\in\RR^p\)</span>. Consideremos el problema</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; \frac{1}{2}\xx^\top P\xx+\mathbf{q}^\top \xx+c\\
+\text{sujeto a }  &amp; A\xx=\bb.
+\end{array}
+\]</span></p>
+<p>Teniendo en cuenta que únicamente hay restricciones de igualdad, a saber, <span class="math inline">\(h_j(\xx)=\aa_j^\top\xx\)</span>, donde <span class="math inline">\(\aa_j\)</span> es la <span class="math inline">\(j\)</span>-ésima fila de <span class="math inline">\(A\)</span>, obtengamos la condición de estacionariedad: <span class="math display">\[
+\begin{align*}
+-\nabla f(\xx)&amp;=\sum_{j=1}^m\nu_j\nabla h_j(\xx)\\
+-(P\xx+\qq)&amp;= A^\top\bfnu\\
+P\xx+\qq+A^\top\bfnu &amp;=\bfzero.
+\end{align*}
+\]</span></p>
+<p>Agregando la factibilidad primal <span class="math inline">\(A^\top\xx=\bb\)</span>, podemos escribir matricialmente <span class="math display">\[
+\begin{pmatrix}P&amp;A^\top\\A&amp;0\end{pmatrix}\begin{pmatrix}\xx\\\bfnu\end{pmatrix}=\begin{pmatrix}-\qq\\\bb\end{pmatrix}.
+\]</span></p>
+<p>Este es un sistema de <span class="math inline">\(p+m\)</span> ecuaciones con <span class="math inline">\(p+m\)</span> incógnitas. Dado que las condiciones KKT son suficientes y necesarias, resolverlo permite hallar <span class="math inline">\(\xx^\star\)</span>. No es necesario verificar condiciones adicionales como la holgura complementaria ni la factibilidad dual, ya que no hay restricciones de desigualdad.</p>
+</div>
+<div style="margin-top:-0.5em;">
+
+</div>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br> Proponga casos para el Ejemplo 3, con <span class="math inline">\(\xx\in\RR^2\)</span> y <span class="math inline">\(m=2\)</span>.</p>
+</div>
+</div>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+</section>
+<section id="generalización" class="level3">
+<h3 class="anchored" data-anchor-id="generalización">Generalización</h3>
+<p>Volvamos al caso general de nuestro interés: <span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; f(\xx)\\
+\text{sujeto a } &amp; \xx\in\left\{\xx\in\RR^p\left|\begin{array}{cl}
+g_i(\xx)\leq 0,&amp; i=1,\cdots,r.\\
+h_j(\xx)=0, &amp; j=1,\cdots,m.
+\end{array}\right.\right\},
+\end{array}
+\tag{8}
+\]</span></p>
+<p>donde <span class="math inline">\(\Omega\)</span> está definido como una intersección de restricciones funcionales diferenciables.</p>
+<p>Supongamos que <span class="math inline">\(\xx^\star\)</span> es un punto óptimo en la frontera del conjunto factible <span class="math inline">\(\Omega\)</span> correspondiente a tres condiciones de desigualdad <span class="math inline">\(g_i(x) \le 0\)</span> para <span class="math inline">\(i=1,2,3\)</span>. En la siguiente figura se grafica la idea principal que subyace a la definición de cono normal para el caso de restricciones no lineales.</p>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/conic_hull_generalization.png" alt="Conic Hull" width="400px" class="figure-img">
+<figcaption>
+Envolvente cónica de la intersección de restricciones <span class="math inline">\(g_i(\xx)\leq 0\)</span>, para <span class="math inline">\(i=1,2,3\)</span>.
+</figcaption>
+</figure>
+<div style="margin-top:2em;">
+
+</div>
+<div class="myhighlight">
+<p>El conjunto de direcciones que forma un ángulo obtuso (o recto) con todas las direcciones desde <span class="math inline">\(\xx^\star\)</span> que permanecen en <span class="math inline">\(\Omega\)</span> coincide con el cono normal de la linearización de las restricciones activas en <span class="math inline">\(\xx^\star\)</span>.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Esta idea es más bien intuitiva, por lo cual no estamos en condiciones de extender el Teorema 4 ni el Corolario 5 de manera rigurosa. Sin embargo, lo que sí haremos es extender el concepto de las condiciones KKT, dejando para más adelante el análisis de su aplicabilidad. Para ello, utilizaremos los resultados de la sección anterior en <span class="math inline">\(\tilde{\Omega}\)</span>, la <em>linearización</em> de <span class="math inline">\(\Omega\)</span> en un punto dado. En particular, para un punto óptimo <span class="math inline">\(\xx^\star\)</span>, la linearización de las restricciones queda determinada por:</p>
+<p><span class="math display">\[
+\tilde{g}_i(\xx):=g_i(\xx^\star)+\nabla g_i(\xx^\star)\cdot (\xx-\xx^\star).
+\]</span> <span class="math display">\[
+\tilde{h}_i(\xx):=h_i(\xx^\star)+\nabla h_i(\xx^\star)\cdot (\xx-\xx^\star),
+\]</span></p>
+<p>Es decir, resulta <span class="math display">\[
+\tilde{\Omega}:=\left\{\xx\in\RR^p\left|\begin{array}{rl}
+\tilde{g}_i(\xx)\leq 0,&amp; i=1,\cdots,r.\\
+\tilde{h}_j(\xx)=0, &amp; j=1,\cdots,m.
+\end{array}\right.\right\}.
+\]</span></p>
+<p>Es importante notar que <span class="math inline">\(\nabla \tilde{g}_i(\xx)=\nabla g_i(\xx^\star)\)</span> y <span class="math inline">\(\nabla \tilde{h}_i(\xx)=\nabla h_i(\xx^\star)\)</span>. En consecuencia, la aplicación del Teorema 4 a <span class="math inline">\(\tilde{\Omega}\)</span> resulta en el siguiente cono normal:</p>
+<p><span class="math display">\[
+\left.N_{\tilde{\Omega}}(\xx^\star)=\left\{\sum_{i\in I(\xx^\star)}\lambda_i\nabla g_i(\xx^\star)+\sum_{j=1}^m\nu_j\nabla h_j(\xx^\star)+ \,\right| \lambda_i\in\RR_0^+, \nu_j\in\RR\right\},
+\tag{9}
+\]</span></p>
+<p>donde <span class="math inline">\(I(\xx^\star):=\left\{i\in\{1,\cdots,r\} \mid g_i(\xx^\star)=0\right\}\)</span>. Por supuesto, el uso del conjunto índice <span class="math inline">\(I\)</span> puede evitarse utilizando holgura complementaria, tal como antes.</p>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br> ¿Porqué, en la expresión (9), los multiplicadores <span class="math inline">\(\lambda_i\)</span> asociados a las restricciones de igualdad no deben ser no negativos?</p>
+</div>
+</div>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p><strong>Estamos en condiciones de formalizar el concepto de las condiciones KKT.</strong></p>
+<p>⚠️ ¡Atención! Aún no vamos a podemos afirmar que se tratan de condiciones de optimalidad. De hecho, veremos más adelante que no siempre lo son. Afortunadamente, existen ciertas hipótesis bajo las cuales sí constituyen condiciones necesarias de optimalidad, a las cuales se conoce como <em>cualificación de restricciones</em>. Pero vamos paso a paso.</p>
+<div style="margin-top:2em;">
+
+</div>
+<div class="definicion">
+<p><strong>Definición 2.</strong> (Condiciones de Karush-Kuhn-Tucker (KKT)) Sea un problema de optimización con función objetivo diferenciable y restricciones funcionales, de la forma <span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; f(\xx)\\
+\text{sujeto a } &amp; \xx\in\left\{\xx\in\RR^p\left|\begin{array}{cl}
+g_i(\xx)\leq 0,&amp; i=1,\cdots,r.\\
+h_j(\xx)=0, &amp; j=1,\cdots,m.
+\end{array}\right.\right\},
+\end{array}
+\]</span></p>
+<p>Las <em>condiciones KKT</em> en <span class="math inline">\(\xx\)</span> están dadas por:</p>
+<ul>
+<li><p><strong>Factibilidad primal</strong>: <span class="math display">\[
+g_i(\xx)\leq 0\qquad\forall i=1,\ldots,r,
+\]</span> <span class="math display">\[
+h_j(\xx)=0\qquad\forall j=1,\ldots,m.
+\]</span></p></li>
+<li><p><strong>Factibilidad dual</strong>: <span class="math display">\[
+\lambda_i\geq 0\qquad\forall i=1,\cdots,r.
+\]</span></p></li>
+<li><p><strong>Holgura complementaria</strong>: <span class="math display">\[
+\lambda_i g_i(\xx)=0\qquad \forall i=1,\cdots,r.
+\]</span></p></li>
+<li><p><strong>Estacionariedad</strong>: <span class="math display">\[
+-\nabla f(\xx)=\sum_{i=1}^r\lambda_i\nabla g_i(\xx)+\sum_{j=1}^m\nu_j\nabla h_j(\xx).
+\]</span></p></li>
+</ul>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<div class="alert alert-light text-dark" role="important">
+<p><span class="badge bg-warning text-dark">Importante</span></p>
+<ul>
+<li><p>Las condiciones KKT indican que <span class="math inline">\(-\nabla f(\xx)\)</span> debe estar en el cono normal a la linearización <span class="math inline">\(\tilde{\Omega}\)</span> del conjunto de restricciones <span class="math inline">\(\Omega\)</span>.</p></li>
+<li><p>La condición de holgura complementaria se resume en:</p></li>
+</ul>
+<div class="myhighlight">
+<p>Si la restricción <span class="math inline">\(g_i(\xx)\leq 0\)</span> no está activa, entonces <span class="math inline">\(\lambda_i=0.\)</span></p>
+</div>
+<div style="margin-top:1.5em;">
+
+</div>
+<ul>
+<li>Insistimos:</li>
+</ul>
+<div class="myhighlight">
+<p>Las condiciones KKT a menudo son necesarias para la optimalidad, pero no siempre.</p>
+</div>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Hasta ahora, tenemos claro que, si el conjunto factible es un poliedro, las condiciones KKT se cumplen en los puntos óptimos. Sin embargo, hemos advertido que esto no siempre es cierto en condiciones generales; es decir, existen situaciones en las que un punto óptimo no satisface las condiciones KKT.</p>
+<p>A continuación, veremos un ejemplo que ilustra precisamente esta situación. Luego, estudiaremos bajo qué circunstancias podemos asegurar que las condiciones KKT sí constituyen un criterio necesario de optimalidad, análisis que se conoce bajo el concepto de <em>cualificación de restricciones</em>.</p>
+<div class="callout-example">
+<p><span class="badge bg-primary">Ejemplo 4</span></p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; -x\\
+\text{sujeto a }  &amp; y-(1-x)^3\leq 0,\\
+                  &amp; x\geq 0,\;y\geq 0.
+\end{array}
+\]</span></p>
+<p>La función objetivo es <span class="math inline">\(f(x,y)=-x\)</span>, y las restricciones funcionales son <span class="math inline">\(g_1(x,y)=y-(1-x)^3\leq 0\)</span>, <span class="math inline">\(g_2(x,y)=-x\leq 0\)</span> y <span class="math inline">\(g_3(x,y)=-y\leq 0\)</span>. Entonces <span class="math display">\[
+\nabla f(x,y)=(-1,0),
+\]</span> <span class="math display">\[
+\nabla g_1(x,y)=(-3(1-x)^2,1),\qquad\nabla g_2(x,y)=(-1,0),\qquad\nabla g_3(x,y)=(0,-1).
+\]</span></p>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/ej_KKT_fail.png" alt="..." width="400px" class="figure-img">
+</figure>
+<p>Como se puede apreciar en la figura, <span class="math inline">\((x^\star,y^\star)=(1,0)\)</span> es el único punto óptimo de este problema. Pero en él, los gradientes de la función objetivo y de las restricciones activas son <span class="math display">\[
+\nabla f(x^\star,y^\star)=(-1,0)
+\]</span> <span class="math display">\[
+\nabla g_1(x^\star,y^\star)=(0,1),\qquad\nabla g_3(x^\star,y^\star)=(0,-1).
+\]</span></p>
+<p>Claramente, no hay manera de encontrar multiplicadores de Lagrange <span class="math inline">\(\lambda_1\)</span> y <span class="math inline">\(\lambda_3\)</span> que verifiquen la condición de estacionariedad <span class="math display">\[
+\underbrace{-\nabla f(x^\star,y^\star)}_{(1,0)}=\lambda_1\underbrace{\nabla g_1(x^\star,y^\star)}_{(0,1)}+\lambda_3\underbrace{\nabla g_3(x^\star,y^\star)}_{(0,-1)}.
+\]</span></p>
+<p>En consecuencia, las condiciones KKT fallan en este caso.</p>
+</div>
+</section>
+<section id="cualificación-de-restricciones" class="level3">
+<h3 class="anchored" data-anchor-id="cualificación-de-restricciones">Cualificación de restricciones</h3>
+<p>Una <em>cualificación de restricciones</em> es una condición adicional que se impone sobre las restricciones de un problema de optimización, con el fin de evitar comportamientos degenerados y garantizar ciertas propiedades teóricas deseables. En particular, nuestro interés es asegurar que las condiciones KKT sean efectivamente condiciones necesarias de optimalidad.</p>
+<p>Sea <span class="math inline">\(\xx^\star\)</span> un punto óptimo de <span class="math inline">\(\Omega\)</span>. Las cualificaciones de restricciones más frecuentes son:</p>
+<ul>
+<li><p><strong>Restricciones afines</strong>: Esto lo hemos estudiado como caso particular en la sección anterior, por lo cual no hace falta imponer cualificaciones adicionales.</p></li>
+<li><p><strong>Restricciones de desigualdad cóncavas y restricciones de igualdad afines</strong>: Si las restricciones de desigualdad activas <span class="math inline">\(\{g_i \mid i\in I(\xx^\star)\}\)</span> son funciones diferenciables cóncavas en una vecindad convexa de <span class="math inline">\(\xx^\star\)</span> y las restricciones de igualdad <span class="math inline">\(\{h_j \mid j=1,\ldots, m\}\)</span> son funciones afines, entonces las condiciones KKT se cumplen para <span class="math inline">\(\xx^\star\)</span>.</p></li>
+<li><p><strong>Independencia lineal de los gradientes</strong>: Si todas las funciones de restricción son continuamente diferenciables y el conjunto <span class="math display">\[
+\{\nabla g_i(\xx^\star) \mid i\in I(\xx^\star)\}\cup\{\nabla h_j(\xx^\star) \mid j=1,\ldots,m\}
+\]</span> es linealmente independiente, entonces las condiciones KKT se cumplen para <span class="math inline">\(\xx^\star\)</span>.</p></li>
+<li><p><strong>Condición de Slater para KKT</strong>: Si las restricciones de desigualdad activas <span class="math inline">\(\{g_i \mid i\in I(\xx^\star)\}\)</span> son funciones diferenciables convexas, las restricciones de igualdad <span class="math inline">\(\{h_j \mid j=1,\ldots, m\}\)</span> son funciones afines y además existe un punto <em>estrictamente factible</em> para las restricciones de desigualdad activas, es decir <span class="math display">\[
+\exists\xx_0:g_j(\xx_0)&lt;0\qquad\forall j\in I(\xx^\star),
+\]</span> entonces las condiciones KKT se cumplen para <span class="math inline">\(\xx^\star\)</span>.</p>
+<p>En este caso, decimos simplemente que <em>las restricciones verifican la condición de Slater</em>.</p></li>
+</ul>
+<div style="margin-top:2em;">
+
+</div>
+<p>La condición de Slater es la cualificación de restricciones más común para garantizar que las condiciones KKT son necesarias para que un punto sea óptimo. Es importante remarcar que:</p>
+<ul>
+<li>La condición de <em>factibilidad estricta</em> es fundamental y no puede relajarse.</li>
+</ul>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br></p>
+<p>Analice las condiciones KKT en el punto óptimo del problema <span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; x\\
+\text{sujeto a }  &amp; x^2\leq 0.
+\end{array}
+\]</span></p>
+</div>
+</div>
+</div>
+<ul>
+<li>La condición de convexidad tampoco puede relajarse, como se ve en el Ejemplo 4, donde la función de restricción <span class="math inline">\(g_1(x,y)=y-(1-x)^3\)</span> no es convexa. En efecto, <span class="math display">\[
+\nabla^2 g_1(x,y)=\begin{pmatrix}
+-6(1-x)&amp;0\\
+0&amp;0
+\end{pmatrix},
+\]</span> lo cual implica que no es semidefinida positiva en un entorno del punto óptimo <span class="math inline">\((1,0)\)</span>.</li>
+</ul>
+<div style="margin-top:2em;">
+
+</div>
+<p>Ahora bien, si a la condición de Slater le añadimos la hipótesis de que la función objetivo <span class="math inline">\(f\)</span> es convexa, entonces las condiciones KKT no solo son necesarias, sino que también resultan suficientes para garantizar la optimalidad. Este escenario corresponde a los problemas de optimización convexa con funciones diferenciables, en los cuales el punto óptimo queda completamente caracterizado por las condiciones KKT.</p>
+<div class="teorema">
+<p><strong>Teorema 6.</strong> Sea un problema de optimización convexa de la forma <span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; f(\xx)\\
+\text{sujeto a } &amp; \xx\in\left\{\xx\in\RR^p\left|\begin{array}{cl}
+g_i(\xx)\leq 0,&amp; i=1,\cdots,r.\\
+A\xx=\bb
+\end{array}\right.\right\},
+\end{array}
+\]</span> con <span class="math inline">\(A\in\RR^{m\times p}\)</span> y <span class="math inline">\(\bb\in\RR^m\)</span>. Si la función objetivo <span class="math inline">\(f\)</span> y las funciones de restricción <span class="math inline">\(g_i\)</span> (<span class="math inline">\(i=1,\ldots,r\)</span>) son diferenciables, y además las restricciones verifican la condición de Slater, entonces las condiciones KKT son suficientes y necesarias para que un punto sea óptimo.</p>
+</div>
+<details>
+<summary>
+Mostrar detalles
+</summary>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true"><span style="border: 1px solid #ddd; padding: 2px 6px; border-radius: 4px;"><em>Demostración</em></span></a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<p>Probaremos únicamente la suficiencia. Sea <span class="math inline">\(\xx_0\)</span> un punto factible que verifica las condiciones KKT. Entonces, la condición de estacionariedad nos permite afirmar que existen <span class="math inline">\(\bflambda\in\RR^r\)</span>, con <span class="math inline">\(\bflambda\succeq\bfzero\)</span>, y <span class="math inline">\(\bfnu\in\RR^m\)</span> tales que <span class="math display">\[
+\nabla f(\xx_0)+\sum_{i=1}^r\lambda_i\nabla g_i(\xx_0)+A^\top\bfnu=\bfzero.
+\tag{10}
+\]</span></p>
+<p>Dado que <span class="math inline">\(f\)</span> y <span class="math inline">\(g_i\)</span> son funciones convexas, también es convexa la función <span class="math inline">\(L:\RR^p\to\RR\)</span> definida por <span class="math display">\[
+L(\xx):=f(\xx)+\sum_{i=1}^r\lambda_i g_i(\xx)+\bfnu^\top(A\xx-\bb).
+\]</span></p>
+<p>Por condición de optimalidad de primer orden sin restricciones para funciones convexas (Teorema 1), la expresión (10) implica que <span class="math inline">\(\xx_0\)</span> es el minimizador de <span class="math inline">\(L(\xx_0)\)</span>. Además, es fácil ver que <span class="math inline">\(L(\xx)\leq f(\xx)\)</span> para todo <span class="math inline">\(\xx\)</span> factible. En consecuencia, se deduce <span class="math display">\[
+f(\xx_0)=L(\xx_0)\leq L(\xx)\leq f(\xx)\qquad\forall\xx\text{ factible},
+\]</span> donde la primera igualdad es cierta gracias a la condición de holgura complementaria <span class="math inline">\(\lambda_i g_i(\xx_0)=0\)</span> para todo <span class="math inline">\(i=1,\ldots,r\)</span>. Luego, <span class="math inline">\(\xx_0\)</span> es punto óptimo del problema, tal como queríamos probar.<span class="math inline">\(\qquad\blacksquare\)</span></p>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br> En la demostración anterior, verifique que <span class="math inline">\(L\)</span> es una función convexa, <span class="math inline">\(L(\xx)\leq f(\xx)\)</span> para todo <span class="math inline">\(\xx\)</span> factible y <span class="math inline">\(L(\xx_0)=f(\xx_0)\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</details>
+<div style="margin-top:2em;">
+
+</div>
+<div class="callout-example">
+<p><span class="badge bg-primary">Ejemplo 5</span></p>
+<p><span class="math display">\[
+\begin{array}{cl}
+\text{minimizar } &amp; x_1^2+x_2^2\\
+\text{sujeto a }  &amp; x_1+x_2\leq 1,\\
+                  &amp; x_1\geq 0, x_2\geq 0.
+\end{array}
+\]</span></p>
+<p>Claramente el único punto óptimo es <span class="math inline">\(\xx^\star=\bfzero\)</span>. Además, se cumple la condición de Slater para KKT: en primer lugar, las restricciones de desigualdad están definidas por funciones afines (y, por lo tanto, convexas); en segundo lugar, el punto <span class="math inline">\((0.2,0.2)\)</span> es estrictamente factible para las restricciones activas en <span class="math inline">\(\bfzero\)</span>. Por lo tanto, podemos afirmar que las condiciones KKT son suficientes y necesarias para la optimalidad.</p>
+<p>Vamos a verificar la conclusión anterior. Las condiciones KKT son: <span class="math display">\[
+\begin{array}{cl}
+x_1^\star+x_2^\star-1\leq 0,\; x_1^\star\geq 0,\; x_2^\star\geq 0\qquad&amp;\text{(Factibilidad primal)}\\[3pt]
+\lambda_i^\star\geq 0\qquad\forall i=1,2,3\qquad &amp;\text{(Factibilidad dual)}\\[3pt]
+\lambda_1^\star(x_1^\star+x_2^\star-1)=0,\; \lambda_2^\star x_1^\star=0,\;\lambda_3^\star x_2^\star=0\qquad&amp;\text{(Holgura complementaria)}\\[3pt]
+-2x_1^\star=\lambda_1^\star-\lambda_2^\star,\;-2x_2^\star=\lambda_1^\star-\lambda_3^\star\qquad&amp;\text{(Estacionariedad)}
+\end{array}
+\]</span></p>
+<p>El único punto que cumple todas estas condiciones es <span class="math inline">\(\xx^\star=\bfzero\)</span>, con <span class="math inline">\(\bflambda^\star=\bfzero\)</span>. Para justificar esto, veamos que suponer <span class="math inline">\(x_1^\star&gt; 0\)</span> (análogamente para <span class="math inline">\(x_2^\star&gt;0\)</span>) conduce a un absurdo:</p>
+<ol type="1">
+<li>Por holgura complementaria, debe ser <span class="math inline">\(\lambda_2^\star=0\)</span>.</li>
+<li>La primera condición de estacionariedad implica <span class="math inline">\(\lambda_1^\star&lt;0\)</span>. Esto contradice la factiibilidad dual <span class="math inline">\(\lambda_1^\star\geq 0\)</span>.</li>
+</ol>
+</div>
+</section>
+</section>
+<section id="dualidad" class="level2">
+<h2 class="anchored" data-anchor-id="dualidad">Dualidad</h2>
+<p>La teoría de la dualidad juega un papel fundamental en la optimización, permitiendo reformular problemas en términos de funciones duales que pueden proporcionar información valiosa sobre la solución óptima.</p>
+<section id="función-dual-de-lagrange" class="level3">
+<h3 class="anchored" data-anchor-id="función-dual-de-lagrange">Función dual de Lagrange</h3>
+<div class="definicion">
+<p><strong>Definición 3.</strong> (Lagrangiano) Sea un problema de optimización de la forma <span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; f(\xx)\\
+\text{sujeto a } &amp; \xx\in\left\{\xx\in\RR^p\left|\begin{array}{cl}
+g_i(\xx)\leq 0,&amp; i=1,\cdots,r.\\
+h_j(\xx)=0, &amp; j=1,\cdots,m.
+\end{array}\right.\right\}.
+\end{array}
+\]</span></p>
+<p>Se denomina <em>Lagrangiano</em> a la función <span class="math inline">\(\calL:\RR^p\times\RR^r\times\RR^m\to\RR\)</span> definida por <span class="math display">\[
+\calL(\xx,\bflambda,\bfnu):=f(\xx)+\sum_{i=1}^r\lambda_i g_i(\xx)+\sum_{j=1}^m\nu_j h_j(\xx),
+\]</span></p>
+<p>con <span class="math inline">\(\text{dom}\,L:=\mathcal{D}\times\RR^r\times\RR^m\)</span>. Las componentes de los vectores <span class="math inline">\(\bflambda\)</span> y <span class="math inline">\(\bfnu\)</span> se denominan <em>multiplicadores de Lagrange</em>.</p>
+</div>
+<div style="margin-top:1em;">
+
+</div>
+<p>Nos referiremos al problema de optimización general como <mark><em>problema primal</em></mark>. A partir del Lagrangiano, construimos a continuación una función que luego nos permitirá derivar una cota inferior para el valor óptimo <span class="math inline">\(p^\star\)</span> del problema primal.</p>
+<div class="definicion">
+<p><strong>Definición 4.</strong> (Función dual) Sea <span class="math inline">\(\calL\)</span> el Lagrangiano de la Definición 3. Se denomina <em>función dual de Lagrange</em> a <span class="math inline">\(\calG:\RR^r\times\RR^m\to\RR\)</span> definida por <span class="math display">\[
+\calG(\bflambda,\bfnu):=\inf_{\xx}\calL(\xx,\bflambda,\bfnu).
+\]</span></p>
+<p>Cuando el Lagrangiano no está acotado inferiormente en <span class="math inline">\(\xx\)</span>, se asume el valor <span class="math inline">\(-\infty\)</span>.</p>
+</div>
+<details>
+<summary>
+Mostrar detalles
+</summary>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true"><span style="font-size: 1.25em;">①</span></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false"><span style="font-size: 1.25em;">②</span></a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<p>Para un <span class="math inline">\(\xx\)</span> fijo, el Lagrangiano es una función afín de <span class="math inline">\((\bflambda,\bfnu)\)</span>. Es decir, puede ser escrito de la forma <span class="math display">\[
+\calL(\xx,\bflambda,\bfnu)=A\begin{pmatrix}\bflambda\\\bfnu\end{pmatrix}+\bb
+\]</span></p>
+<div style="margin-top:-0.5em;">
+
+</div>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br> ¿Quiénes son <span class="math inline">\(A\)</span> y <span class="math inline">\(\bb\)</span> en la expresión anterior?</p>
+</div>
+</div>
+</div>
+<p>Por lo tanto, la función dual <span class="math inline">\(\calG\)</span> es el ínfimo puntual de una familia de funciones afines de <span class="math inline">\((\bflambda,\bfnu)\)</span>. Esto significa que <span class="math inline">\(\calG\)</span> es siempre una función cóncava (ver operaciones que preservan convexidad en <a href="A2_optimizacion_convexa.html#operaciones-que-preservan-convexidad-1">C1-S2</a>).</p>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<p>La función dual <span class="math inline">\(\calG\)</span> es una cota inferior del valor óptimo <span class="math inline">\(p^\star\)</span> del problema primal, en el siguiente sentido: para todo <span class="math inline">\(\bflambda\succeq \bfzero\)</span> y para todo <span class="math inline">\(\bfnu\)</span>, resulta <span class="math display">\[
+\calG(\bflambda,\bfnu)\leq p^\star.
+\]</span></p>
+<div style="margin-top:-0.5em;">
+
+</div>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br> Verificar la propiedad.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</details>
+<div style="margin-top:2em;">
+
+</div>
+<div class="callout-example">
+<p><span class="badge bg-primary">Ejemplo 6</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Solución por mínimos cuadrados de un sistema de ecuaciones lineales </span></p>
+<p>Sean <span class="math inline">\(A\in\RR^{m\times p}\)</span> y <span class="math inline">\(\bb\in\RR^m\)</span> y consideremos el problema</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; \xx^\top\xx\\
+\text{sujeto a }  &amp; A\xx=\bb.
+\end{array}
+\]</span></p>
+<p>Al no haber restricciones de desigualdad, el Lagrangiano es <span class="math display">\[
+L(\xx,\bfnu)=\xx^\top\xx+\bfnu^\top (A\xx-\bb).
+\]</span></p>
+<p>Teniendo en cuenta el Ejemplo 12 de <a href="A2_optimizacion_convexa.html">C1-S2</a>, podemos afirmar que <span class="math inline">\(L\)</span> es una función convexa. Por lo tanto, podemos minimizar respecto de <span class="math inline">\(\xx\)</span> usando la condición de optimalidad <span class="math inline">\(\nabla_{\xx}L(\xx,\bfnu)=\bfzero\)</span>: <span class="math display">\[
+\begin{align*}
+\nabla_{\xx}L(\xx,\bfnu)=2\xx+A^\top\bfnu&amp;=\bfzero\\
+\xx&amp;=-\frac{1}{2}A^\top\bfnu.
+\end{align*}
+\]</span></p>
+<p>La función dual es <span class="math display">\[
+\begin{align*}
+\calG(\bfnu)&amp;=L\left(-\frac{1}{2}A^\top\bfnu,\bfnu\right)\\
+&amp;=\left(-\frac{1}{2}A^\top\bfnu\right)^\top\left(-\frac{1}{2}A^\top\bfnu\right)+\bfnu^\top\left(A\left(-\frac{1}{2}A^\top\bfnu\right)-\bb\right)\\
+&amp;=-\frac{1}{4}\bfnu^\top AA^\top \bfnu-\bfnu^\top \bb,
+\end{align*}
+\]</span></p>
+<p>la cual es una función cuadrática cóncava. Por propiedad, podemos afirmar que <span class="math display">\[
+-\frac{1}{4}\bfnu^\top A A^\top \bfnu-\bfnu^\top\bb\leq p^{\star}\qquad\forall\bfnu\in\RR^m.
+\]</span></p>
+</div>
+<div style="margin-top:-0.5em;">
+
+</div>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br> Proponga casos para el Ejemplo 6, con <span class="math inline">\(\xx\in\RR^2\)</span> y <span class="math inline">\(m=2\)</span>. En cada uno, de ser posible, obtenga y compare el valor máximo de la función dual con la solución del problema primal.</p>
+</div>
+</div>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+</section>
+<section id="el-problema-dual-de-lagrange" class="level3">
+<h3 class="anchored" data-anchor-id="el-problema-dual-de-lagrange">El problema dual de Lagrange</h3>
+<p>Inmediatamente nos podemos preguntar:</p>
+<div class="myhighlight3">
+<p>¿Cuál es el valor máximo <span class="math inline">\(d^\star\)</span> de <span class="math inline">\(\calG(\bflambda,\bfnu)\)</span> si asumimos <span class="math inline">\(\bflambda\succeq \bfzero\)</span>?</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Esta pregunta cobra interés de las propiedades de la función dual <span class="math inline">\(\calG\)</span>: es una función cóncava y constituye una cota inferior de <span class="math inline">\(p^\star\)</span> para <span class="math inline">\(\lambda\succeq \bfzero\)</span>. Por lo tanto, maximizarla conduce a un problema de optimización convexo, independientemente de si el problema primal lo es o no. Además, se verifica <span class="math display">\[
+d^\star\leq p^\star.
+\]</span></p>
+<p>El problema de optimización convexo mencionado lo definimos formalmente a continuación.</p>
+<div class="definicion">
+<p><strong>Definición 5.</strong> (Problema dual) Sea <span class="math inline">\(\calG\)</span> la función dual de Lagrange asociado al problema primal. El <em>problema dual de Lagrange</em> es <span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; \calG(\bflambda,\bfnu)\\
+\text{sujeto a }  &amp; \bflambda\succeq \bfzero.
+\end{array}
+\]</span></p>
+<p>El valor óptimo del problema dual se denota con <span class="math inline">\(d^\star\)</span>. Además, se dice que <span class="math inline">\((\bflambda^\star,\bfnu^\star)\)</span> son los <em>multiplicadores de Lagrange óptimos</em> si verifican <span class="math display">\[
+\calG(\bflambda^\star,\bfnu^\star)=d^\star.
+\]</span></p>
+</div>
+<p>Resaltamos:</p>
+<div class="myhighlight">
+<p>El problema dual es siempre un problema de optimización convexo.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<section id="dualidad-débil" class="level4">
+<h4 class="anchored" data-anchor-id="dualidad-débil">Dualidad débil</h4>
+<p>El valor óptimo del problema dual, <span class="math inline">\(d^\star\)</span>, es, por definición, la mejor cota inferior de <span class="math inline">\(p^\star\)</span> que podemos obtener mediante la función dual de Lagrange. La desigualdad <span class="math display">\[
+d^\star\leq p^\star
+\tag{11}
+\]</span> se conoce como <mark><em>dualidad débil</em></mark>, y es cierta incluso si el problema primal no es convexo. La dualidad débil es cierta incluso para valores infinitos:</p>
+<ul>
+<li>Si el problema primal no tiene cota inferior (<span class="math inline">\(p^\star=-\infty\)</span>), entonces el problema dual es es infactible (<span class="math inline">\(d^\star=-\infty\)</span>).</li>
+<li>Si el problema dual no tiene cota superior (<span class="math inline">\(d^\star=\infty\)</span>), entonces el problema primal es infactible (<span class="math inline">\(p^\star=\infty\)</span>).</li>
+</ul>
+<p>Nos referiremos a la diferencia <span class="math inline">\(p^\star-d^\star\)</span> como <mark><em>brecha de dualidad óptima</em></mark> del problema primal. Es importante remarcar que la ventaja de trabajar con la dualidad débil (11) radica en que aún cuando el problema primal es difícil de resolver, el problema dual, al ser siempre convexo, la mayoría de las veces puede ser resuelto eficientemente.</p>
+</section>
+<section id="dualidad-fuerte" class="level4">
+<h4 class="anchored" data-anchor-id="dualidad-fuerte">Dualidad fuerte</h4>
+<p>La <mark><em>dualidad fuerte</em></mark> se cumple si ocurre <span class="math display">\[
+d^\star=p^\star.
+\tag{12}
+\]</span></p>
+<p>Hay dos hechos importantes a tener en cuenta:</p>
+<ul>
+<li>La dualidad fuerte, en general, no se cumple.</li>
+<li>Si el problema primal es convexo, la dualidad fuerte usualmente se cumple.</li>
+</ul>
+<p>La cualificación de restricciones más común para asegurar la dualidad fuerte es la <em>condición de Slater</em>, que presentaremos en el siguiente teorema. Observar que difiere sutilmente de la condición vista para KKT.</p>
+<div class="teorema">
+<p><strong>Teorema 7.</strong> (Teorema de Slater) Sea un problema de optimización convexa de la forma <span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; f(\xx)\\
+\text{sujeto a } &amp; \xx\in\left\{\xx\in\RR^p\left|\begin{array}{cl}
+g_i(\xx)\leq 0,&amp; i=1,\cdots,r.\\
+A\xx=\bb
+\end{array}\right.\right\},
+\end{array}
+\]</span> con <span class="math inline">\(A\in\RR^{m\times p}\)</span> y <span class="math inline">\(\bb\in\RR^m\)</span>. Si se satisface la <em>condición de Slater</em> de que existe un punto <em>estrictamente factible</em>; esto es <span class="math display">\[
+\exists\xx_0\in\text{relint}\,\mathcal{D}:g_i(\xx_0)&lt;0\qquad\forall i=1,\ldots,r,\qquad A\xx_0=\bb,
+\]</span> entonces se cumple la dualidad fuerte.</p>
+</div>
+<p>Recordemos, del <a href="A2_optimizacion_convexa.html">C1-S2</a>, que <span class="math inline">\(\text{relint}\,\mathcal{D}\)</span> es el interior relativo de <span class="math inline">\(\mathcal{D}\)</span> definido por <span class="math display">\[
+\text{relint}\,\mathcal{D}:=\left\{\xx\in \mathcal{D}\,\left|\exists r&gt;0: B(\xx,r)\cap \text{aff}\,\mathcal{D}\subset \mathcal{D}\right.\right\},
+\]</span></p>
+<p>La aparición de <span class="math inline">\(\text{relint}\,\mathcal{D}\)</span> es fundamental, pues permite aplicar el teorema anterior a problemas donde no hay restricciones de desigualdad. Además, en tales casos, la condición de Slater puede simplificarse bastante. Por ejemplo, si <span class="math inline">\(\text{dom}\,f=\RR^p\)</span> y solo hay restricciones de igualdad, <span class="math inline">\(A\xx=\bb\)</span>, entonces <span class="math display">\[
+\mathcal{D}=\Omega=\{\xx\in\RR^p \mid A\xx=\bb\},
+\]</span></p>
+<p>lo cual significa que <span class="math inline">\(\mathcal{D}\)</span> es un conjunto afín y, en consecuencia, ocurre que <span class="math inline">\(\text{aff}\,\mathcal{D}=\mathcal{D}\)</span> tal que <span class="math inline">\(\text{relint}\,\mathcal{D}=\mathcal{D}\)</span>. En tal caso, la condición de Slater se reduce a mostrar que <span class="math inline">\(\Omega\)</span> es no vacío.</p>
+<div class="callout-example">
+<p><span class="badge bg-primary">Ejemplo 7</span></p>
+<p>Consideremos el problema del Ejemplo 6, con <span class="math inline">\(m=1\)</span>: <span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; \xx^\top\xx\\
+\text{sujeto a }  &amp; \aa^\top\xx=b,
+\end{array}
+\]</span> con <span class="math inline">\(\aa\in\RR^p\)</span> y <span class="math inline">\(b\in\RR\)</span>. Tenemos un solo multiplicador de Lagrange, <span class="math inline">\(\nu\in\RR\)</span>, y la función dual es <span class="math display">\[
+\calG(\nu)=-\frac{1}{4}\|\aa\|_2^2\nu^2-b\nu.
+\]</span></p>
+<p>Por lo tanto, el problema dual es <span class="math display">\[
+\begin{array}{ll}
+\text{maximizar } &amp; -\frac{1}{4}\|\aa\|_2^2\nu^2-b\nu\\
+\text{sujeto a }  &amp; \nu&gt;0.
+\end{array}
+\]</span></p>
+<p>Este es un problema fácil de resolver, porque <span class="math inline">\(\calG(\nu)\)</span> es una función de una variable; más precisamente, una función cuadrática, por lo cual la solución está dado por su vértice. Resulta <span class="math display">\[
+\nu^\star=\frac{2b}{\|\aa\|_2^2},\qquad d^\star=\calG(\nu^\star)=-\frac{3b^2}{\|\aa\|_2^2}.
+\]</span></p>
+<p>Dado que se cumplen las condiciones del Teorema 5 (problema de optimización convexa + condición de Slater), podemos concluir que hay dualidad fuerte. Luego, el valor óptimo del problema primal es <span class="math display">\[
+p^\star=-\frac{3b^2}{\|\aa\|_2^2}.
+\]</span></p>
+</div>
+<div style="margin-top:-0.5em;">
+
+</div>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br> Proponga casos para el Ejemplo 7, con <span class="math inline">\(\xx\in\RR^2\)</span>, y deduzca geométricamente el punto óptimo <span class="math inline">\(\xx^\star\)</span>.</p>
+</div>
+</div>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+</section>
+</section>
+<section id="relación-entre-dualidad-y-kkt" class="level3">
+<h3 class="anchored" data-anchor-id="relación-entre-dualidad-y-kkt">Relación entre dualidad y KKT</h3>
+<p>Analicemos la siguiente pregunta:</p>
+<div class="myhighlight3">
+<p>¿Qué implicancias tiene la dualidad fuerte <span class="math inline">\(d^\star=p^\star\)</span>?</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Para ello, vamos a suponer que los puntos óptimos existen, tanto para el problema primal (<span class="math inline">\(\xx^\star\)</span>) como para el problema dual (<span class="math inline">\(\bflambda^\star\)</span> y <span class="math inline">\(\bfnu^\star\)</span>). Además, es importante recordar que en el problema dual se impone la restricción <span class="math inline">\(\bflambda\succeq\bfzero\)</span>.</p>
+<p>La dualidad fuerte significa que <span class="math display">\[
+\underbrace{f(\xx^\star)}_{p^\star}=\underbrace{\calG(\bflambda^\star,\bfnu^\star)}_{d^\star}=\inf_{\xx}L(\xx,\bflambda^\star,\bfnu^\star).
+\tag{13}
+\]</span></p>
+<p>Hay que tener cuidado al interpretar la expresión (13): si bien garantiza que <span class="math inline">\(f(\xx^\star)\)</span> es el valor ínfimo del Lagrangiano, no nos dice nada acerca de cuál es el valor de <span class="math inline">\(\xx\)</span> donde dicho ínfimo se alcanza. No obstante, la naturaleza de los multiplicadores de Lagrange y las restricciones funcionales nos permiten deducir, a partir de (13), lo siguiente: <span class="math display">\[
+\begin{align*}
+f(\xx^\star)&amp;\leq L(\xx^\star,\bflambda^\star,\bfnu^\star)\\
+&amp;=f(\xx^\star)+\underbrace{\sum_{i=1}^r\lambda_ig_i(\xx^\star)}_{\leq\, 0}+\underbrace{\sum_{j=1}^m\nu_j h_j(\xx^\star)}_{=\,0}\\
+&amp;\leq f(\xx^\star)
+\end{align*}
+\]</span></p>
+<p>Luego, por antisimetría, debe ser <span class="math display">\[
+f(\xx^\star)=\underbrace{f(\xx^\star)+\sum_{i=1}^r\lambda_ig_i(\xx^\star)}_{L(\xx^\star,\bflambda^\star,\bfnu^\star)}.
+\tag{14}
+\]</span></p>
+<p>A partir de (13) y (14) podemos concluir que, bajo dualidad fuerte, la terna <span class="math inline">\((\xx^\star,\bflambda^\star,\bfnu^\star)\)</span> verifica dos condiciones KKT de la Definición 2: holgura complementaria y estacionariedad.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">Holgura complementaria</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Estacionariedad</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<p>Para que la igualdad en (14) sea cierta, debe ser <span class="math display">\[
+\sum_{i=1}^r\lambda_ig_i(\xx^\star)=0.
+\]</span></p>
+<p>Pero los términos son no positivos, por lo cual esto es equivalente a pedir <span class="math display">\[
+\lambda_i g_i(\xx^\star)=0\qquad\forall i = 1,\ldots, r.
+\]</span></p>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<p>El ínfimo de <span class="math inline">\(L(\xx,\bflambda^\star,\bfnu^\star)\)</span> sí ocurre en <span class="math inline">\(\xx^\star\)</span>: <span class="math display">\[
+L(\xx^\star,\bflambda^\star,\bfnu^\star)=\inf_{\xx}L(\xx,\bflambda^\star,\bfnu^\star).
+\]</span></p>
+<p>Esto es:</p>
+<div class="myhighlight">
+<p>Bajo dualidad fuerte, <span class="math inline">\(\xx^\star\)</span> es un minimizador de <span class="math inline">\(L(\xx,\bflambda^\star,\bfnu^\star)\)</span>.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>La suposición de que la función objetivo y las funciones de restricción son diferenciables implica que el Lagrangiano también lo es. Como la diferenciabilidad requiere que las funciones estén definidas en conjuntos abiertos, podemos asegurar que <span class="math inline">\(\text{dom}\,L:=\mathcal{D}\times\RR^r\times\RR^m\)</span> es un conjunto abierto de <span class="math inline">\(\RR^{p+r+m}\)</span>. Así, <span class="math inline">\(\xx^\star\)</span> es un punto interior de <span class="math inline">\(\text{dom}\,L\)</span> y, por lo tanto, la condición de optimalidad asegura que <span class="math display">\[
+\nabla L(\xx^\star,\bflambda^\star,\bfnu^\star)=\bfzero.
+\]</span></p>
+<p>Reemplazando <span class="math display">\[
+\nabla L(\xx^\star,\bflambda^\star,\bfnu^\star)=\nabla f(\xx^\star)+\sum_{i=1}^r\lambda_i^\star\nabla g_i(\xx^\star)+\sum_{j=1}^m\nu_j^\star\nabla h_j(\xx^\star),
+\]</span> obtenemos <span class="math display">\[
+-\nabla f(\xx^\star)=\sum_{i=1}^r\lambda_i^\star\nabla g_i(\xx^\star)+\sum_{j=1}^m\nu_j^\star\nabla h_j(\xx^\star).
+\tag{14}
+\]</span></p>
+</div>
+</div>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Por supuesto, la factibilidad primal y la factibilidad dual son inmediatas del hecho de asumir que <span class="math inline">\(\xx^\star\)</span> es óptimo para el problema primal y <span class="math inline">\((\bflambda^\star,\bfnu^\star)\)</span> son óptimos para el problema dual, respectivamente. Así, estamos en condiciones de afirmar que las condiciones KKT son necesarias para la dualidad fuerte, tal y como lo establece el siguiente teorema.</p>
+<div class="teorema">
+<p><strong>Teorema 8.</strong> (Dualidad y KKT) Sea <span class="math inline">\(\xx^\star\)</span> un punto óptimo primal y <span class="math inline">\((\bflambda^\star,\bfnu^\star)\)</span> un punto óptimo dual. Si <span class="math inline">\(d^\star=p^\star\)</span>, entonces <span class="math inline">\((\xx^\star,\bflambda^\star,\bfnu^\star)\)</span> satisface las condiciones de Karush-Kuhn-Tucker.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<div class="callout-example">
+<p><span class="badge bg-primary">Ejemplo 8</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Problema de <em>water-filling</em> </span></p>
+<p>Veamos un ejemplo clásico de <em>teoría de la información</em>. Consideremos un sistema de comunicación con <span class="math inline">\(p\)</span> canales para transmisión de información y supongamos que la potencia total disponible para transmitir es limitada. El objetivo es distribuir la potencia total, que para facilitar el análisis se normaliza al valor 1. Así, si denotamos <span class="math inline">\(x_i\)</span> la potencia asignada al <span class="math inline">\(i\)</span>-ésimo canal, tenemos que <span class="math display">\[
+\sum_{i=1}^p x_i=1,
+\]</span> con <span class="math inline">\(x_i\geq 0\)</span> para todo <span class="math inline">\(i=1,\ldots,p\)</span>.</p>
+<p>Un modelo típico para la capacidad máxima de transmisión es <span class="math display">\[
+\sum_{i=1}^p\log(x_i+\alpha_i),
+\]</span> donde <span class="math inline">\(\alpha_i&gt;0\)</span> representa el ruido del <span class="math inline">\(i\)</span>-ésimo canal. Esto deriva en el siguiente problema de optimización convexa: <span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; -\sum_{i=1}^p\log(x_i+\alpha_i)\\
+\text{sujeto a }  &amp; \mathbf{1}^\top\xx=1,\\
+                  &amp; \xx\succeq \bfzero.
+\end{array}
+\]</span></p>
+<p>Observar que hay <span class="math inline">\(p\)</span> restricciones de desigualdad, con <span class="math inline">\(g_i(\xx)=x_i\)</span>, y una única restricción de igualdad, con <span class="math inline">\(h(\xx)=\mathbf{1}^\top\xx\)</span>.</p>
+<p>Claramente la condición de Slater se cumple: podemos tomar, por ejemplo, el punto estrictamente factible <span class="math inline">\(x_i=1/p\)</span> (para todo <span class="math inline">\(i=1,\ldots,p\)</span>). Por lo tanto, podemos asegurar que se cumple la dualidad fuerte y que las condiciones KKT son suficientes y necesarias para la optimalidad.</p>
+<p>Las condiciones KKT son: <span class="math display">\[
+\begin{array}{cl}
+\xx^\star\succeq \bfzero,\; \mathbf{1}^\top\xx^\star=1\qquad&amp;\text{(Factibilidad primal)}\\[2pt]
+\bflambda^\star\succeq \bfzero\qquad &amp;\text{(Factibilidad dual)}\\[2pt]
+\lambda_i^\star x_i^\star=0\qquad\forall i=1,\ldots,p\qquad&amp;\text{(Holgura complementaria)}\\
+\displaystyle\frac{1}{x_i^\star+\alpha_i}=-\lambda_i^\star+\nu^\star\qquad\forall i=1,\ldots,p\qquad&amp;\text{(Estacionariedad)}
+\end{array}
+\]</span></p>
+<p>La última condición puede reescribirse como <span class="math display">\[
+\lambda_i^\star=\nu^\star-\displaystyle\frac{1}{x_i^\star+\alpha_i},
+\]</span> lo que permite combinarla con las demás condiciones que involucran <span class="math inline">\(\bflambda\)</span>, facilitando así la eliminación de esta variable de holgura. Resulta: <span class="math display">\[
+\xx^\star\succeq\bfzero,\;\mathbf{1}^\top\xx^\star=1,
+\]</span> <span class="math display">\[
+\left(\nu^\star-\displaystyle\frac{1}{x_i^\star+\alpha_i}\right)x_i^\star=0\qquad\forall i = 1,\ldots,p,
+\]</span> <span class="math display">\[
+\nu^\star-\frac{1}{x_i^\star+\alpha_i}\geq 0\qquad\forall i=1,\ldots,p.
+\]</span></p>
+<p>El análisis de las últimas dos expresiones permite deducir que <span class="math display">\[
+x_i^\star=\left\{\begin{array}{cl}
+1/\nu^\star-\alpha_i&amp;\mbox{si }\nu^\star&lt;\frac{1}{\alpha_i},\\
+0&amp;\mbox{si }\nu^\star\geq\frac{1}{\alpha_i}.
+\end{array}\right.,
+\]</span> o, equivalentemente, <span class="math inline">\(x_i^\star=\max\{0,1/\nu^\star-\alpha_i\}\)</span>. Finalmente, el uso de la condición <span class="math inline">\(\mathbf{1}^\top\xx^\star=1\)</span> resulta en <span class="math display">\[
+\sum_{i=1}^p\max\{0,1/\nu^\star-\alpha_i\}=1.
+\tag{15}
+\]</span></p>
+<p>El lado izquierdo de (15) corresponde a una función de <span class="math inline">\(1/\nu^\star\)</span> que es continua, creciente por tramos y con puntos de quiebre en los valores <span class="math inline">\(\alpha_i\)</span>, tal y como lo ejemplifica la siguiente figura:</p>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/ej_water_filling_1.png" alt="Texto" width="500px" class="figure-img">
+<figcaption>
+Gráfica de <span class="math inline">\(f(1/\nu^\star)\)</span>. Los valores <span class="math inline">\(a_i\)</span> corresponden a los <span class="math inline">\(\alpha_i\)</span> ordenados de menor a mayor.
+</figcaption>
+</figure>
+<p>Por lo tanto, existe solución y puede ser fácilmente determinada.</p>
+<p>Este método de solución se conoce como <em>water-filling</em> por la siguiente interpretación: si <span class="math inline">\(\alpha_i\)</span> es el nivel del suelo en el punto <span class="math inline">\(i\)</span> e inundamos la región con agua hasta la altura <span class="math inline">\(1/\nu^\star\)</span>, entonces la cantidad total de agua es justamente <span class="math display">\[
+\sum_{i=1}^p\max\{0,1/\nu^\star-\alpha_i\}.
+\]</span></p>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/ej_water_filling_2.png" alt="Texto" width="350px" class="figure-img">
+<figcaption>
+Método de <em>water-filling</em>. La región se inunda hasta un nivel <span class="math inline">\(1/\nu^\star\)</span>, utilizando una cantidad total de agua igual a 1.
+</figcaption>
+</figure>
+<p>El problema de optimización, con esta interpretación, consiste en aumentar el nivel de inundación hasta haber usado una cantidad total de agua igual a 1, de manera tal que la profundidad de agua sobre el punto <span class="math inline">\(i\)</span>-ésimo es justamente el valor óptimo <span class="math inline">\(x_i^\star\)</span>.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Vamos a finalizar esta sección con un cuadro resumen con los principales resultados.</p>
+<div style="margin-top:2em;">
+
+</div>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/cuadro_resumen_A4.png" alt="Texto" width="600px" class="figure-img">
+</figure>
+<div class="highlight">
+<p>⚠️ Recordemos que la condición de Slater es la más común y utilizada para garantizar dualidad fuerte y la validez de las condiciones KKT en problemas convexos. Sin embargo, no es la única condición de cualificación de restricciones existente. Para profundizar en otras condiciones de cualificación, especialmente en el contexto de problemas no convexos, se recomienda consultar textos especializados en optimización no convexa, pero estos temas escapan al alcance de este curso.</p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p><br><br></p>
+</section>
+</section>
+<section id="actividades" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="actividades">Actividades</h2>
+✏️ <strong>Conceptuales</strong><br>
+
+<hr class="linea-corta">
+<ol type="1">
+<li><p>Mostrar que el multiplicador de Lagrange asociado a una restricción de igualdad puede ser cualquier número real. [<em>Ayuda: descomponga la restricción de igualdad en dos restricciones de desigualdad</em>.]</p></li>
+<li><p>Considere el problema <span class="math display">\[
+\min x^2\quad\text{sujeto a}\quad 2-x\leq 0.
+\]</span> Obtenga la función dual de Lagrange y verifique graficamente su convexidad. ¿Cuál es el valor de <span class="math inline">\(d^\star\)</span>?</p></li>
+<li><p>Mostrar que, si <span class="math inline">\(\xx\)</span> es factible primal y <span class="math inline">\((\bflambda,\bfnu)\)</span> es factible dual, entonces <span class="math inline">\((\bflambda,\bfnu)\)</span> es <span class="math inline">\(\epsilon\)</span>-subóptimo para el problema dual.</p></li>
+</ol>
+<div style="margin-top:2em;">
+
+</div>
+💻 <strong>Prácticas</strong><br>
+
+<hr class="linea-corta">
+<ol type="1">
+<li>…</li>
+</ol>
+<div style="margin-top: 5em;">
+
+</div>
+<div class="refs">
+<p><span style="color: #444;"><strong>Referencias</strong></span></p>
+<p>Boyd, S., &amp; Vandenberghe, L. (2004). <em>Convex Optimization</em>. Capítulo 5. Cambridge University Press.</p>
+<p>Farina, G. Apuntes del curso MIT 6.7220: <em>Nonlinear Optimization</em>. Lección 2 (2025) y lección 5 (2024). Disponible en la <a href="https://www.mit.edu/~gfarina/notes/">página del curso</a>.</p>
+</div>
+
+
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../CAPITULO_1";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/isaiasibanez\.github\.io\/OML2\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../CAPITULO_1/A3_resolucion_computacional.html" class="pagination-link" aria-label="1.3 Resolución computacional con CVXPY y SciPy">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">1.3 Resolución computacional con CVXPY y SciPy</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../CAPITULO_1/A5_metodos_optimizacion.html" class="pagination-link" aria-label="1.5 Métodos de optimización">
+        <span class="nav-page-text">1.5 Métodos de optimización</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

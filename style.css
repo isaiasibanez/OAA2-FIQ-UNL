@@ -1,5 +1,5 @@
 .definicion {
-  background-color: #f9f9f9; /* Fondo gris claro */
+background-color: #fcfefc; /* Verde muy muy suave */
   border: 2px solid #4CAF50; /* Borde verde */
   padding: 15px;            /* Espaciado interno */
   padding-bottom: 2px;
@@ -19,11 +19,95 @@
 
 .highlight {
   background-color: #fffdf5; /* Fondo muy suave */
-  border: 2px solid #ffa726; /* Borde naranja */
+  border: 0px solid #ffa726; /* Borde naranja */
   padding: 10px;            /* Espaciado interno */
   border-radius: 5px;       /* Bordes suavemente redondeados */
   margin: 10px 0;           /* Margen arriba y abajo */
   font-family: Arial, sans-serif; /* Fuente opcional */
+}
+
+.myhighlight {
+  max-width: 60%;
+  margin: 0em auto;
+  padding: 0.5em;
+  padding-bottom: 0em;
+  border: 0px solid #ccc;
+  border-top: 1.5px solid #5b2c6f;
+  border-bottom: 1.5px solid #5b2c6f;
+  background-color: #ffffff;
+  text-align: center;
+  color: #5b2c6f;
+  font-style: normal;
+  border-radius: 0;
+}
+
+
+.myhighlight2 {
+  max-width: 50%;
+  margin: 0em auto;
+  padding: 0.5em 0.5em 0.01em 0.5em;
+  border: 0px;
+  text-align: center;
+  color: #1a5276;             /* azul */
+  font-style: normal;
+  border-radius: 0;
+}
+
+
+.myhighlight3 {
+  max-width: 60%;
+  margin: 0em auto;
+  padding: 0.5em 0.5em 0.1em 0.5em;
+  border: 1.5px solid #e67e22;    /* naranja oscuro */
+  background-color: #fffdfa;      /* naranja ultra suave, casi blanco */
+  text-align: center;
+  color: #b03a00;                 /* naranja oscuro más profundo */
+  font-style: normal;
+  border-radius: 0;
+}
+
+
+.myhighlight4 {
+  max-width: 80%;
+  margin: 0em auto;
+  padding: 0.5em 0.5em 0.1em 0.5em;
+  border: 1.5px solid #7b241c;       /* borde dark red */
+  background-color: #fff5f5;         /* fondo rojo pastel más claro */
+  text-align: center;
+  color: #6e0b0b;                    /* texto dark red intenso */
+  font-style: normal;
+  border-radius: 0;
+}
+
+
+
+
+.myhighlight p {
+  text-align: center;
+}
+
+.myhighlight2 p {
+  text-align: center;
+}
+
+.myhighlight3 p {
+  text-align: center;
+}
+
+
+.myhighlight4 p {
+  text-align: center;
+}
+
+
+
+.metodo {
+  background-color: #e6f0ff; /* azul claro */
+  border: 2px solid #3b82f6; /* azul brillante */
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+  font-family: Arial, sans-serif;
 }
 
   
@@ -44,15 +128,13 @@ pre {
 
 
 
-
-
 blockquote {
   color: black;          /* Cambia el color del texto */
   /* font-family: 'Georgia', serif;  /* Cambia la tipografía */
   font-size: 1.15em;     /* Tamaño de letra */
-  border-left: 3px solid #007ACC; /* Personaliza la barra lateral */
-  padding-left: 1em;
-  margin-left: 0;
+  border-left: 2px solid #000000; /* Personaliza la barra lateral */
+  padding-left: 0em;
+  margin-left: 1.5em;
 }
 
 
@@ -103,5 +185,77 @@ aside {
 
 
 
+.refs {
+  font-size: 0.95em;
+}
 
 
+p {
+  text-align: justify;
+}
+
+
+
+mark {
+  /* background-color: #ccffcc; /* verde resaltador */
+  background-color: #d4edda; /* verde éxito tipo Bootstrap */
+  color: black;
+  padding: 0.1em;
+  border-radius: 3px;
+}
+
+
+
+
+
+/* Despues probar si hace falta dominar el tamaño de letra: 
+body {
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+h1 { font-size: 2em; }
+h2 { font-size: 1.6em; }
+h3 { font-size: 1.3em; }
+
+
+img {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+figure {
+  text-align: center;
+  margin: auto;
+}
+*/
+
+
+.linea-corta {
+  width: 27%;          /* 0.5 del ancho del contenedor */
+  margin-left: 0;      /* alineado a la izquierda (podés cambiar) */
+  margin-top: 0.2em;   /* espacio pequeño arriba, para acercarla al texto */
+  margin-bottom: 1em;  /* espacio abajo, ajustalo a gusto */
+  border: 0.5px solidrgba(0, 26, 78, 0.71); /* grosor y color de la línea */
+}
+
+
+
+.callout.question {
+  border-left: 2px solid #f97316 !important;
+  background-color: #f5f5f5 !important; /* Gris apenas más oscuro */
+  color: #000000 !important;
+  padding-left: 0.4em;
+  
+  font-size: 0.9em;
+  width: 80%;
+  
+  margin-left: auto;
+  margin-right: auto;
+  
+  padding-top: 0em;
+  padding-bottom: 0em;
+
+  border-radius: 0 !important;  /* Quitar esquinas redondeadas */
+}
