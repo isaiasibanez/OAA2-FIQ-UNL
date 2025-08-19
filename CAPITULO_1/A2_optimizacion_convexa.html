@@ -1274,7 +1274,6 @@ Epígrafo de una función <span class="math inline">\(f\)</span>.
 <p><span class="badge bg-warning text-dark">Importante</span></p>
 <p>Diremos que <span class="math inline">\(f:\RR^p\to\RR\)</span> es <em>diferenciable</em> si su gradiente <span class="math inline">\(\nabla f\)</span> existe en todo su dominio, y que es <em>dos veces diferenciable</em> si además su hessiana <span class="math inline">\(\nabla^2 f\)</span> existe en todo su dominio. En ambos casos, asumimos que dicho dominio es un conjunto abierto.</p>
 </div>
-<p><span style="color:darkred;">Acá recordar Taylor…</span></p>
 <div style="margin-top:2em;">
 
 </div>
@@ -1355,7 +1354,7 @@ g(t)\geq g(\tilde{t})+g'(\tilde{t})(t-\tilde{t}).
 Mostrar detalles
 </summary>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true"><span style="font-size: 1.25em;">①</span></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false"><span style="font-size: 1.25em;">②</span></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-3" role="tab" aria-controls="tabset-9-3" aria-selected="false"><span style="font-size: 1.25em;">③</span></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-4" role="tab" aria-controls="tabset-9-4" aria-selected="false"><span style="border: 1px solid #ddd; padding: 2px 6px; border-radius: 4px;"><em>Demostración</em></span></a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true"><span style="font-size: 1.25em;">①</span></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false"><span style="font-size: 1.25em;">②</span></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-3" role="tab" aria-controls="tabset-9-3" aria-selected="false"><span style="font-size: 1.25em;">③</span></a></li></ul>
 <div class="tab-content">
 <div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
 <ul>
@@ -1367,9 +1366,6 @@ Mostrar detalles
 </div>
 <div id="tabset-9-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-3-tab">
 <p>Para funciones cóncavas, tenemos la caracterización correspondiente: <span class="math inline">\(f\)</span> es cóncava si y solo si <span class="math inline">\(\text{dom}\,f\)</span> es convexo y <span class="math inline">\(\nabla^2 f(\xx)\preceq 0\)</span> para todo <span class="math inline">\(\xx\in\text{dom}\,f\)</span>.</p>
-</div>
-<div id="tabset-9-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-4-tab">
-<p><span style="color:darkred;">Ver si poner…</span></p>
 </div>
 </div>
 </div>
@@ -1406,7 +1402,7 @@ f(\xx)=\frac{1}{2}\xx^\top A\xx+\bb^\top\xx+c,
 f(x,y)=\frac{1}{2}\begin{pmatrix}x&amp;y\end{pmatrix}\begin{pmatrix}2&amp;1\\1&amp;3\end{pmatrix}\begin{pmatrix}x\\ y\end{pmatrix}=\frac{1}{2}(2x^2+2xy+3y^2)
 \]</span></p>
 <p>es convexa, ya que <span class="math inline">\(\xx^\top A\xx=2x^2+2xy+3y^2=x^2+(x+y)^2+2y^2\geq 0\)</span> para todo <span class="math inline">\((x,y)\in\RR^2\)</span>, lo cual significa que <span class="math inline">\(A\succeq 0\)</span>.</p>
-<div id="a6e63b4e" class="cell" data-execution_count="1">
+<div id="d6798e00" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1445,12 +1441,10 @@ f(x,y)=\frac{1}{2}\begin{pmatrix}x&amp;y\end{pmatrix}\begin{pmatrix}2&amp;1\\1&a
 </div>
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 13</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Funciones de varias variables </span></p>
-<p><span style="color:darkred;">Acá van un par de ejemplos más del Boyd, y después el resto como ejercicios..</span></p>
 </div>
 </section>
 <section id="operaciones-que-preservan-convexidad-1" class="level3">
 <h3 class="anchored" data-anchor-id="operaciones-que-preservan-convexidad-1">Operaciones que preservan convexidad</h3>
-<p><span style="color:darkred;">Acá falta agregar ejemplos.</span></p>
 <p>En esta sección describimos algunas operaciones que preservan la convexidad o concavidad de funciones, o que permiten construir nuevas funciones convexas y cóncavas. (📝 Las verificaciones se piden en Ejercicio 14).</p>
 <ul>
 <li><p><strong>Sumas ponderadas no negativas</strong>. Si <span class="math inline">\(f\)</span> es una función convexa y <span class="math inline">\(\alpha \geq 0\)</span>, entonces la función <span class="math inline">\(\alpha f\)</span> es convexa. Si <span class="math inline">\(f_1\)</span> y <span class="math inline">\(f_2\)</span> son ambas funciones convexas, entonces su suma <span class="math inline">\(f_1 + f_2\)</span> también lo es. Combinando estas dos propiedades, se obtiene que el conjunto de funciones convexas es en sí mismo un cono convexo: una suma ponderada no negativa de funciones convexas, <span class="math display">\[
@@ -1564,12 +1558,18 @@ f(\zz)\leq (1-\theta)f(\xx)+\theta f(\yy)&lt;(1-\theta)f(\xx)+\theta f(\xx)&lt;f
 </div>
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 14</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Funciones de varias variables </span></p>
-<p><span style="color:darkred;">Acá va un ejemplo de problema de optimización convexo.</span></p>
 </div>
 <p><br><br></p>
 </section>
 <section id="actividades" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="actividades">Actividades</h2>
+<details>
+<summary>
+Mostrar
+</summary>
+<div style="margin-top:1em;">
+
+</div>
 ✏️ <strong>Conceptuales</strong><br>
 
 <hr class="linea-corta">
@@ -1618,16 +1618,13 @@ f(\xx)=\sup_{\yy\in C}\|\xx-\yy\|.
 f(X)=\lambda_{\text{max}}(X),
 \]</span> donde <span class="math inline">\(\lambda_{\text{max}}\)</span> es el <em>valor propio máximo</em> de <span class="math inline">\(X\)</span>, es convexa.</p></li>
 </ol>
+</details>
 <div style="margin-top:2em;">
 
 </div>
 💻 <strong>Prácticas</strong><br>
 
 <hr class="linea-corta">
-<ol type="1">
-<li><p><span style="color:darkred;">Ejercicios de promedios ponderado y envolvente convexa, esto último usando <code>ConvexHull</code>.</span></p></li>
-<li><p><span style="color:darkred;">Ejercicios de envolvente cónica. Acá no hay nada que lo haga automáticamente: una posible opción sería generar un conjunto de puntos que sean combinaciones y plotearlos, se podría hacer una grilla para los <span class="math inline">\(\theta_i\)</span> o randomizarlos.</span></p></li>
-</ol>
 <div style="margin-top: 5em;">
 
 </div>
