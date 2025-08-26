@@ -785,7 +785,7 @@ S_2:=\{(x,y)\in\RR^2\mid x^2+y^2\leq r\}.
 <div style="margin-top:2em;">
 
 </div>
-<div id="84be2ae7" class="cell" data-execution_count="1">
+<div id="8f0ee071" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1262,7 +1262,7 @@ N_{\Omega}(\xx_0)=\{\lambda_1\aa_1+\lambda_2\aa_2 \mid \lambda_1,\lambda_2\in\RR
 </div>
 </section>
 </section>
-<section id="funciones-convexas" class="level2 page-columns page-full">
+<section id="funciones-convexas" class="level2">
 <h2 class="anchored" data-anchor-id="funciones-convexas">Funciones convexas</h2>
 <div class="definicion">
 <p><strong>Definición 8.</strong> (Función convexa) Una función <span class="math inline">\(f:\RR^p\rightarrow\RR\)</span> es <em>convexa</em> si <span class="math inline">\(\text{dom}\,f\)</span> es un conjunto convexo y si verifica <span class="math display">\[
@@ -1338,7 +1338,7 @@ f(\theta x_1+(1-\theta)x_2)-\left[\theta f(x_1)+(1-\theta) f(x_2)\right]&amp;=(\
 <p>La prueba es sencilla (📝Ejercicio 9). De manera análoga, una función es cóncava si y solo si su <em>hipógrafo</em>, definido como <span class="math display">\[
 \text{hypo}\,f = \{(\xx, t) \mid t \leq f(\xx)\},
 \]</span> es un conjunto convexo.</p>
-<section id="condiciones-de-convexidad" class="level3 page-columns page-full">
+<section id="condiciones-de-convexidad" class="level3">
 <h3 class="anchored" data-anchor-id="condiciones-de-convexidad">Condiciones de convexidad</h3>
 <p>Probar que una función es convexa utilizando la Definición 8 puede ser tedioso. Afortunadamente, existen criterios basados en sus derivadas. Estos permiten caracterizar la convexidad en términos del comportamiento local de la función, ya sea a través del gradiente (primera derivada) o de la matriz Hessiana (segunda derivada).</p>
 <p>Primero, recordemos que:</p>
@@ -1433,9 +1433,6 @@ g(t)\geq g(\tilde{t})+g'(\tilde{t})(t-\tilde{t}).
 \nabla^2 f(\xx)\succeq 0\qquad\forall\xx\in\text{dom}\,f.
 \]</span></p>
 </div>
-<aside>
-<span class="math inline">\(A\succeq 0\)</span> significa que <span class="math inline">\(A\)</span> es <em>semidefinida positiva</em>. Esto es, <span class="math inline">\(\xx^\top A\xx\geq 0\)</span> para todo <span class="math inline">\(\xx\in\RR^p\)</span>.
-</aside>
 <details>
 <summary>
 Mostrar detalles
@@ -1492,7 +1489,7 @@ f(\xx)=\frac{1}{2}\xx^\top A\xx+\bb^\top\xx+c,
 f(x,y)=\frac{1}{2}\begin{pmatrix}x&amp;y\end{pmatrix}\begin{pmatrix}2&amp;1\\1&amp;3\end{pmatrix}\begin{pmatrix}x\\ y\end{pmatrix}=\frac{1}{2}(2x^2+2xy+3y^2)
 \]</span></p>
 <p>es convexa, ya que <span class="math inline">\(\xx^\top A\xx=2x^2+2xy+3y^2=x^2+(x+y)^2+2y^2\geq 0\)</span> para todo <span class="math inline">\((x,y)\in\RR^2\)</span>, lo cual significa que <span class="math inline">\(A\succeq 0\)</span>.</p>
-<div id="bc79a493" class="cell" data-execution_count="2">
+<div id="38546fbf" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
