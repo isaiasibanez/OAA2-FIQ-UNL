@@ -337,6 +337,7 @@ eyJhdHRyIjp7ImNvbnRleHQiOiJvanMiLCJlY2hvIjpmYWxzZSwiZWRpdCI6ZmFsc2UsImV2YWwiOnRy
 \]</span></p>
 <p>Asimismo, recordemos que una matriz <span class="math inline">\(A\)</span> se dice <em>semidefinida positiva</em> (<span class="math inline">\(A\succeq 0\)</span>), si verifica <span class="math inline">\(\xx^\top A\xx\geq 0\)</span> para todo <span class="math inline">\(\xx\in\RR^p\)</span>, mientras que se dice <em>definida positiva</em> (<span class="math inline">\(A\succ 0\)</span>) si la desigualdad es estricta. De manera análoga, se definen las matrices semidefinidas negativas (<span class="math inline">\(A \preceq 0\)</span>) y definidas negativas (<span class="math inline">\(A \prec 0\)</span>).</p>
 <p>Al conjunto de matrices simétricas lo denotaremos <span class="math inline">\(\SS^p\)</span>, mientras que con <span class="math inline">\(\SS_+^p\)</span> y <span class="math inline">\(\SS_{++}^p\)</span> nos referiremos al conjunto de matrices simétricas semidefinidas positivas y simétricas definidas positivas, respectivamente.</p>
+<p>Por último, del mismo modo que escribimos <span class="math inline">\(A\xx=\bb\)</span> para referirnos a un conjunto de igualdades de la forma <span class="math inline">\(\aa_i^\top\xx=b_i\)</span>, vamos a denotar <span class="math inline">\(A\xx\preceq\bb\)</span> al conjunto de desigualdades <span class="math inline">\(\aa_i^\top\xx\leq b_i\)</span>.</p>
 <div style="margin-top:2.5em;">
 
 </div>
@@ -361,7 +362,7 @@ eyJhdHRyIjp7ImNvbnRleHQiOiJvanMiLCJlY2hvIjpmYWxzZSwiZWRpdCI6ZmFsc2UsImV2YWwiOnRy
 </script>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="177" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 176;"><span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a>viewof theta <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="fl">0.01</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"θ:"</span>})</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="178" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 177;"><span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a>viewof theta <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="fl">0.01</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"θ:"</span>})</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-2" data-nodetype="declaration">
 
@@ -678,8 +679,8 @@ eyJhdHRyIjp7ImNvbnRleHQiOiJvanMiLCJlY2hvIjpmYWxzZSwiZWRpdCI6ZmFsc2UsImV2YWwiOnRy
 </script>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="638" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 637;"><span id="cb3-638"><a href="#cb3-638" aria-hidden="true" tabindex="-1"></a>viewof theta1 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">2</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="fl">0.01</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="fl">0.5</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"θ₁:"</span>})</span>
-<span id="cb3-639"><a href="#cb3-639" aria-hidden="true" tabindex="-1"></a>viewof theta2 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">2</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="fl">0.01</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="fl">0.5</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"θ₂:"</span>})</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="639" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 638;"><span id="cb3-639"><a href="#cb3-639" aria-hidden="true" tabindex="-1"></a>viewof theta1 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">2</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="fl">0.01</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="fl">0.5</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"θ₁:"</span>})</span>
+<span id="cb3-640"><a href="#cb3-640" aria-hidden="true" tabindex="-1"></a>viewof theta2 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">2</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="fl">0.01</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="fl">0.5</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"θ₂:"</span>})</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-3-1" data-nodetype="declaration">
@@ -763,6 +764,9 @@ Mostrar detalles
 S_{1} + S_{2} := \{\xx_1 + \xx_2 \mid \xx_1 \in S_{1}, \xx_2 \in S_{2}\}
 \]</span> es un conjunto convexo.</li>
 </ul>
+<div style="margin-top:-1em;">
+
+</div>
 <div class="question callout callout-style-simple callout-none no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -772,6 +776,9 @@ S_{1} + S_{2} := \{\xx_1 + \xx_2 \mid \xx_1 \in S_{1}, \xx_2 \in S_{2}\}
 <p><span style="font-size: 1.3em;">📝</span><br> Verifique que las operaciones indicadas efectivamente preservan la convexidad.</p>
 </div>
 </div>
+</div>
+<div style="margin-top:1em;">
+
 </div>
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 6</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Suma de un polígono y un disco </span></p>
@@ -785,7 +792,7 @@ S_2:=\{(x,y)\in\RR^2\mid x^2+y^2\leq r\}.
 <div style="margin-top:2em;">
 
 </div>
-<div id="8f0ee071" class="cell" data-execution_count="1">
+<div id="eff3b528" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -937,7 +944,7 @@ Segmento de recta
 </tr>
 <tr>
 <td>
-Recta
+Recta <span class="math inline">\(\{\theta\vv\mid\vv\neq\bfzero,\;\theta\in\RR\}\)</span>
 </td>
 <td>
 <input type="checkbox" name="afin6">
@@ -948,7 +955,7 @@ Recta
 </tr>
 <tr>
 <td>
-Recta que pasa por el origen
+Recta <span class="math inline">\(\{\xx_0+\theta\vv\mid\vv\neq\bfzero,\;\theta\in\RR\}\)</span>
 </td>
 <td>
 <input type="checkbox" name="afin7">
@@ -1075,9 +1082,6 @@ Mostrar detalles
 <p>Un <mark><em>bola</em></mark> en <span class="math inline">\(\RR^p\)</span>, de <em>centro</em> <span class="math inline">\(\xx_0\)</span> y <em>radio</em> <span class="math inline">\(r\)</span>, es un conjunto de la forma <span class="math display">\[
 B(\xx_0,r):=\{\xx \mid \|\xx-\xx_0\|_2\leq r\},\qquad \xx_0\in\RR^p,\;r\in\RR^+.
 \]</span></p>
-<div style="margin-top:-0.5em;">
-
-</div>
 <div class="question callout callout-style-simple callout-none no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -1130,13 +1134,13 @@ B(\xx_0,r):=\{\xx \mid \|\xx-\xx_0\|_2\leq r\},\qquad \xx_0\in\RR^p,\;r\in\RR^+.
 </div>
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 8</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Símplex </span></p>
-<p>El <em><span class="math inline">\(p\)</span>-símplex estándar</em> en <span class="math inline">\(\RR^{n}\)</span> es el conjunto <span class="math display">\[
-\Delta^{p-1}=\left\{\xx\in\RR^p \left|\;\sum_{i=1}^p x_i=1,\; t_i\geq 0\, (\forall i=1,\ldots,p)\right.\right\}.
+<p>El <em><span class="math inline">\(p\)</span>-símplex estándar</em> en <span class="math inline">\(\RR^{p}\)</span> es el conjunto <span class="math display">\[
+\Delta^{p-1}=\left\{\xx\in\RR^p \left|\;\sum_{i=1}^p x_i=1,\; x_i\geq 0\, (\forall i=1,\ldots,p)\right.\right\}.
 \]</span></p>
 <p>Es un poliedro, ya que puede expresarse como la intersección de:</p>
 <ul>
 <li>El hiperplano definido por <span class="math inline">\(\sum_{i=1}^p x_i=1\)</span>.</li>
-<li>Los <span class="math inline">\(n+1\)</span> semiespacios definidos por <span class="math inline">\(x_i\geq 0\)</span>, con <span class="math inline">\(i=1,\ldots,p\)</span>.</li>
+<li>Los <span class="math inline">\(p\)</span> semiespacios definidos por <span class="math inline">\(x_i\geq 0\)</span>, con <span class="math inline">\(i=1,\ldots,p\)</span>.</li>
 </ul>
 <figure style="text-align: center;" class="figure">
 <img src="figuras/2_simplex.png" alt="2-simplex" width="300px" class="figure-img">
@@ -1158,27 +1162,26 @@ N_{\Omega}(\xx_0) := \{\dd\in\RR^p \mid \langle\dd,\xx-\xx_0\rangle_2\leq 0,\;\f
 </div>
 <p>Si bien la expresión <span class="math inline">\(\langle \dd,\xx-\xx_0 \rangle_2\)</span> puede escribirse como <span class="math inline">\(\dd^\top(\xx-\xx_0)\)</span>, la notación con producto interno permite una rápida interpretación de este concepto. Si usamos la propiedad <span class="math inline">\(\langle\uu,\vv\rangle_2 =\|\uu\|_2\|\vv\|_2\cos \alpha\)</span>, donde <span class="math inline">\(\alpha\)</span> es el ángulo entre <span class="math inline">\(\uu\)</span> y <span class="math inline">\(\vv\)</span>, podemos decir que <span class="math inline">\(\dd\in N_{\Omega}(\xx_0)\)</span> si <span class="math display">\[
 \|\dd\|_2\|\xx-\xx_0\|_2\cos \alpha \leq 0,
-\]</span> con <span class="math inline">\(\alpha\)</span> el ángulo entre los vectores <span class="math inline">\(\dd\)</span> y <span class="math inline">\(\xx-\xx_0\)</span>. Esto es cierto si <span class="math display">\[
--\frac{\pi}{2}\leq \alpha\leq\pi.
-\]</span></p>
-<p>Por lo tanto:</p>
+\]</span> con <span class="math inline">\(\alpha\)</span> el ángulo entre los vectores <span class="math inline">\(\dd\)</span> y <span class="math inline">\(\xx-\xx_0\)</span>. Esto es cierto si <span class="math inline">\(\frac{\pi}{2}\leq \alpha\leq\pi\)</span> (ver Figura 9).</p>
+<div style="margin-top:1em;">
+
+</div>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/angulo_entre_direcciones_cono_normal.png" alt="…" width="450px" class="figure-img">
+<figcaption>
+<strong>Figura 9</strong>. Interpretación geométrica de las direcciones <span class="math inline">\(\dd\)</span> y <span class="math inline">\(\xx-\xx_0\)</span>.
+</figcaption>
+</figure>
+<div style="margin-top:2em;">
+
+</div>
 <div class="myhighlight">
 <p>El cono normal consta de aquellas direcciones que forman un ángulo obtuso o recto con todas las direcciones <span class="math inline">\(\xx-\xx_0\)</span>, junto con la dirección nula <span class="math inline">\(\dd=\bfzero\)</span>.</p>
 </div>
 <div style="margin-top:2em;">
 
 </div>
-<figure style="text-align: center;" class="figure">
-<img src="figuras/cono_normal_01.png" alt="Conos normales de un conjunto convexo" width="400px" class="figure-img">
-<figcaption>
-<strong>Figura 9</strong>. Conos normales de un conjunto convexo. A diferencia de lo que ocurre en <span class="math inline">\(\xx_2\)</span> (vértice de <span class="math inline">\(\Omega\)</span>), en <span class="math inline">\(\xx_1\)</span> el cono normal es una semirrecta normal a <span class="math inline">\(\Omega\)</span>.
-</figcaption>
-</figure>
-<p><span style="display:block; height:0.25em;"></span></p>
-<p>Para entender mejor esta definición, vamos a ver algunos ejemplos.</p>
-<div style="margin-top:2em;">
-
-</div>
+<p>Para entender esta definición, vamos a ver algunos ejemplos.</p>
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 9</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Cono normal a un punto interior </span></p>
 <p>Si <span class="math inline">\(\xx_0\)</span> es un punto interior de <span class="math inline">\(\Omega\)</span>, el cono normal contiene únicamente el vector cero:<br>
@@ -1255,7 +1258,7 @@ N_{\Omega}(\xx_0)=\{\lambda_1\aa_1+\lambda_2\aa_2 \mid \lambda_1,\lambda_2\in\RR
 </figure>
 </div>
 </div>
-<p>Probaremos este resultado, generalizado a <span class="math inline">\(r\)</span> semiespacios, en <a href="A4_condiciones_optimalidad.html#condiciones-de-karush-kuhn-tucker-kkt">C1-S2</a>.</p>
+<p>Probaremos este resultado, generalizado a <span class="math inline">\(r\)</span> semiespacios, en <a href="A4_condiciones_optimalidad.html#condiciones-de-karush-kuhn-tucker-kkt">C1-S4</a>.</p>
 </div>
 <div style="margin-top:1.5em;">
 
@@ -1454,9 +1457,6 @@ Mostrar detalles
 </div>
 </div>
 </details>
-<div style="margin-top:-1em;">
-
-</div>
 <div class="question callout callout-style-simple callout-none no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -1489,7 +1489,7 @@ f(\xx)=\frac{1}{2}\xx^\top A\xx+\bb^\top\xx+c,
 f(x,y)=\frac{1}{2}\begin{pmatrix}x&amp;y\end{pmatrix}\begin{pmatrix}2&amp;1\\1&amp;3\end{pmatrix}\begin{pmatrix}x\\ y\end{pmatrix}=\frac{1}{2}(2x^2+2xy+3y^2)
 \]</span></p>
 <p>es convexa, ya que <span class="math inline">\(\xx^\top A\xx=2x^2+2xy+3y^2=x^2+(x+y)^2+2y^2\geq 0\)</span> para todo <span class="math inline">\((x,y)\in\RR^2\)</span>, lo cual significa que <span class="math inline">\(A\succeq 0\)</span>.</p>
-<div id="38546fbf" class="cell" data-execution_count="2">
+<div id="68646320" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
