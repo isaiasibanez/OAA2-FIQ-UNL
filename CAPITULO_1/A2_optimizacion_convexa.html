@@ -792,7 +792,7 @@ S_2:=\{(x,y)\in\RR^2\mid x^2+y^2\leq r\}.
 <div style="margin-top:2em;">
 
 </div>
-<div id="b5fec5ef" class="cell" data-execution_count="1">
+<div id="e5cf326b" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1654,7 +1654,7 @@ f(\xx)=\frac{1}{2}\xx^\top A\xx+\bb^\top\xx+c,
 f(x,y)=\frac{1}{2}\begin{pmatrix}x&amp;y\end{pmatrix}\begin{pmatrix}2&amp;1\\1&amp;3\end{pmatrix}\begin{pmatrix}x\\ y\end{pmatrix}=\frac{1}{2}(2x^2+2xy+3y^2)
 \]</span></p>
 <p>es convexa, ya que <span class="math inline">\(\xx^\top A\xx=2x^2+2xy+3y^2=x^2+(x+y)^2+2y^2\geq 0\)</span> para todo <span class="math inline">\((x,y)\in\RR^2\)</span>, lo cual significa que <span class="math inline">\(A\succeq 0\)</span>.</p>
-<div id="0aa956c6" class="cell" data-execution_count="2">
+<div id="a31dd01e" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1716,21 +1716,6 @@ f(\theta\xx_1+(1-\theta)\xx_2)=\|\theta\xx_1+(1-\theta)\xx_2\|\leq\theta\|\xx_1\
   \]</span> Por lo tanto, <span class="math inline">\(\nabla^2 f(\xx)\succeq 0\)</span>, tal como esperábamos.</p></li>
 </ul>
 </div>
-<div class="question callout callout-style-simple callout-none no-icon">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-body-container">
-<p><span style="font-size: 1.3em;">📝</span><br> Verifique que las siguientes funciones son convexas:</p>
-<ul>
-<li><p><span class="math inline">\(f(\xx)=\alpha\,\|A\xx-\bb\|_2^2+\beta\,\|C\xx-\dd\|_1,\qquad \alpha,\beta\geq 0.\)</span></p></li>
-<li><p><span class="math inline">\(f(\xx)=\displaystyle\sum_{i=1}^m w_i\,\bigl|\aa_i^\top \xx+b_i\bigr|,\qquad w_i\geq 0.\)</span></p></li>
-<li><p><span class="math inline">\(f(\xx)=\log\left(\displaystyle\sum_{i=1}^m \exp\big(\aa_i^\top \xx + b_i\big)\right).\)</span></p></li>
-</ul>
-</div>
-</div>
-</div>
 <div style="margin-top:2em;">
 
 </div>
@@ -1740,7 +1725,7 @@ f(\theta\xx_1+(1-\theta)\xx_2)=\|\theta\xx_1+(1-\theta)\xx_2\|\leq\theta\|\xx_1\
 <p>En esta sección describimos algunas operaciones que preservan la convexidad o concavidad de funciones, o que permiten construir nuevas funciones convexas y cóncavas (📝 las verificaciones se piden en Ejercicio 14).</p>
 <ul>
 <li><p><strong>Sumas ponderadas no negativas</strong>. Si <span class="math inline">\(f\)</span> es una función convexa y <span class="math inline">\(\alpha \geq 0\)</span>, entonces la función <span class="math inline">\(\alpha f\)</span> es convexa. Si <span class="math inline">\(f_1\)</span> y <span class="math inline">\(f_2\)</span> son ambas funciones convexas, entonces su suma <span class="math inline">\(f_1 + f_2\)</span> también lo es. Combinando estas dos propiedades, se obtiene que el conjunto de funciones convexas es en sí mismo un cono convexo: una suma ponderada no negativa de funciones convexas, <span class="math display">\[
-f = w_1 f_1 + \cdots + w_m f_m,
+f = w_1 f_1 + \cdots + w_m f_m,\qquad w_i\geq 0,
 \]</span> es convexa. De manera similar, una suma ponderada no negativa de funciones cóncavas es cóncava.</p></li>
 <li><p><strong>Composición con una aplicación afín</strong>. Sean <span class="math inline">\(f:\RR^p\to\RR\)</span>, <span class="math inline">\(A\in\RR^{p\times m}\)</span> y <span class="math inline">\(\bb\in\RR^p\)</span>. Definimos <span class="math inline">\(g:\RR^m\to\RR\)</span> como <span class="math display">\[
 g(\xx):=f(A\xx+\bb)
@@ -1766,6 +1751,21 @@ f(\xx)=\sum_{i=1}^rx_{[i]}.
 f(\xx)=\max\left\{x_{i_1}+\cdots+x_{i_n} \mid 1\leq i_1 \leq \ldots\leq i_r\leq n \right\};
 \]</span></p>
 <p>esto es, el máximo de todas las posibles sumas de <span class="math inline">\(r\)</span> diferentes componentes de <span class="math inline">\(\xx\)</span>. Dado que tales sumas son funciones lineales (y, por lo tanto, convexas), concluimos que <span class="math inline">\(f\)</span> es convexa.</p>
+</div>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br> Verifique que las siguientes funciones son convexas:</p>
+<ul>
+<li><p><span class="math inline">\(f(\xx)=\alpha\,\|A\xx-\bb\|_2^2+\beta\,\|C\xx-\dd\|_1,\qquad \alpha,\beta\geq 0.\)</span></p></li>
+<li><p><span class="math inline">\(f(\xx)=\displaystyle\sum_{i=1}^m w_i\,\bigl|\aa_i^\top \xx+b_i\bigr|,\qquad w_i\geq 0.\)</span></p></li>
+<li><p><span class="math inline">\(f(\xx)=\log\left(\displaystyle\sum_{i=1}^m \exp\big(\aa_i^\top \xx + b_i\big)\right).\)</span></p></li>
+</ul>
+</div>
+</div>
 </div>
 <div style="margin-top:1.5em;">
 
@@ -1909,7 +1909,8 @@ Mostrar
 <li><p>Sea <span class="math inline">\(\{S_i\}_{i\in I}\)</span> una familia de conjuntos convexos. Probar que si <span class="math inline">\(S_i\)</span> es convexo para cada <span class="math inline">\(i\in I\)</span>, entonces <span class="math inline">\(\bigcap_{i\in I} S_i\)</span> es convexo. ¿Qué ocurre con <span class="math inline">\(\bigcup_{i\in I} S_i\)</span>?</p></li>
 <li><p>Sean <span class="math inline">\(S_1\)</span> y <span class="math inline">\(S_2\)</span> conjuntos convexos. Muestre que <span class="math inline">\(S_1\times S_2\)</span> es convexo.</p></li>
 <li><p>Sea <span class="math inline">\(S\subset\RR^p\)</span> un conjunto convexo, <span class="math inline">\(\aa\in\RR^p\)</span> y <span class="math inline">\(\alpha\in\RR\)</span>. Pruebe que los conjuntos <span class="math inline">\(S+\aa:=\{\xx+\aa \mid \xx\in S\}\)</span> y <span class="math inline">\(\alpha S:=\{\alpha\xx \mid \xx\in S\}\)</span> son convexos.</p></li>
-<li><p>Realice la prueba del Ejemplo 12 de cono normal a un hiperplano. Es decir, muestre que <span class="math inline">\(\dd\in N_{\Omega}(\xx_0)\)</span> si y solo si es de la forma <span class="math inline">\(\dd=\lambda\aa\)</span> para algún <span class="math inline">\(\lambda\in\RR\)</span>. [<em>Ayuda: para el directo, suponga <span class="math inline">\(\dd\neq \lambda\aa\)</span> y utilice el hecho de que <span class="math inline">\(\dd\)</span> puede escribirse como <span class="math inline">\(\dd=(\xx-\xx_0)+k\aa\)</span>, donde <span class="math inline">\(\xx\)</span> es la proyección de <span class="math inline">\(\dd\)</span> sobre <span class="math inline">\(\Omega\)</span> y <span class="math inline">\(k\in\RR\)</span></em>.]</p></li>
+<li><p>(a) Realice la prueba del Ejemplo 12 de cono normal a un hiperplano. Es decir, muestre que <span class="math inline">\(\dd\in N_{\Omega}(\xx_0)\)</span> si y solo si es de la forma <span class="math inline">\(\dd=\lambda\aa\)</span> para algún <span class="math inline">\(\lambda\in\RR\)</span>. [<em>Ayuda: para el directo, suponga <span class="math inline">\(\dd\neq \lambda\aa\)</span> y utilice el hecho de que <span class="math inline">\(\dd\)</span> puede escribirse como <span class="math inline">\(\dd=(\xx-\xx_0)+k\aa\)</span>, donde <span class="math inline">\(\xx\)</span> es la proyección de <span class="math inline">\(\dd\)</span> sobre <span class="math inline">\(\Omega\)</span> y <span class="math inline">\(k\in\RR\)</span></em>.]</p>
+<p>(b) Considere el&nbsp;subconjunto de <span class="math inline">\(\RR^2\)</span> determinado por <span class="math inline">\(x_1+x_2 \leq \frac{1}{2}\)</span>, <span class="math inline">\(x_1\geq 0\)</span>, <span class="math inline">\(x_2\geq 0\)</span>, y utilice el resultado de (a) para hallar gráfica y simbólicamente los conos normales en cada vértice y lado del subconjunto.</p></li>
 <li><p>Muestre que los conjuntos de subnivel de una función <span class="math inline">\(f:\RR^p\to\RR\)</span> convexa, definidos como <span class="math display">\[
 C_\alpha:=\{\xx\in\text{dom}\,f \mid f(\xx)\leq\alpha\},
 \]</span> son convexos, pero que el recíproco no se cumple. Para esto último utilice algún contraejemplo.</p></li>
