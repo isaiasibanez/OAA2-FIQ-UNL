@@ -304,6 +304,9 @@ window.Quarto = {
 <li><p><a href="https://docs.scipy.org/doc/scipy/tutorial/optimize.html"><code>scipy.optimize</code></a>: es una colección de algoritmos de optimización general, que incluye métodos para resolver problemas con restricciones lineales y no lineales, tanto convexos como no convexos. Es útil para ilustrar problemas sencillos y ver qué sucede cuando no se garantiza convexidad.</p></li>
 </ul>
 <p>A través de ejemplos concretos, veremos cómo utilizar estas herramientas para formular y resolver problemas de optimización. Esto también nos ayudará a motivar tanto el estudio de las condiciones de optimalidad como los métodos de optimización, que abordaremos en las proximas secciones, lo cual permitirá justificar porqué y cómo estas herramientas funcionan.</p>
+<div style="margin-top:2.5em;">
+
+</div>
 <section id="sintaxis-básica" class="level2">
 <h2 class="anchored" data-anchor-id="sintaxis-básica">Sintaxis básica</h2>
 <section id="cvxpy" class="level3">
@@ -329,7 +332,7 @@ window.Quarto = {
                   &amp; x+y-1=0
 \end{array}
 \]</span></p>
-<div id="1fd93a55" class="cell" data-execution_count="1">
+<div id="1afe929b" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Creamos dos variables:</span></span>
@@ -358,7 +361,7 @@ Punto óptimo 1.0 1.570086213240983e-22</code></pre>
 </div>
 </div>
 <p>A continuación, vamos a representar geométricamente este problema: del lado izquierdo, el grafo en <span class="math inline">\(\RR^3\)</span> de la función objetivo; del lado derecho, el conjunto factible como intersección de las restricciones dadas.</p>
-<div id="1c3d133e" class="cell" data-execution_count="2">
+<div id="f878bd3f" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> Patch</span>
@@ -431,7 +434,7 @@ Punto óptimo 1.0 1.570086213240983e-22</code></pre>
 \end{array}
 \]</span></p>
 <p>con <span class="math inline">\(A\in\RR^{n\times m}\)</span> y <span class="math inline">\(\bb\in\RR^m\)</span> aleatorios, para <span class="math inline">\(n,m\in\mathbb{N}\)</span> fijos.</p>
-<div id="07444ef9" class="cell" data-execution_count="3">
+<div id="a2c53ab6" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cvxpy <span class="im">as</span> cp</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -529,7 +532,7 @@ x+y^2 \\
 \end{pmatrix}
 \]</span></p></li>
 </ul>
-<div id="2bf5ee22" class="cell" data-execution_count="4">
+<div id="19a4d00f" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> Bounds</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> LinearConstraint</span>
@@ -563,12 +566,15 @@ x+y^2 \\
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Punto óptimo:"</span>, res.x)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>`gtol` termination condition is satisfied.
-Number of iterations: 12, function evaluations: 24, CG iterations: 7, optimality: 4.48e-09, constraint violation: 0.00e+00, execution time: 0.024 s.
+Number of iterations: 12, function evaluations: 24, CG iterations: 7, optimality: 4.48e-09, constraint violation: 0.00e+00, execution time: 0.014 s.
 Éxito en optimización: True
 Valor objetivo óptimo: 0.3427175756443014
 Punto óptimo: [0.41494531 0.17010937]</code></pre>
 </div>
 </div>
+</div>
+<div style="margin-top:2.5em;">
+
 </div>
 </section>
 </section>
@@ -658,6 +664,9 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImluY2x1ZGUiOnRydWV9LCJjb2RlIjoiIyBS
 </div>
 </div>
 </div>
+<div style="margin-top:2em;">
+
+</div>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -706,6 +715,9 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImluY2x1ZGUiOnRydWV9LCJjb2RlIjoiIyBS
 </div>
 </div>
 </div>
+</div>
+<div style="margin-top:2em;">
+
 </div>
 </div>
 </div>
@@ -791,6 +803,9 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImluY2x1ZGUiOnRydWV9LCJjb2RlIjoiIyBS
 </div>
 </div>
 </div>
+</div>
+<div style="margin-top:2em;">
+
 </div>
 </div>
 </div>
