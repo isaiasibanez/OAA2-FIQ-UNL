@@ -775,7 +775,7 @@ g_i(\xx)\leq 0,&amp; i=1,\cdots,r\\
 h_j(\xx)=0, &amp; j=1,\cdots,m
 \end{array}\right.\right\},
 \end{array}
-\tag{9}
+\tag{10}
 \]</span></p>
 <p>donde <span class="math inline">\(\Omega\)</span> está definido como una intersección de restricciones funcionales diferenciables.</p>
 <p>Supongamos que <span class="math inline">\(\xx^\star\)</span> es un punto óptimo en la frontera del conjunto factible <span class="math inline">\(\Omega\)</span> correspondiente a tres condiciones de desigualdad <span class="math inline">\(g_i(x) \le 0\)</span> para <span class="math inline">\(i=1,2,3\)</span>. En la siguiente figura se grafica la idea principal que subyace a la definición de cono normal para el caso de restricciones no lineales.</p>
@@ -809,7 +809,7 @@ h_j(\xx)=0, &amp; j=1,\cdots,m
 <p>Es importante notar que <span class="math inline">\(\nabla \tilde{g}_i(\xx)=\nabla g_i(\xx^\star)\)</span> y <span class="math inline">\(\nabla \tilde{h}_i(\xx)=\nabla h_i(\xx^\star)\)</span>. En consecuencia, la aplicación del Teorema 4 a <span class="math inline">\(\tilde{\Omega}\)</span> resulta en el siguiente cono normal:</p>
 <p><span class="math display">\[
 \left.N_{\tilde{\Omega}}(\xx^\star)=\left\{\sum_{i\in I(\xx^\star)}\lambda_i\nabla g_i(\xx^\star)+\sum_{j=1}^m\nu_j\nabla h_j(\xx^\star)\;\right|\; \lambda_i\in\RR_0^+, \nu_j\in\RR\right\},
-\tag{10}
+\tag{11}
 \]</span></p>
 <p>donde el conjunto de restricciones activas está determinado por <span class="math inline">\(I(\xx^\star):=\left\{i\in\{1,\cdots,r\} \mid g_i(\xx^\star)=0\right\}\)</span>. Por supuesto, el uso del conjunto índice <span class="math inline">\(I\)</span> puede evitarse utilizando holgura complementaria, tal como antes.</p>
 <div style="margin-top:2em;">
@@ -992,12 +992,12 @@ Mostrar detalles
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <p>Probaremos únicamente la suficiencia. Sea <span class="math inline">\(\xx_0\)</span> un punto factible que verifica las condiciones KKT. Entonces, la condición de estacionariedad nos permite afirmar que existen <span class="math inline">\(\bflambda\in\RR^r\)</span>, con <span class="math inline">\(\bflambda\succeq\bfzero\)</span>, y <span class="math inline">\(\bfnu\in\RR^m\)</span> tales que <span class="math display">\[
 \nabla f(\xx_0)+\sum_{i=1}^r\lambda_i\nabla g_i(\xx_0)+A^\top\bfnu=\bfzero.
-\tag{11}
+\tag{12}
 \]</span></p>
 <p>Dado que <span class="math inline">\(f\)</span> y <span class="math inline">\(g_i\)</span> son funciones convexas, también es convexa la función <span class="math inline">\(L:\RR^p\to\RR\)</span> definida por <span class="math display">\[
 L(\xx):=f(\xx)+\sum_{i=1}^r\lambda_i g_i(\xx)+\bfnu^\top(A\xx-\bb).
 \]</span></p>
-<p>Por condición de optimalidad de primer orden sin restricciones para funciones convexas (Teorema 1), la expresión (11) implica que <span class="math inline">\(\xx_0\)</span> es el minimizador de <span class="math inline">\(L(\xx_0)\)</span>. Además, es fácil ver que <span class="math inline">\(L(\xx)\leq f(\xx)\)</span> para todo <span class="math inline">\(\xx\)</span> factible. En consecuencia, se deduce <span class="math display">\[
+<p>Por condición de optimalidad de primer orden sin restricciones para funciones convexas (Teorema 1), la expresión (12) implica que <span class="math inline">\(\xx_0\)</span> es el minimizador de <span class="math inline">\(L(\xx_0)\)</span>. Además, es fácil ver que <span class="math inline">\(L(\xx)\leq f(\xx)\)</span> para todo <span class="math inline">\(\xx\)</span> factible. En consecuencia, se deduce <span class="math display">\[
 f(\xx_0)=L(\xx_0)\leq L(\xx)\leq f(\xx)\qquad\forall\xx\text{ factible},
 \]</span> donde la primera igualdad es cierta gracias a la condición de holgura complementaria <span class="math inline">\(\lambda_i g_i(\xx_0)=0\)</span> para todo <span class="math inline">\(i=1,\ldots,r\)</span>. Luego, <span class="math inline">\(\xx_0\)</span> es punto óptimo del problema, tal como queríamos probar.<span class="math inline">\(\qquad\blacksquare\)</span></p>
 <div class="question callout callout-style-simple callout-none no-icon">
@@ -1207,7 +1207,7 @@ d^\star\leq p^\star.
 <h4 class="anchored" data-anchor-id="dualidad-débil">Dualidad débil</h4>
 <p>El valor óptimo del problema dual, <span class="math inline">\(d^\star\)</span>, es, por definición, la mejor cota inferior de <span class="math inline">\(p^\star\)</span> que podemos obtener mediante la función dual de Lagrange. La desigualdad <span class="math display">\[
 d^\star\leq p^\star
-\tag{12}
+\tag{13}
 \]</span> se conoce como <mark><em>dualidad débil</em></mark>, y es cierta incluso si el problema primal no es convexo. La dualidad débil es cierta incluso para valores infinitos:</p>
 <ul>
 <li>Si el problema primal no tiene cota inferior (<span class="math inline">\(p^\star=-\infty\)</span>), entonces el problema dual es es infactible (<span class="math inline">\(d^\star=-\infty\)</span>).</li>
@@ -1219,7 +1219,7 @@ d^\star\leq p^\star
 <h4 class="anchored" data-anchor-id="dualidad-fuerte">Dualidad fuerte</h4>
 <p>La <mark><em>dualidad fuerte</em></mark> se cumple si ocurre <span class="math display">\[
 d^\star=p^\star.
-\tag{13}
+\tag{14}
 \]</span></p>
 <p>Hay dos hechos importantes a tener en cuenta:</p>
 <ul>
@@ -1297,9 +1297,9 @@ p^\star=-\frac{3b^2}{\|\aa\|_2^2}.
 <p>Para ello, vamos a suponer que los puntos óptimos existen, tanto para el problema primal (<span class="math inline">\(\xx^\star\)</span>) como para el problema dual (<span class="math inline">\(\bflambda^\star\)</span> y <span class="math inline">\(\bfnu^\star\)</span>). Además, es importante recordar que en el problema dual se impone la restricción <span class="math inline">\(\bflambda\succeq\bfzero\)</span>.</p>
 <p>La dualidad fuerte significa que <span class="math display">\[
 \underbrace{f(\xx^\star)}_{p^\star}=\underbrace{\calG(\bflambda^\star,\bfnu^\star)}_{d^\star}=\inf_{\xx}L(\xx,\bflambda^\star,\bfnu^\star).
-\tag{14}
+\tag{15}
 \]</span></p>
-<p>Hay que tener cuidado al interpretar la expresión (14): si bien garantiza que <span class="math inline">\(f(\xx^\star)\)</span> es el valor ínfimo del Lagrangiano, no nos dice nada acerca de cuál es el valor de <span class="math inline">\(\xx\)</span> donde dicho ínfimo se alcanza. No obstante, la naturaleza de los multiplicadores de Lagrange y las restricciones funcionales nos permiten deducir, a partir de (14), lo siguiente: <span class="math display">\[
+<p>Hay que tener cuidado al interpretar la expresión (15): si bien garantiza que <span class="math inline">\(f(\xx^\star)\)</span> es el valor ínfimo del Lagrangiano, no nos dice nada acerca de cuál es el valor de <span class="math inline">\(\xx\)</span> donde dicho ínfimo se alcanza. No obstante, la naturaleza de los multiplicadores de Lagrange y las restricciones funcionales nos permiten deducir, a partir de (15), lo siguiente: <span class="math display">\[
 \begin{align*}
 f(\xx^\star)&amp;\leq L(\xx^\star,\bflambda^\star,\bfnu^\star)\\
 &amp;=f(\xx^\star)+\underbrace{\sum_{i=1}^r\lambda_ig_i(\xx^\star)}_{\leq\, 0}+\underbrace{\sum_{j=1}^m\nu_j h_j(\xx^\star)}_{=\,0}\\
@@ -1308,9 +1308,9 @@ f(\xx^\star)&amp;\leq L(\xx^\star,\bflambda^\star,\bfnu^\star)\\
 \]</span></p>
 <p>Luego, por antisimetría, debe ser <span class="math display">\[
 f(\xx^\star)=\underbrace{f(\xx^\star)+\sum_{i=1}^r\lambda_ig_i(\xx^\star)}_{L(\xx^\star,\bflambda^\star,\bfnu^\star)}.
-\tag{15}
+\tag{16}
 \]</span></p>
-<p>A partir de (14) y (15) podemos concluir que, bajo dualidad fuerte, la terna <span class="math inline">\((\xx^\star,\bflambda^\star,\bfnu^\star)\)</span> verifica dos condiciones KKT de la Definición 2: holgura complementaria y estacionariedad.</p>
+<p>A partir de (15) y (16) podemos concluir que, bajo dualidad fuerte, la terna <span class="math inline">\((\xx^\star,\bflambda^\star,\bfnu^\star)\)</span> verifica dos condiciones KKT de la Definición 2: holgura complementaria y estacionariedad.</p>
 <div style="margin-top:2em;">
 
 </div>
@@ -1319,7 +1319,7 @@ f(\xx^\star)=\underbrace{f(\xx^\star)+\sum_{i=1}^r\lambda_ig_i(\xx^\star)}_{L(\x
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">Holgura complementaria</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Estacionariedad</a></li></ul>
 <div class="tab-content">
 <div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
-<p>Para que la igualdad en (15) sea cierta, debe ser <span class="math display">\[
+<p>Para que la igualdad en (16) sea cierta, debe ser <span class="math display">\[
 \sum_{i=1}^r\lambda_ig_i(\xx^\star)=0.
 \]</span></p>
 <p>Pero los términos son no positivos, por lo cual esto es equivalente a pedir <span class="math display">\[
@@ -1398,9 +1398,9 @@ x_i^\star=\left\{\begin{array}{cl}
 \end{array}\right.,
 \]</span> o, equivalentemente, <span class="math inline">\(x_i^\star=\max\{0,1/\nu^\star-\alpha_i\}\)</span>. Finalmente, el uso de la condición <span class="math inline">\(\mathbf{1}^\top\xx^\star=1\)</span> resulta en <span class="math display">\[
 \sum_{i=1}^p\max\{0,1/\nu^\star-\alpha_i\}=1.
-\tag{16}
+\tag{17}
 \]</span></p>
-<p>El lado izquierdo de (16) corresponde a una función de <span class="math inline">\(1/\nu^\star\)</span> que es continua, creciente por tramos y con puntos de quiebre en los valores <span class="math inline">\(\alpha_i\)</span>, tal y como lo ejemplifica la siguiente figura:</p>
+<p>El lado izquierdo de (17) corresponde a una función de <span class="math inline">\(1/\nu^\star\)</span> que es continua, creciente por tramos y con puntos de quiebre en los valores <span class="math inline">\(\alpha_i\)</span>, tal y como lo ejemplifica la siguiente figura:</p>
 <figure style="text-align: center;" class="figure">
 <img src="figuras/ej_water_filling_1.png" alt="Texto" width="500px" class="figure-img">
 <figcaption>
