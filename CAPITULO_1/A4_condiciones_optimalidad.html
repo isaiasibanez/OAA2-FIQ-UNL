@@ -916,10 +916,9 @@ h_j(\xx)=0\qquad\forall j=1,\ldots,m.
 <li><p><strong>Independencia lineal de los gradientes (LICQ)</strong>: Si todas las funciones de restricción son continuamente diferenciables y el conjunto <span class="math display">\[
 \{\nabla g_i(\xx^\star) \mid i\in I(\xx^\star)\}\cup\{\nabla h_j(\xx^\star) \mid j=1,\ldots,m\}
 \]</span> es linealmente independiente, entonces las condiciones KKT se cumplen para <span class="math inline">\(\xx^\star\)</span>.</p></li>
-<li><p><strong>Condición de Slater para KKT</strong>: Si las restricciones de desigualdad activas <span class="math inline">\(\{g_i \mid i\in I(\xx^\star)\}\)</span> son funciones diferenciables convexas, las restricciones de igualdad <span class="math inline">\(\{h_j \mid j=1,\ldots, m\}\)</span> son funciones afines y además existe un punto <em>estrictamente factible</em> para las restricciones de desigualdad activas, es decir <span class="math display">\[
-\exists\xx_0:g_j(\xx_0)&lt;0\qquad\forall j\in I(\xx^\star),
-\]</span> entonces las condiciones KKT se cumplen para <span class="math inline">\(\xx^\star\)</span>.</p>
-<p>En este caso, decimos simplemente que <em>las restricciones verifican la condición de Slater</em>.</p></li>
+<li><p><strong>Condición de Slater</strong>: Si el problema es de optimización convexa (restricciones de desigualdad convexas y restricciones de igualdad afines), y además existe un punto <em>estrictamente factible</em>; esto es <span class="math display">\[
+\exists\xx_0:g_i(\xx_0)&lt;0\;\land\; h_j(\xx_0)=0\qquad\forall i=1,\ldots,r,\;\forall j=1,\ldots,m,
+\]</span> entonces las condiciones KKT se cumplen para <span class="math inline">\(\xx^\star\)</span>.</p></li>
 </ul>
 <div style="margin-top:2em;">
 
@@ -1076,15 +1075,7 @@ h_j(\xx)=0, &amp; j=1,\cdots,m
 \]</span></p>
 <p>Cuando el Lagrangiano no está acotado inferiormente en <span class="math inline">\(\xx\)</span>, se asume el valor <span class="math inline">\(-\infty\)</span>.</p>
 </div>
-<details>
-<summary>
-Mostrar detalles
-</summary>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true"><span style="font-size: 1.25em;">①</span></a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false"><span style="font-size: 1.25em;">②</span></a></li></ul>
-<div class="tab-content">
-<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
-<p>Para un <span class="math inline">\(\xx\)</span> fijo, el Lagrangiano es una función afín de <span class="math inline">\((\bflambda,\bfnu)\)</span>. Es decir, puede ser escrito de la forma <span class="math display">\[
+<p>Observar que, para un <span class="math inline">\(\xx\)</span> fijo, el Lagrangiano es una función afín de <span class="math inline">\((\bflambda,\bfnu)\)</span>. Es decir, puede ser escrito de la forma <span class="math display">\[
 \calL(\xx,\bflambda,\bfnu)=A\begin{pmatrix}\bflambda\\\bfnu\end{pmatrix}+\bb
 \]</span></p>
 <div style="margin-top:-0.5em;">
@@ -1101,8 +1092,8 @@ Mostrar detalles
 </div>
 </div>
 <p>Por lo tanto, la función dual <span class="math inline">\(\calG\)</span> es el ínfimo puntual de una familia de funciones afines de <span class="math inline">\((\bflambda,\bfnu)\)</span>. Esto significa que <span class="math inline">\(\calG\)</span> es siempre una función cóncava (ver operaciones que preservan convexidad en <a href="A2_optimizacion_convexa.html#operaciones-que-preservan-convexidad-1">C1-S2</a>).</p>
-</div>
-<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="alert alert-light text-dark" role="important">
+<p><span class="badge bg-warning text-dark">Importante</span></p>
 <p>La función dual <span class="math inline">\(\calG\)</span> es una cota inferior del valor óptimo <span class="math inline">\(p^\star\)</span> del problema primal, en el siguiente sentido: para todo <span class="math inline">\(\bflambda\succeq \bfzero\)</span> y para todo <span class="math inline">\(\bfnu\)</span>, resulta <span class="math display">\[
 \calG(\bflambda,\bfnu)\leq p^\star.
 \]</span></p>
@@ -1120,10 +1111,7 @@ Mostrar detalles
 </div>
 </div>
 </div>
-</div>
-</div>
-</details>
-<div style="margin-top:1em;">
+<div style="margin-top:2em;">
 
 </div>
 <div class="callout-example">
@@ -1226,7 +1214,7 @@ d^\star=p^\star.
 <li>La dualidad fuerte, en general, no se cumple.</li>
 <li>Si el problema primal es convexo, la dualidad fuerte usualmente se cumple.</li>
 </ul>
-<p>La cualificación de restricciones más común para asegurar la dualidad fuerte es la <em>condición de Slater</em>, que presentaremos en el siguiente teorema. Observar que difiere sutilmente de la condición vista para KKT.</p>
+<p>La cualificación de restricciones más común para asegurar la dualidad fuerte es la <em>condición de Slater</em> definida anteriormente. Formalizaremos esto en el siguiente teorema.</p>
 <div class="teorema">
 <p><strong>Teorema 6.</strong> (Teorema de Slater) Sea un problema de optimización convexa de la forma <span class="math display">\[
 \begin{array}{ll}
@@ -1316,9 +1304,9 @@ f(\xx^\star)=\underbrace{f(\xx^\star)+\sum_{i=1}^r\lambda_ig_i(\xx^\star)}_{L(\x
 </div>
 <hr>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">Holgura complementaria</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Estacionariedad</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Holgura complementaria</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Estacionariedad</a></li></ul>
 <div class="tab-content">
-<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <p>Para que la igualdad en (16) sea cierta, debe ser <span class="math display">\[
 \sum_{i=1}^r\lambda_ig_i(\xx^\star)=0.
 \]</span></p>
@@ -1326,7 +1314,7 @@ f(\xx^\star)=\underbrace{f(\xx^\star)+\sum_{i=1}^r\lambda_ig_i(\xx^\star)}_{L(\x
 \lambda_i g_i(\xx^\star)=0\qquad\forall i = 1,\ldots, r.
 \]</span></p>
 </div>
-<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
 <p>El ínfimo de <span class="math inline">\(L(\xx,\bflambda^\star,\bfnu^\star)\)</span> sí ocurre en <span class="math inline">\(\xx^\star\)</span>: <span class="math display">\[
 L(\xx^\star,\bflambda^\star,\bfnu^\star)=\inf_{\xx}L(\xx,\bflambda^\star,\bfnu^\star).
 \]</span></p>
