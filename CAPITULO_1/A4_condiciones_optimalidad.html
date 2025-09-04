@@ -1069,6 +1069,9 @@ h_j(\xx)=0, &amp; j=1,\cdots,m
 
 </div>
 <p>Nos referiremos al problema de optimización general como <mark><em>problema primal</em></mark>. A partir del Lagrangiano, construimos a continuación una función que luego nos permitirá derivar una cota inferior para el valor óptimo <span class="math inline">\(p^\star\)</span> del problema primal.</p>
+<div style="margin-top:1em;">
+
+</div>
 <div class="definicion">
 <p><strong>Definición 4.</strong> (Función dual) Sea <span class="math inline">\(\calL\)</span> el Lagrangiano de la Definición 3. Se denomina <em>función dual de Lagrange</em> a <span class="math inline">\(\calG:\RR^r\times\RR^m\to\RR\)</span> definida por <span class="math display">\[
 \calG(\bflambda,\bfnu):=\inf_{\xx}\calL(\xx,\bflambda,\bfnu).
@@ -1091,7 +1094,10 @@ h_j(\xx)=0, &amp; j=1,\cdots,m
 </div>
 </div>
 </div>
-<p>Por lo tanto, la función dual <span class="math inline">\(\calG\)</span> es el ínfimo puntual de una familia de funciones afines de <span class="math inline">\((\bflambda,\bfnu)\)</span>. Esto significa que <span class="math inline">\(\calG\)</span> es siempre una función cóncava (ver operaciones que preservan convexidad en <a href="A2_optimizacion_convexa.html#operaciones-que-preservan-convexidad-1">C1-S2</a>).</p>
+<p>Por lo tanto, la función dual <span class="math inline">\(\calG\)</span> es el ínfimo puntual de una familia de funciones afines de <span class="math inline">\((\bflambda,\bfnu)\)</span>. Esto significa que <span class="math inline">\(\calG\)</span> es siempre una función cóncava (ver operaciones que preservan convexidad en <a href="A2_optimizacion_convexa.html#operaciones-que-preservan-convexidad-1">C1-S2</a>), lo cual será fundamental más adelante.</p>
+<div style="margin-top:2em;">
+
+</div>
 <div class="alert alert-light text-dark" role="important">
 <p><span class="badge bg-warning text-dark">Importante</span></p>
 <p>La función dual <span class="math inline">\(\calG\)</span> es una cota inferior del valor óptimo <span class="math inline">\(p^\star\)</span> del problema primal, en el siguiente sentido: para todo <span class="math inline">\(\bflambda\succeq \bfzero\)</span> y para todo <span class="math inline">\(\bfnu\)</span>, resulta <span class="math display">\[
