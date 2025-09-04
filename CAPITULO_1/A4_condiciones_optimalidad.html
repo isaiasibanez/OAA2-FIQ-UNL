@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.40">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -36,7 +36,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-327735d1480bff6f7510335fe22ad292.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -238,6 +238,7 @@ window.Quarto = {
 \def\calL{\mathcal{L}}
 \def\calG{\mathcal{G}}
 \def\calD{\mathcal{D}}
+\def\calN{\mathcal{N}}
 \def\aa{{\bf a}}
 \def\bb{{\bf b}}
 \def\cc{{\bf c}}
@@ -679,17 +680,17 @@ N_{\Omega}(\xx)=\left\{A^\top\bflambda+C^\top\bfnu \mid \bflambda^\top(A\xx-\bb)
 \text{sujeto a }  &amp; A\xx=\bb.
 \end{array}
 \]</span></p>
-<p>Teniendo en cuenta que únicamente hay restricciones de igualdad, a saber, <span class="math inline">\(h_j(\xx)=\aa_j^\top\xx\)</span>, donde <span class="math inline">\(\aa_j\)</span> es la <span class="math inline">\(j\)</span>-ésima fila de <span class="math inline">\(A\)</span>, obtengamos la condición de estacionariedad: <span class="math display">\[
+<p>Dado que la función objetivo es convexa, las condiciones KKT son suficientes y necesarias. Además, teniendo en cuenta que solo hay restricciones de igualdad, a saber, <span class="math inline">\(h_j(\xx)=\aa_j^\top\xx-b_j\)</span>, únicamente debemos analizar las condiciones de factibilidad primal y estacionariedad. La condición de estacionariedad es:</p>
+<p><span class="math display">\[
 \begin{align*}
--\nabla f(\xx)&amp;=\sum_{j=1}^m\nu_j\nabla h_j(\xx)\\
--(P\xx+\qq)&amp;= A^\top\bfnu\\
-P\xx+\qq+A^\top\bfnu &amp;=\bfzero.
+-\nabla f(\xx^\star)&amp;=\sum_{j=1}^m\nu_j^\star\nabla h_j(\xx^\star)\\
+-(P\xx^\star+\qq)&amp;= A^\top\bfnu^\star\\
+P\xx^\star+\qq+A^\top\bfnu^\star &amp;=\bfzero.
 \end{align*}
 \]</span></p>
-<p>Agregando la factibilidad primal <span class="math inline">\(A^\top\xx=\bb\)</span>, podemos escribir matricialmente <span class="math display">\[
-\begin{pmatrix}P&amp;A^\top\\A&amp;0\end{pmatrix}\begin{pmatrix}\xx\\\bfnu\end{pmatrix}=\begin{pmatrix}-\qq\\\bb\end{pmatrix}.
+<p>Agregando la factibilidad primal <span class="math inline">\(A\xx^\star=\bb\)</span>, obtenemos finalmente un sistema de <span class="math inline">\(p+m\)</span> ecuaciones con <span class="math inline">\(p+m\)</span> incógnitas: <span class="math display">\[
+\begin{pmatrix}P&amp;A^\top\\A&amp;0\end{pmatrix}\begin{pmatrix}\xx^\star\\\bfnu^\star\end{pmatrix}=\begin{pmatrix}-\qq\\\bb\end{pmatrix}.
 \]</span></p>
-<p>Este es un sistema de <span class="math inline">\(p+m\)</span> ecuaciones con <span class="math inline">\(p+m\)</span> incógnitas. Dado que las condiciones KKT son suficientes y necesarias, resolverlo permite hallar <span class="math inline">\(\xx^\star\)</span>. No es necesario verificar condiciones adicionales como la holgura complementaria ni la factibilidad dual, ya que no hay restricciones de desigualdad.</p>
 </div>
 <div style="margin-top:-0.5em;">
 
@@ -738,7 +739,7 @@ x_1^\star -2 + \lambda_1^\star-\lambda_2^\star  \\
 \]</span></p>
 <p>Si <span class="math inline">\(\lambda_1^\star=0\)</span>, se deduce <span class="math inline">\(\lambda_2^\star=x_1^\star-2\)</span> y <span class="math inline">\(\lambda_3^\star=4x_2^\star-2\)</span>. Luego, por holgura complementaria, resultan <span class="math inline">\((x_1^\star-2)x_1^\star=0\)</span> y <span class="math inline">\((4x_2^\star-2)x_2^\star=0\)</span>, con soluciones factibles <span class="math inline">\((0,0)\)</span> y <span class="math inline">\((0,0.5)\)</span>. Ambas deben ser descartadas, pues violan la factibilidad dual.</p>
 <p>En consecuencia, debe ser <span class="math inline">\(\lambda_1^\star\neq 0\)</span>. Esto significa que la restricción <span class="math inline">\(x_1+x_2\leq 1.5\)</span> está activa, tal que <span class="math display">\[
-$x_1^\star+x_2^\star-1.5=0.
+x_1^\star+x_2^\star-1.5=0.
 \]</span></p>
 <p>Ahora, veamos que <span class="math inline">\(x_1^\star\neq 0\)</span> y <span class="math inline">\(x_2^\star\neq 0\)</span>. Si <span class="math inline">\(x_1^\star=0\)</span> (análogamente para <span class="math inline">\(x_2^\star\)</span>), de la primera ecuación en (9) se deduce <span class="math inline">\(\lambda_2^\star=\lambda_1^\star-2\)</span>, tal que <span class="math inline">\(\lambda_1^\star\geq 2\)</span>. La holgura complementaria resulta en <span class="math inline">\(x_2^\star=1.5\)</span>, lo cual nos lleva una contradicción entre la segunda ecuación de (9), que resulta en <span class="math inline">\(\lambda_3^\star=4\)</span>, y la holgura complementaria, que exige <span class="math inline">\(\lambda_3^\star=0\)</span>.</p>
 <p>En limpio, sabemos que debe ser <span class="math inline">\(\lambda_1^\star\neq 0\)</span>, <span class="math inline">\(x_1^\star\neq 0\)</span>, <span class="math inline">\(x_2^\star\neq 0\)</span>. Además, por holgura complementaria, <span class="math inline">\(\lambda_2^\star=0\)</span> y <span class="math inline">\(\lambda_3^\star=0\)</span>.</p>
@@ -761,7 +762,7 @@ x_2^\star\\
 \end{pmatrix}.
 \]</span></p>
 <p>La solución del sistema nos da el único punto óptimo del problema: <span class="math display">\[
-\xx^\star=(1.2,0.3)\qquad\text{con }\lambda_1^\star=0.8.
+\xx^\star=(1.2,0.3)\qquad\text{con}\;\lambda_1^\star=0.8.
 \]</span></p>
 </div>
 </section>
@@ -796,9 +797,9 @@ h_j(\xx)=0, &amp; j=1,\cdots,m
 </div>
 <p>Esta idea es más bien intuitiva, por lo cual no estamos en condiciones de extender el Teorema 4 ni el Corolario 1 de manera rigurosa. Sin embargo, lo que sí haremos es extender el concepto de las condiciones KKT, dejando para más adelante el análisis de su aplicabilidad. Para ello, utilizaremos los resultados de la sección anterior en <span class="math inline">\(\tilde{\Omega}\)</span>, la <em>linearización</em> de <span class="math inline">\(\Omega\)</span> en un punto dado. En particular, para un punto óptimo <span class="math inline">\(\xx^\star\)</span>, la linearización de las restricciones queda determinada por:</p>
 <p><span class="math display">\[
-\tilde{g}_i(\xx):=g_i(\xx^\star)+\nabla g_i(\xx^\star)\cdot (\xx-\xx^\star),
+\tilde{g}_i(\xx):=g_i(\xx^\star)+\nabla g_i(\xx^\star)^\top (\xx-\xx^\star),
 \]</span> <span class="math display">\[
-\tilde{h}_i(\xx):=h_i(\xx^\star)+\nabla h_i(\xx^\star)\cdot (\xx-\xx^\star).
+\tilde{h}_i(\xx):=h_i(\xx^\star)+\nabla h_i(\xx^\star)^\top(\xx-\xx^\star).
 \]</span></p>
 <p>Es decir, resulta <span class="math display">\[
 \tilde{\Omega}:=\left\{\xx\in\RR^p\left|\;\begin{array}{ll}
@@ -893,7 +894,7 @@ h_j(\xx)=0\qquad\forall j=1,\ldots,m.
 <img src="figuras/ej_KKT_fail.png" alt="..." width="400px" class="figure-img">
 </figure>
 <p>Como se puede apreciar en la figura, <span class="math inline">\((x^\star,y^\star)=(1,0)\)</span> es el único punto óptimo de este problema. Pero en él, los gradientes de la función objetivo y de las restricciones activas son <span class="math display">\[
-\nabla f(x^\star,y^\star)=(-1,0)
+\nabla f(x^\star,y^\star)=(-1,0),
 \]</span> <span class="math display">\[
 \nabla g_1(x^\star,y^\star)=(0,1),\qquad\nabla g_3(x^\star,y^\star)=(0,-1).
 \]</span></p>
