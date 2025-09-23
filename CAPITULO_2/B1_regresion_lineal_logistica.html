@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,7 +64,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../CAPITULO_2/B2_glm.html" rel="next">
 <link href="../CAPITULO_1/A5_metodos_optimizacion.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -164,7 +197,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../CAPITULO_1/A3_resolucion_computacional.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">1.3 Resolución computacional con CVXPY y SciPy</span></a>
+ <span class="menu-text">1.3 Resolución computacional y problemas clásicos de optimización convexa</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -196,24 +229,6 @@ window.Quarto = {
  <span class="menu-text">2.1 Regresión lineal y regresión logística</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../CAPITULO_2/B2_glm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.2 Modelos lineales generalizados</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../CAPITULO_2/B3_ridge_lasso.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.3 Métodos de regularización</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../CAPITULO_2/B4_svm.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">2.4 Máquinas de vectores soporte</span></a>
-  </div>
-</li>
       </ul>
   </li>
     </ul>
@@ -228,32 +243,26 @@ window.Quarto = {
   <ul>
   <li><a href="#regresión-lineal" id="toc-regresión-lineal" class="nav-link active" data-scroll-target="#regresión-lineal">Regresión lineal</a>
   <ul class="collapse">
-  <li><a href="#interpretación-probabilística" id="toc-interpretación-probabilística" class="nav-link" data-scroll-target="#interpretación-probabilística">Interpretación probabilística</a>
-  <ul class="collapse">
+  <li><a href="#distribución-condicional" id="toc-distribución-condicional" class="nav-link" data-scroll-target="#distribución-condicional">Distribución condicional</a></li>
   <li><a href="#función-de-verosimilitud" id="toc-función-de-verosimilitud" class="nav-link" data-scroll-target="#función-de-verosimilitud">Función de verosimilitud</a></li>
-  </ul></li>
+  <li><a href="#optimalidad" id="toc-optimalidad" class="nav-link" data-scroll-target="#optimalidad">Optimalidad</a></li>
   <li><a href="#algoritmo-lms" id="toc-algoritmo-lms" class="nav-link" data-scroll-target="#algoritmo-lms">Algoritmo LMS</a></li>
-  <li><a href="#ejemplo" id="toc-ejemplo" class="nav-link" data-scroll-target="#ejemplo">Ejemplo</a></li>
+  <li><a href="#propiedades-del-estimador" id="toc-propiedades-del-estimador" class="nav-link" data-scroll-target="#propiedades-del-estimador">Propiedades del estimador</a></li>
   </ul></li>
   <li><a href="#regresión-logística" id="toc-regresión-logística" class="nav-link" data-scroll-target="#regresión-logística">Regresión logística</a>
   <ul class="collapse">
-  <li><a href="#función-logística" id="toc-función-logística" class="nav-link" data-scroll-target="#función-logística">Función logística</a>
-  <ul class="collapse">
-  <li><a href="#gráfico-de-la-función-logística" id="toc-gráfico-de-la-función-logística" class="nav-link" data-scroll-target="#gráfico-de-la-función-logística">Gráfico de la función logística</a></li>
-  </ul></li>
-  <li><a href="#estimación-de-parámetros" id="toc-estimación-de-parámetros" class="nav-link" data-scroll-target="#estimación-de-parámetros">Estimación de parámetros</a>
-  <ul class="collapse">
+  <li><a href="#distribución-condicional-1" id="toc-distribución-condicional-1" class="nav-link" data-scroll-target="#distribución-condicional-1">Distribución condicional</a></li>
   <li><a href="#función-de-verosimilitud-1" id="toc-función-de-verosimilitud-1" class="nav-link" data-scroll-target="#función-de-verosimilitud-1">Función de verosimilitud</a></li>
-  <li><a href="#regla-de-ascenso-por-gradiente" id="toc-regla-de-ascenso-por-gradiente" class="nav-link" data-scroll-target="#regla-de-ascenso-por-gradiente">Regla de ascenso por gradiente</a></li>
+  <li><a href="#optimalidad-1" id="toc-optimalidad-1" class="nav-link" data-scroll-target="#optimalidad-1">Optimalidad</a></li>
+  <li><a href="#aplicación-de-descenso-por-gradiente" id="toc-aplicación-de-descenso-por-gradiente" class="nav-link" data-scroll-target="#aplicación-de-descenso-por-gradiente">Aplicación de descenso por gradiente</a></li>
+  <li><a href="#propiedades-del-estimador-1" id="toc-propiedades-del-estimador-1" class="nav-link" data-scroll-target="#propiedades-del-estimador-1">Propiedades del estimador</a></li>
   </ul></li>
-  <li><a href="#ejemplo-1" id="toc-ejemplo-1" class="nav-link" data-scroll-target="#ejemplo-1">Ejemplo</a></li>
   <li><a href="#actividades" id="toc-actividades" class="nav-link" data-scroll-target="#actividades">Actividades</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../CAPITULO_2/B1_regresion_lineal_logistica.html">2. MODELOS DISCRIMINATIVOS</a></li><li class="breadcrumb-item"><a href="../CAPITULO_2/B1_regresion_lineal_logistica.html">2.1 Regresión lineal y regresión logística</a></li></ol></nav>
 <div class="quarto-title">
@@ -285,6 +294,7 @@ window.Quarto = {
 \def\calL{\mathcal{L}}
 \def\calG{\mathcal{G}}
 \def\calD{\mathcal{D}}
+\def\calN{\mathcal{N}}
 \def\aa{{\bf a}}
 \def\bb{{\bf b}}
 \def\cc{{\bf c}}
@@ -296,6 +306,7 @@ window.Quarto = {
 \def\zz{{\bf z}}
 \def\uu{{\bf u}}
 \def\vv{{\bf v}}
+\def\ww{{\bf w}}
 \def\XX{{\bf X}}
 \def\TT{{\bf T}}
 \def\SS{{\bf S}}
@@ -317,228 +328,673 @@ window.Quarto = {
 \def\argmax{\mathop{\mathrm{arg\,max\,}}}
 \]</span></p>
 </div>
-<p><span style="color:darkred;">BORRADOR SIN EDICIÓN.</span></p>
-<section id="regresión-lineal" class="level1">
-<h1>Regresión lineal</h1>
-<section id="interpretación-probabilística" class="level2">
-<h2 class="anchored" data-anchor-id="interpretación-probabilística">Interpretación probabilística</h2>
-<p>En el modelo de regresión lineal, las variables predictoras <span class="math inline">\(\XX\in\RR^p\)</span> se relacionan con la variable respuesta <span class="math inline">\(Y\in\RR\)</span> mediante la ecuación</p>
-<p><span class="math display">\[
-Y = \theta_0+\theta_1 X_1+\theta_2 X_2+\cdots+\theta_p X_p + \varepsilon,
-\]</span></p>
-<p>donde <span class="math inline">\(\bftheta=(\theta_0,\theta_1,\cdots,\theta_p)\in\RR^{p+1}\)</span> es el conjunto de parámetros del modelo y <span class="math inline">\(\varepsilon\)</span> es un término de error que captura efectos no modelados (como características omitidas o ruido aleatorio). Podemos escribir más abreviado el modelo bajo la convención <span class="math inline">\(x_0=1\)</span>, como:</p>
-<p><span class="math display">\[
-Y = \bftheta^T \XX + \varepsilon,
-\]</span></p>
-<p>Además, se asume que el error aleatorio <span class="math inline">\(\varepsilon\)</span> se distribuye según una distribución Normal con media cero y varianza <span class="math inline">\(\sigma^2\)</span>, esto es</p>
-<p><span class="math display">\[
-\varepsilon^{(i)} \sim \mathcal{N}(0, \sigma^2).
-\]</span></p>
-<p>De esta manera, la densidad de <span class="math inline">\(\varepsilon\)</span> es</p>
-<p><span class="math display">\[
-p(\varepsilon) = \frac{1}{\sqrt{2 \pi \sigma^2}} \exp\left(-\frac{\varepsilon^2}{2 \sigma^2}\right),
-\]</span></p>
-<p>Esto implica que <span class="math inline">\(Y|\XX\sim \mathcal{N}(\bftheta^T\XX,\sigma^2)\)</span> o, lo que es lo mismo, que la función de densidad condicional está dada por</p>
-<p><span class="math display">\[
-p(y |\xx; \bftheta) = \frac{1}{\sqrt{2 \pi \sigma^2}} \exp\left(-\frac{(y-\bftheta^T \xx)^2}{2 \sigma^2}\right).
-\]</span></p>
+<p>En esta sección estudiaremos dos modelos fundamentales de aprendizaje supervisado: la regresión lineal, utilizada para variables de respuesta cuantitativas, y la regresión logística, empleada cuando la respuesta es categórica. Ambos modelos pueden ser formulados como problemas de optimización, lo que permite aplicar los conceptos vistos en el capítulo anterior. Para ambos modelos, analizaremos su formulación probabilística, las características del problema y los métodos de resolución más utilizados.</p>
 <hr>
+<p>Durante este capítulo, consideraremos <span class="math inline">\(\XX=(X_1,\ldots,X_p)\in\RR^p\)</span> un conjunto de variables predictoras y <span class="math inline">\(Y\in\RR\)</span> una variable respuesta. Además, vamos a suponer que la distribución condicional de <span class="math inline">\(Y|\XX\)</span> depende de un vector de parámetros <span class="math inline">\(\bftheta\in\RR^q\)</span>.</p>
+<p>Para un conjunto de datos <span class="math inline">\(\{(\xx_i,y_i)\}_{i=1}^n\)</span>, denotamos <span class="math inline">\(X\in\RR^{n\times p}\)</span> la matriz de predictoras y <span class="math inline">\(\yy\in\RR^n\)</span> el vector de respuestas.</p>
+<p>En lo que sigue, vamos a trabajar sin intercepto; es decir, consideraremos la relación lineal <span class="math inline">\(\bftheta^\top\XX\)</span>. Luego, si se necesitara un intercepto <span class="math inline">\(\theta_0\)</span>, los resultados se adaptan de forma directa reemplazando la matriz de datos <span class="math inline">\(X\)</span> por la matriz ampliada <span class="math display">\[
+\widetilde{X}=\begin{pmatrix}\mathbf{1} &amp; X\end{pmatrix}\in\RR^{n\times (p+1)}.
+\]</span></p>
+<p>Además, denotamos <span class="math inline">\(\mathbb{P}(A)\)</span> la probabilidad de que ocurra un suceso <span class="math inline">\(A\)</span>, mientras que <span class="math inline">\(\media\left[Z\right]\)</span> representa el <em>valor esperado</em> de la variable aleatoria <span class="math inline">\(Z\)</span>.</p>
+<hr>
+<div style="margin-top:1em;">
+
+</div>
+<p>La tarea de obtener un estimador <span class="math inline">\(\hat{\bftheta}\)</span> de <span class="math inline">\(\bftheta\)</span> puede ser formulada a través de un problema de optimización de la forma <span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; J(\bftheta),
+\end{array}
+\tag{1}
+\]</span></p>
+<p>en principio sin restricciones. Aquí, la función objetivo <span class="math inline">\(J:\RR^q\to\RR\)</span>, conocida como <em>función de pérdida</em>, mide que tan bien los parámetros <span class="math inline">\(\bftheta\)</span> se ajustan a los datos observados. El punto óptimo del problema es el estimador buscado, por lo cual de ahora en adelante haremos la siguiente distinción:</p>
+<div class="alert alert-light text-dark" role="important">
+<p><span class="badge bg-warning text-dark">Importante</span></p>
+<p>Denotaremos por <span class="math inline">\(\bftheta^\star\)</span> el valor verdadero del parámetro, mientras que <span class="math inline">\(\hat{\bftheta}\)</span> será el estimador obtenido; es decir, <span class="math inline">\(\hat{\bftheta}\)</span> es el punto óptimo del problema de optimización (1).</p>
+</div>
+<div style="margin-top:1em;">
+
+</div>
+<p>Bajo la suposición de que los datos son i.i.d. (independientes e idénticamente distribuidos), con distribución de densidad condicional <span class="math inline">\(p(y|\xx; \bftheta)\)</span>, una estrategia para formular <span class="math inline">\(J(\bftheta)\)</span> es el <mark>principio de máxima verosimilitud</mark>, que consiste en elegir <span class="math inline">\(\hat{\bftheta}\)</span> de manera tal que se maximice la <em>función de verosimilitud</em></p>
+<p><span class="math display">\[
+L(\bftheta):=\prod_{i=1}^np(y_i|\xx_i; \bftheta).
+\tag{1}
+\]</span></p>
+<p>La función <span class="math inline">\(L(\bftheta)\)</span> mide la compatibilidad de los datos con el modelo <span class="math inline">\(p(y|\xx; \bftheta)\)</span> para un valor de <span class="math inline">\(\bftheta\)</span> dado. En general, es más conveniente utilizar el logaritmo de la verosimilitud: <span class="math display">\[
+\ell(\bftheta):=\log L(\bftheta)=\sum_{i=1}^n\log p(y_i|\xx_i; \bftheta).
+\tag{2}
+\]</span></p>
+<p>Luego, la definición de <span class="math inline">\(J(\bftheta)\)</span> dependerá del problema específico. En general, tiene la forma <span class="math display">\[
+J(\bftheta)=\sum_{i=1}^n\text{loss}\,(y_i,f(\xx_i;\bftheta)),
+\]</span> donde <span class="math inline">\(\text{loss}:\RR\times\RR\to\RR_0^+\)</span> mide el error entre el valor observado de la variable respuesta y el valor estimado por el modelo <span class="math inline">\(\hat{y}_i=f(\xx_i;\bftheta)\)</span>.</p>
+<div style="margin-top:2.5em;">
+
+</div>
+<section id="regresión-lineal" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="regresión-lineal">Regresión lineal</h2>
+<div style="margin-top:-1em;">
+
+</div>
+<div class="myhighlight2">
+<span style="font-size:0.8em;"><em>Supuestos del modelo</em></span>
+<div style="margin-top:-0.1em;">
+
+</div>
+<p><span class="math display">\[
+\begin{array}{c}
+Y=\theta_1X_1+\cdots+\theta_p X_p+\varepsilon\\[2pt]
+\varepsilon\sim \calN(0,\sigma^2)
+\end{array}
+\]</span></p>
+</div>
+<div style="margin-top:1em;">
+
+</div>
+<p>El conjunto de parámetros del modelo de regresión lineal es <span class="math inline">\(\bftheta\in\RR^p\)</span>, mientras que <span class="math inline">\(\varepsilon\in\RR\)</span> es un término de error que captura efectos no modelados (como características omitidas o ruido aleatorio). Podemos escribir el modelo de forma abreviada como <span class="math display">\[
+Y = \bftheta^\top \XX + \varepsilon.
+\]</span></p>
+<figure style="text-align: center;" class="figure">
+<img src="figuras/linear_regression_hastie.png" alt="…" width="350px" class="figure-img">
+<figcaption>
+<strong>Figura 1</strong>. Interpretación geométrica del modelo de regresión lineal en <span class="math inline">\(\RR^2\)</span>. Los puntos ajustados están determinados por las proyecciones sobre el plano <span class="math inline">\(\hat{y}=\theta_1 x_1+\theta_2 x_2\)</span> (más intercepto).
+</figcaption>
+</figure>
+<div style="margin-top:2em;">
+
+</div>
+<p>El supuesto <span class="math inline">\(\varepsilon\sim \calN(0,\sigma^2)\)</span> significa que la función de densidad de la variable aleatoria <span class="math inline">\(\varepsilon\)</span> es <span class="math display">\[
+p(\varepsilon) = \frac{1}{\sqrt{2 \pi \sigma^2}} \exp\left(-\frac{\varepsilon^2}{2 \sigma^2}\right).
+\]</span></p>
+<section id="distribución-condicional" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="distribución-condicional">Distribución condicional</h3>
+<p>Dado <span class="math inline">\(\XX=\xx\)</span>, tenemos que <span class="math display">\[
+Y=\underbrace{\bftheta^\top\xx}_{\text{cte}}+\varepsilon.
+\]</span></p>
+<p>Por lo tanto, el supuesto <span class="math inline">\(\varepsilon\sim\calN(0,\sigma^2)\)</span> implica que <span class="math display">\[
+Y|\XX=\xx\sim \calN(\bftheta^\top\xx,\sigma^2).
+\]</span></p>
+<aside>
+Si <span class="math inline">\(Z\sim\calN(\mu,\sigma^2)\)</span> y <span class="math inline">\(a,b\in\RR\)</span>, <span class="math inline">\(aZ+b\sim\calN(a\mu+b,a^2\sigma^2)\)</span>.
+</aside>
+<p>Finalmente:</p>
+<div style="margin-top:-1em;">
+
+</div>
+<div class="myhighlight">
+<p>La función de densidad condicional de <span class="math inline">\(Y|\XX\)</span> en el modelo de regresión lineal es <span class="math display">\[
+p(y |\xx; \bftheta) = \frac{1}{\sqrt{2 \pi \sigma^2}} \exp\left(-\frac{(y-\bftheta^\top \xx)^2}{2 \sigma^2}\right).
+\]</span></p>
+</div>
+<div style="margin-top:1em;">
+
+</div>
+</section>
 <section id="función-de-verosimilitud" class="level3">
 <h3 class="anchored" data-anchor-id="función-de-verosimilitud">Función de verosimilitud</h3>
 <p>Para un conjunto de datos <span class="math inline">\(\{\xx_i, y_i\}_{i=1}^n\)</span> i.i.d., la función de verosimilitud es</p>
 <p><span class="math display">\[
-L(\bftheta) = \prod_{i=1}^{n} \frac{1}{\sqrt{2 \pi \sigma^2}} \exp\left(-\frac{(y_i - \bftheta^T\xx_i)^2}{2 \sigma^2}\right).
+L(\bftheta) = \prod_{i=1}^{n} \frac{1}{\sqrt{2 \pi \sigma^2}} \exp\left(-\frac{(y_i - \bftheta^\top\xx_i)^2}{2 \sigma^2}\right).
 \]</span></p>
-<p>Ahora debemos aplicar el principio de <strong>máxima verosimilitud</strong>, que consiste en elegir <span class="math inline">\(\bftheta\)</span> de forma que los datos sean lo más probables posible (es decir, maximizar <span class="math inline">\(L(\bftheta)\)</span>). Sin embargo, es más conveniente maximizar el logaritmo de la verosimilitud, lo cual se denota con <span class="math inline">\(\ell(\bftheta)\)</span>. Resulta en este caso</p>
+<p>Entonces</p>
 <p><span class="math display">\[
 \begin{align*}
 \ell(\bftheta) &amp;= \log L(\bftheta) \\
-&amp;= \log \prod_{i=1}^{n} \frac{1}{\sqrt{2 \pi}\sigma} \exp\left(-\frac{(y_i - \bftheta^T \xx_i)^2}{2 \sigma^2}\right) \\
-&amp;= \sum_{i=1}^{n} \left[\log\frac{1}{\sqrt{2 \pi}\sigma} - \frac{1}{2 \sigma^2}  (y_i - \bftheta^T \xx_i)^2\right]\\
-&amp;= n  \log \frac{1}{\sqrt{2 \pi}\sigma} - \frac{1}{2 \sigma^2} \sum_{i=1}^{n} (y_i - \bftheta^T \xx_i)^2
+&amp;= \log \prod_{i=1}^{n} \frac{1}{\sqrt{2 \pi}\sigma} \exp\left(-\frac{(y_i - \bftheta^\top \xx_i)^2}{2 \sigma^2}\right) \\
+&amp;= \sum_{i=1}^{n} \left[\log\frac{1}{\sqrt{2 \pi}\sigma} - \frac{1}{2 \sigma^2}  (y_i - \bftheta^\top \xx_i)^2\right]\\
+&amp;= n  \log \frac{1}{\sqrt{2 \pi}\sigma} - \frac{1}{2 \sigma^2} \sum_{i=1}^{n} (y_i - \bftheta^\top \xx_i)^2
 \end{align*}
 \]</span></p>
-<p>Observar en esta última expresión que maximizar <span class="math inline">\(\ell(\theta)\)</span> es equivalente a minimizar</p>
-<p><span class="math display">\[
-J(\bftheta)=\frac{1}{2} \sum_{i=1}^{n} (y_i - \bftheta^T \xx_i)^2,
-\]</span></p>
-<p>lo cual es la función de costo asociada a mínimos cuadrados. El paramétro <span class="math inline">\(\hat{\bftheta}\)</span> que minimiza dicha función está dado en forma cerrada por</p>
-<p><span class="math display">\[\hat{\bftheta}=(X^TX)^{-1}X^T\vec{y},\]</span></p>
-<p>donde <span class="math inline">\(X\in\RR^{n\times p}\)</span> es la matriz de datos y <span class="math inline">\(\vec{y}\)</span> el vector de respuestas.</p>
-</section>
-</section>
-<section id="algoritmo-lms" class="level2">
-<h2 class="anchored" data-anchor-id="algoritmo-lms">Algoritmo LMS</h2>
-<p>Un algoritmo de búsqueda del minimizador de <span class="math inline">\(J(\bftheta)\)</span> comienza con un valor inicial para <span class="math inline">\(\bftheta\)</span> y, luego, realiza una actualización iterativa de <span class="math inline">\(\bftheta\)</span> que pretende hacer el valor de <span class="math inline">\(J(\bftheta)\)</span> cada vez más pequeño. Específicamente, consideremos el algoritmo de <strong>descenso de gradiente</strong> que utiliza la siguiente actualización:</p>
-<p><span class="math display">\[
-\theta_j := \theta_j - \alpha \frac{\partial}{\partial \theta_j} J(\bftheta).
-\]</span></p>
-<p>(Esta actualización se realiza simultáneamente para todos los valores de <span class="math inline">\(j = 0, \dots, p\)</span>). Aquí, <span class="math inline">\(\alpha\)</span> se llama <strong>tasa de aprendizaje</strong>. Este es un algoritmo natural que repetidamente da un paso en la dirección del descenso más pronunciado de <span class="math inline">\(J\)</span>.</p>
-<p>Para implementar este algoritmo, necesitamos calcular el término de la derivada parcial en el lado derecho. Primero trabajemos en el caso donde solo tenemos un ejemplo de entrenamiento <span class="math inline">\((\xx, y)\)</span>, de manera que podamos omitir la suma en la definición de <span class="math inline">\(J\)</span>. Tenemos:</p>
-<p><span class="math display">\[
-\frac{\partial}{\partial \theta_j} J(\bftheta) = \frac{\partial}{\partial \theta_j}\left[ \frac{1}{2} (y-\bftheta^T\xx)^2\right] = (y-\bftheta^T\xx) x_j.
-\]</span></p>
-<p>Esto da la regla de actualización:</p>
-<p><span class="math display">\[
-\theta_j := \theta_j + \alpha (y-\bftheta^T\xx) x_j.
-\]</span></p>
-<p>Esta regla se llama la <strong>regla de actualización LMS</strong> (<em>least mean squares</em>), y también se conoce como la <strong>regla de aprendizaje Widrow-Hoff</strong>.</p>
-<p>La magnitud de la actualización es proporcional al término de error <span class="math inline">\((y - \bftheta^T\xx)\)</span>. Si encontramos un ejemplo de entrenamiento en el que nuestra predicción coincide casi con el valor real de <span class="math inline">\(y\)</span>, entonces el cambio en los parámetros será mínimo.</p>
-<p>Para un conjunto de entrenamiento <span class="math inline">\(\{\xx_i,y_i\}_{i=1}^n\)</span>, es fácil ver que la regla se puede escribir vectorialmente como</p>
-<p><span class="math display">\[
-\bftheta := \bftheta + \alpha \sum_{i=1}^{n} (y_i - \bftheta^T\xx_i) \xx_i.
-\]</span></p>
-<p>Este método analiza cada ejemplo en todo el conjunto de entrenamiento en cada paso y se denomina <strong>descenso de gradiente por lotes</strong> (<em>batch gradient descent</em>).</p>
-</section>
-<section id="ejemplo" class="level2">
-<h2 class="anchored" data-anchor-id="ejemplo">Ejemplo</h2>
-<p>El conjunto de datos <code>California Housing</code> incluye información detallada sobre diversas características socioeconómicas y geográficas de diferentes áreas residenciales en California. El objetivo es predecir el valor medio de las viviendas en cada zona, a partir de factores como la densidad poblacional y los ingresos medios de los hogares, entre otros.</p>
-<div>
-<div id="pyodide-1" class="exercise-cell">
+<div style="margin-top:2em;">
 
 </div>
-<script type="pyodide-1-contents">
-eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImluY2x1ZGUiOnRydWV9LCJjb2RlIjoiaW1wb3J0IHBhbmRhcyBhcyBwZFxuZnJvbSBza2xlYXJuLmxpbmVhcl9tb2RlbCBpbXBvcnQgTGluZWFyUmVncmVzc2lvblxuZnJvbSBza2xlYXJuLm1vZGVsX3NlbGVjdGlvbiBpbXBvcnQgdHJhaW5fdGVzdF9zcGxpdFxuZnJvbSBza2xlYXJuLnByZXByb2Nlc3NpbmcgaW1wb3J0IFN0YW5kYXJkU2NhbGVyXG5mcm9tIHNrbGVhcm4ubWV0cmljcyBpbXBvcnQgbWVhbl9zcXVhcmVkX2Vycm9yXG5mcm9tIHNrbGVhcm4uZGF0YXNldHMgaW1wb3J0IGZldGNoX2NhbGlmb3JuaWFfaG91c2luZ1xuXG5ob3VzaW5nID0gZmV0Y2hfY2FsaWZvcm5pYV9ob3VzaW5nKClcblggPSBwZC5EYXRhRnJhbWUoaG91c2luZy5kYXRhLCBjb2x1bW5zPWhvdXNpbmcuZmVhdHVyZV9uYW1lcylcbnkgPSBwZC5TZXJpZXMoaG91c2luZy50YXJnZXQsIG5hbWU9J01lZEhvdXNlVmFsJylcblxuXG4jIFRyYWluLXRlc3Qgc3BsaXQgeSBlc2NhbGFkbzpcblhfdHJhaW4sIFhfdGVzdCwgeV90cmFpbiwgeV90ZXN0ID0gdHJhaW5fdGVzdF9zcGxpdChYLCB5LCB0ZXN0X3NpemU9MC4yLCByYW5kb21fc3RhdGU9NDIpXG5cbnNjYWxlciA9IFN0YW5kYXJkU2NhbGVyKClcblhfdHJhaW5fc2NhbGVkID0gc2NhbGVyLmZpdF90cmFuc2Zvcm0oWF90cmFpbilcblhfdGVzdF9zY2FsZWQgPSBzY2FsZXIudHJhbnNmb3JtKFhfdGVzdClcblxuXG4jIFJlZ3Jlc2lvbiBsaW5lYWw6XG5tb2RlbG8gPSBMaW5lYXJSZWdyZXNzaW9uKClcblxubW9kZWxvLmZpdChYX3RyYWluX3NjYWxlZCwgeV90cmFpbikgICMgRW50cmVuYW1pZW50b1xueV90ZXN0X2ZpdCA9IG1vZGVsby5wcmVkaWN0KFhfdGVzdF9zY2FsZWQpICAjIFByZWRpY2Npb25cbk1TRSA9IG1lYW5fc3F1YXJlZF9lcnJvcih5X3Rlc3QsIHlfdGVzdF9maXQpICAjIEV2YWx1YWNpb25cblxudGhldGEwID0gbW9kZWxvLmludGVyY2VwdF9cbnRoZXRhID0gbW9kZWxvLmNvZWZfXG5cbnByaW50KGZcIkNhbnRpZGFkIGRlIHByZWRpY3RvcmVzOiB7WC5zaGFwZVsxXX1cIilcbnByaW50KGZcIkludGVyY2VwdG86IHt0aGV0YTB9XCIpXG5wcmludChmXCJDb2VmaWNpZW50ZXMgZGVsIG1vZGVsbzoge3RoZXRhfVwiKSJ9
-</script>
-</div>
-<p>La clase <code>LinearRegression</code> usa la ecuación normal <span class="math inline">\(\hat{\bftheta}=(X^TX)^{-1}X^T\vec{y}\)</span>. Para usar descenso de gradiente, la alternativa es la clase <code>SGDRegressor</code>: esta efectúa <strong>descenso de gradiente estocástico</strong>, que consiste en calcular el gradiente utilizando un dato a la vez.</p>
-<div>
-<div id="pyodide-2" class="exercise-cell">
-
-</div>
-<script type="pyodide-2-contents">
-eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImluY2x1ZGUiOnRydWV9LCJjb2RlIjoiaW1wb3J0IHBhbmRhcyBhcyBwZFxuZnJvbSBza2xlYXJuLmxpbmVhcl9tb2RlbCBpbXBvcnQgU0dEUmVncmVzc29yXG5mcm9tIHNrbGVhcm4ubW9kZWxfc2VsZWN0aW9uIGltcG9ydCB0cmFpbl90ZXN0X3NwbGl0XG5mcm9tIHNrbGVhcm4ucHJlcHJvY2Vzc2luZyBpbXBvcnQgU3RhbmRhcmRTY2FsZXJcbmZyb20gc2tsZWFybi5tZXRyaWNzIGltcG9ydCBtZWFuX3NxdWFyZWRfZXJyb3JcbmZyb20gc2tsZWFybi5kYXRhc2V0cyBpbXBvcnQgZmV0Y2hfY2FsaWZvcm5pYV9ob3VzaW5nXG5cbmhvdXNpbmcgPSBmZXRjaF9jYWxpZm9ybmlhX2hvdXNpbmcoKVxuWCA9IHBkLkRhdGFGcmFtZShob3VzaW5nLmRhdGEsIGNvbHVtbnM9aG91c2luZy5mZWF0dXJlX25hbWVzKVxueSA9IHBkLlNlcmllcyhob3VzaW5nLnRhcmdldCwgbmFtZT0nTWVkSG91c2VWYWwnKVxuXG5cbiMgVHJhaW4tdGVzdCBzcGxpdCB5IGVzY2FsYWRvOlxuWF90cmFpbiwgWF90ZXN0LCB5X3RyYWluLCB5X3Rlc3QgPSB0cmFpbl90ZXN0X3NwbGl0KFgsIHksIHRlc3Rfc2l6ZT0wLjIsIHJhbmRvbV9zdGF0ZT00Milcblxuc2NhbGVyID0gU3RhbmRhcmRTY2FsZXIoKVxuWF90cmFpbl9zY2FsZWQgPSBzY2FsZXIuZml0X3RyYW5zZm9ybShYX3RyYWluKVxuWF90ZXN0X3NjYWxlZCA9IHNjYWxlci50cmFuc2Zvcm0oWF90ZXN0KVxuXG5cbiMgUmVncmVzaW9uIGxpbmVhbCBjb24gU0dEUmVncmVzc29yOlxubW9kZWxvID0gU0dEUmVncmVzc29yKG1heF9pdGVyPTEwMDAsIHRvbD0xZS0zLCBldGEwPTAuMDEsIHJhbmRvbV9zdGF0ZT00MilcblxubW9kZWxvLmZpdChYX3RyYWluX3NjYWxlZCwgeV90cmFpbikgICMgRW50cmVuYW1pZW50b1xueV90ZXN0X2ZpdCA9IG1vZGVsby5wcmVkaWN0KFhfdGVzdF9zY2FsZWQpICAjIFByZWRpY2Npb25cbk1TRSA9IG1lYW5fc3F1YXJlZF9lcnJvcih5X3Rlc3QsIHlfdGVzdF9maXQpICAjIEV2YWx1YWNpb25cblxudGhldGEwID0gbW9kZWxvLmludGVyY2VwdF9cbnRoZXRhID0gbW9kZWxvLmNvZWZfXG5cbnByaW50KGZcIkNhbnRpZGFkIGRlIHByZWRpY3RvcmVzOiB7WC5zaGFwZVsxXX1cIilcbnByaW50KGZcIkludGVyY2VwdG86IHt0aGV0YTB9XCIpXG5wcmludChmXCJDb2VmaWNpZW50ZXMgZGVsIG1vZGVsbzoge3RoZXRhfVwiKSJ9
-</script>
-</div>
-</section>
-</section>
-<section id="regresión-logística" class="level1">
-<h1>Regresión logística</h1>
-<p>Ahora hablemos sobre el problema de clasificación. En este caso, la variable respuesta toma valores discretos, es decir <span class="math inline">\(Y\in\{0,1,\cdots,r\}\)</span>. En particular, nos enfocaremos en el problema de <strong>clasificación binaria</strong> en el que <span class="math inline">\(Y\in\{0,1\}\)</span>.</p>
-<p>Por ejemplo, si estamos tratando de construir un clasificador de spam para correos electrónicos, entonces una observación <span class="math inline">\(\xx\)</span> contendrá características de un correo electrónico, mientras que su <strong>etiqueta</strong> <span class="math inline">\(y\)</span> será 1 si es spam o 0 en caso contrario.</p>
-<p>Podríamos abordar el problema de clasificación ignorando el hecho de que <span class="math inline">\(y\)</span> toma valores discretos, y usar nuestro antiguo algoritmo de regresión lineal para tratar de predecir <span class="math inline">\(y\)</span> dado <span class="math inline">\(\xx\)</span>. Sin embargo, esto suele tener un pobre desempeño y además no tiene sentido que la predicción para un valor de <span class="math inline">\(\xx\)</span> sea un valor fuera del rango de 0 y 1.</p>
-<p>Para resolver este problema, podemos usar la <strong>regresión logística</strong>, donde la predicción se realiza con una función logística o sigmoide.</p>
-<section id="función-logística" class="level2">
-<h2 class="anchored" data-anchor-id="función-logística">Función logística</h2>
-<p>En vez de trabajar con <span class="math inline">\(h(\xx)=\bftheta^T\xx\)</span> (regresión lineal), utilizaremos la siguiente expresión:</p>
+<div class="alert alert-light text-dark" role="important">
+<p><span class="badge bg-warning text-dark">Importante</span></p>
+<p>Observar, en esta última expresión, que maximizar <span class="math inline">\(\ell(\theta)\)</span> es equivalente a minimizar</p>
 <p><span class="math display">\[
-h_\bftheta(\xx) = g(\bftheta^T \xx) = \frac{1}{1 + e^{-\bftheta^T \xx}},
+J(\bftheta)=\frac{1}{2} \sum_{i=1}^{n} (y_i - \bftheta^\top \xx_i)^2=\frac{1}{2}\|X\bftheta-\yy\|_2^2,
 \]</span></p>
-<p>donde</p>
-<p><span class="math display">\[ g(z) = \frac{1}{1 + e^{-z}} \]</span></p>
-<p>se llama <strong>función logística</strong> o <strong>función sigmoide</strong>.</p>
-<section id="gráfico-de-la-función-logística" class="level3">
-<h3 class="anchored" data-anchor-id="gráfico-de-la-función-logística">Gráfico de la función logística</h3>
-<p>La siguiente es una representación de <span class="math inline">\(g(z)\)</span>. Observar que <span class="math inline">\(g(z)\)</span> tiende hacia 1 cuando <span class="math inline">\(z \to \infty\)</span>, mientras que tiende hacia 0 cuando <span class="math inline">\(z \to -\infty\)</span>. Además, <span class="math inline">\(g(z)\)</span> está acotada entre 0 y 1.</p>
-<div>
-<div id="pyodide-3" class="exercise-cell">
-
-</div>
-<script type="pyodide-3-contents">
-eyJhdHRyIjp7ImVkaXQiOmZhbHNlLCJldmFsIjp0cnVlLCJpbmNsdWRlIjp0cnVlfSwiY29kZSI6ImltcG9ydCBudW1weSBhcyBucFxuaW1wb3J0IG1hdHBsb3RsaWIucHlwbG90IGFzIHBsdFxuXG4jIERlZmluaXIgbGEgZnVuY2nDs24gc2lnbW9pZGVcbmRlZiBzaWdtb2lkKHopOlxuICAgIHJldHVybiAxIC8gKDEgKyBucC5leHAoLXopKVxuXG4jIENyZWFyIHZhbG9yZXMgZGUgeiBwYXJhIGdyYWZpY2FyXG56ID0gbnAubGluc3BhY2UoLTEwLCAxMCwgNTAwKVxuZ196ID0gc2lnbW9pZCh6KVxuXG4jIEdyYWZpY2FyIGxhIGZ1bmNpw7NuIHNpZ21vaWRlXG5wbHQuZmlndXJlKGZpZ3NpemU9KDgsIDUpKVxucGx0LnBsb3QoeiwgZ196LCBsYWJlbD1cIiRnKHopID0gXFxcXGZyYWN7MX17MSArIGVeey16fX0kXCIpXG5wbHQuYXhobGluZSgxLCBjb2xvcj1cImdyYXlcIiwgbGluZXN0eWxlPVwiLS1cIiwgbGluZXdpZHRoPTAuNylcbnBsdC5heGhsaW5lKDAsIGNvbG9yPVwiZ3JheVwiLCBsaW5lc3R5bGU9XCItLVwiLCBsaW5ld2lkdGg9MC43KVxucGx0LmF4dmxpbmUoMCwgY29sb3I9XCJncmF5XCIsIGxpbmVzdHlsZT1cIi0tXCIsIGxpbmV3aWR0aD0wLjcpXG5wbHQudGl0bGUoXCJGdW5jacOzbiBMb2fDrXN0aWNhIChTaWdtb2lkZSlcIilcbnBsdC54bGFiZWwoXCIkeiRcIilcbnBsdC55bGFiZWwoXCIkZyh6KSRcIilcbnBsdC5sZWdlbmQoKVxucGx0LmdyaWQoKVxucGx0LnNob3coKSJ9
-</script>
+<p>lo cual es la función de costo asociada a mínimos cuadrados.</p>
 </div>
 </section>
-</section>
-<section id="estimación-de-parámetros" class="level2">
-<h2 class="anchored" data-anchor-id="estimación-de-parámetros">Estimación de parámetros</h2>
-<p>Entonces, dado el modelo de regresión logística, ¿cómo ajustamos <span class="math inline">\(\bftheta\)</span>? Como antes, obtengamos el estimador de máxima verosimilitud a partir de un conjunto de supuestos probabilísticos. Supongamos que</p>
+<section id="optimalidad" class="level3">
+<h3 class="anchored" data-anchor-id="optimalidad">Optimalidad</h3>
+<p>Si bien en la Definición 2 de <a href="A1_intro_optimizacion.html#mínimos-cuadrados-y-programación-lineal">C1-S1</a> ya hemos analizado el problema de mínimos cuadrados, vamos a volver a derivar la solución del problema</p>
 <p><span class="math display">\[
+\begin{array}{ll}
+\text{minimizar } &amp; \displaystyle\frac{1}{2}\|X\bftheta-\yy\|_2^2.
+\end{array}
+\]</span></p>
+<p>Dado que es un problema de optimización sin restricciones con función objetivo convexa, la condición de optimalidad <span class="math inline">\(\nabla J(\bftheta)=\bfzero\)</span> es suficiente y necesaria. Por lo tanto, tenemos que <span class="math display">\[
 \begin{align*}
-P(y = 1 | \xx; \bftheta) &amp;= h_\theta(\xx),
-\\
-P(y = 0 | \xx; \bftheta) &amp;= 1 - h_\theta(\xx).
+\nabla J(\hat{\bftheta})&amp;=\bfzero\\
+X^\top X\hat{\bftheta}-X^\top\yy&amp;=\bfzero\\
+X^\top X\hat{\bftheta} &amp;=X^\top\yy\\
+\hat{\bftheta}&amp;=X^{+}\yy.
 \end{align*}
 \]</span></p>
-<p>Esto puede escribirse de manera más compacta como:</p>
-<p><span class="math display">\[
-p(y | \xx; \bftheta) = \left( h_\bftheta(\xx) \right)^y \left( 1 - h_\bftheta(\xx) \right)^{1-y}.
+<div style="margin-top:2em;">
+
+</div>
+<div class="myhighlight">
+<p>Si <span class="math inline">\(X\)</span> es de rango completo, entonces <span class="math display">\[
+\hat{\bftheta}=(X^\top X)^{-1}X^\top\yy
 \]</span></p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>El vector de valores ajustados <span class="math inline">\(\hat{\yy}\in\RR^n\)</span> está dado por <span class="math display">\[
+\hat{\yy}:=X\hat{\bftheta}.
+\]</span></p>
+<p>Observar que, si <span class="math inline">\(X\)</span> es de rango completo, entonces <span class="math inline">\(\hat{\yy}=X(X^\top X)^{-1}X^\top\yy\)</span>. Esto significa que <span class="math inline">\(\hat{\yy}\)</span> es la proyección de <span class="math inline">\(\yy\)</span> sobre el espacio columna de <span class="math inline">\(X\)</span>.</p>
+</section>
+<section id="algoritmo-lms" class="level3">
+<h3 class="anchored" data-anchor-id="algoritmo-lms">Algoritmo LMS</h3>
+<p>La aplicación del método de descenso por gradiente al problema de optimización en regresión lineal da lugar a lo que se denomina <em>algoritmo LMS (least mean squares)</em>. La regla de actualización es <span class="math display">\[
+\bftheta_{t+1}:=\bftheta_t-\eta \nabla J(\bftheta_t),\qquad\eta&gt;0.
+\]</span></p>
+<p>Luego, debemos sustituir el gradiente por su expresión <span class="math inline">\(\nabla J(\bftheta_t) = X^\top X\bftheta_t-X^\top\yy\)</span>. Esta regla de actualización tambien se conoce como <em>regla de aprendizaje Widrow-Hoff</em>.</p>
+<div style="margin-top:2em;">
+
+</div>
+<div class="highlight">
+<p><span class="badge bg-custom">Algoritmo LMS</span></p>
+<hr>
+<p>Dado un <em>parámetro inicial</em> <span class="math inline">\(\bftheta_0\in\RR^{p}\)</span> y una <em>tasa de aprendizaje</em> <span class="math inline">\(\eta&gt;0\)</span>:</p>
+<div style="margin-left: 1em">
+<p><strong>repetir</strong> para <span class="math inline">\(t = 0,1,2,\ldots\)</span>:</p>
+<blockquote class="blockquote">
+<p>Actualizar <span class="math inline">\(\bftheta_{t+1}:=\bftheta_t-\eta \left(X^\top X\bftheta_t-X^\top\yy\right)\)</span>.</p>
+</blockquote>
+<p><strong>hasta</strong> que el criterio de parada se satisfaga.</p>
+</div>
+<hr>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>En el algoritmo anterior se está trabajando con todas las observaciones a la vez en cada paso de actualización, por lo que se trata de un <em>descenso de gradiente por lotes</em>. Esta estrategia asegura una actualización estable del parámetro <span class="math inline">\(\bftheta\)</span>, aunque puede ser costosa si el número de observaciones es muy grande.</p>
+<p>Por supuesto, como vimos en <a href="A5_metodos_optimizacion.html#método-de-descenso-por-gradiente-estocástico">C1-S5</a>, como alternativa podemos usar descenso de gradiente estocástico o mini-batch. Para ello, notar que para una observación <span class="math inline">\((\xx_i,y_i)\)</span>, la función de pérdida resulta <span class="math display">\[
+\text{loss}\,(y_i,f(\xx_i;\bftheta))=\frac{1}{2}(y_i-\bftheta^\top\xx_i)^2,
+\]</span> tal que <span class="math display">\[
+\nabla_{\bftheta} \text{loss}\,(y_i,f(\xx_i;\bftheta)) = -(y_i-\bftheta^\top\xx_i)\,\xx_i.
+\]</span></p>
+<div style="margin-top:2em;">
+
+</div>
+<div class="highlight">
+<p><span class="badge bg-custom">Algoritmo LMS estocástico</span></p>
+<hr>
+<p>Dado un <em>parámetro inicial</em> <span class="math inline">\(\bftheta_0\in\RR^{p}\)</span> y una <em>tasa de aprendizaje</em> <span class="math inline">\(\eta&gt;0\)</span>:</p>
+<div style="margin-left: 1em">
+<p><strong>repetir</strong> para <span class="math inline">\(t = 0,1,2,\dots\)</span>:</p>
+<blockquote class="blockquote">
+<p><strong>1°</strong> Elegir un índice <span class="math inline">\(i\)</span> al azar de <span class="math inline">\(\{1,\dots,n\}\)</span>.</p>
+<p><strong>2°</strong> Actualizar <span class="math inline">\(\bftheta_{t+1}:=\bftheta_t+\eta\,(y_i-\bftheta_t^\top\xx_i)\,\xx_i\)</span>.</p>
+</blockquote>
+<p><strong>hasta</strong> que el criterio de parada se satisfaga.</p>
+</div>
+<hr>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Observar que la magnitud de la actualización del algoritmo LMS estocástico es proporcional al término de error <span class="math inline">\((y_i - \bftheta_t^\top\xx_i)\)</span>. Si elegimos un ejemplo para el cual <span class="math inline">\(\bftheta_t^\top\xx_i\approx y_i\)</span>, entonces el cambio en el parámetro será mínimo. Esto puede activar prematuramente el criterio de parada basado en la magnitud del gradiente, por lo cual para para evitar detener el algoritmo demasiado pronto, suele ser recomendable basar el criterio de parada en el promedio del error sobre un conjunto de observaciones. También se puede imponer un número mínimo de iteraciones para asegurar que el algoritmo recorra suficientes ejemplos y aprenda de manera estable.</p>
+<div style="margin-top:2em;">
+
+</div>
+<div class="callout-example">
+<p><span class="badge bg-primary">Ejemplo 1</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Regresión lineal en datos <em>California Housing</em> </span></p>
+<p>Utilizaremos el conjunto de datos de <em>California Housing</em> (<a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html">disponible aquí</a>), el cual consiste en 20640 observaciones con 8 variables predictoras que miden características de las viviendas y su entorno. La variable respuesta es el valor mediano de la vivienda en cada bloque censal, por lo que este problema es de regresión.</p>
+<p>Ajustaremos un modelo de regresión lineal a los datos, evaluaremos el MSE en test y presentaremos los coeficientes estimados del modelo.</p>
+<div id="bd6ed00e" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_california_housing</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Datos:</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> fetch_california_housing(return_X_y<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> scaler.fit_transform(X)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo:</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>lr <span class="op">=</span> LinearRegression()</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>lr.fit(X_train, y_train)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción y MSE:</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> lr.predict(X_test)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>mse_test <span class="op">=</span> mean_squared_error(y_test, y_pred)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 📋:</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"MSE en test: </span><span class="sc">{</span>mse_test<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Coeficientes estimados (θ̂):"</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, coef <span class="kw">in</span> <span class="bu">enumerate</span>(lr.coef_):</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"θ_</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>coef<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MSE en test: 0.556
+Coeficientes estimados (θ̂):
+θ_1 = 0.852
+θ_2 = 0.122
+θ_3 = -0.305
+θ_4 = 0.371
+θ_5 = -0.002
+θ_6 = -0.037
+θ_7 = -0.897
+θ_8 = -0.869</code></pre>
+</div>
+</div>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+</section>
+<section id="propiedades-del-estimador" class="level3">
+<h3 class="anchored" data-anchor-id="propiedades-del-estimador">Propiedades del estimador</h3>
+<p>Hemos visto que el algoritmo LMS permite aproximar el estimador de mínimos cuadrados <span class="math inline">\(\hat{\bftheta}\)</span> para el modelo de regresión lineal. Por supuesto, los resultados de convergencia vistos en <a href="../CAPITULO_1/A5_metodos_optimizacion.html#método-de-descenso-por-gradiente">C1-S5</a> para el método de descenso por gradiente son válidos.</p>
+<p>No obstante, <span class="math inline">\(\hat{\bftheta}\)</span> es un estimador del valor verdadero <span class="math inline">\(\bftheta^\star\)</span>, por lo que resulta relevante estudiar sus propiedades estadísticas, tales como consistencia, sesgo y varianza, para entender qué tan buena es la estimación <span class="math inline">\(\hat{\bftheta}\)</span>, incluso después de la convergencia del algoritmo LMS.</p>
+<div class="alert alert-light text-dark" role="important">
+<p><span class="badge bg-warning text-dark">Importante</span></p>
+<p>En base a lo descrito, es fundamental distinguir dos niveles de convergencia:</p>
+<ul>
+<li><p><strong>Convergencia estadística del estimador</strong>: se refiere al hecho de que el estimador <span class="math inline">\(\hat{\bftheta}_n\)</span> converge en probabilidad al valor verdadero <span class="math inline">\(\bftheta^\star\)</span>. Simbólicamente: <span class="math display">\[
+\text{plim}_{n\to\infty}\hat{\bftheta}_n=\bftheta^\star\qquad (\hat{\bftheta}_n\xrightarrow{p}\bftheta^\star).
+\]</span></p>
+<p>Observar que escribimos <span class="math inline">\(\hat{\bftheta}_n\)</span> para explicitar la dependencia del estimador respecto al tamaño muestral <span class="math inline">\(n\)</span>.</p></li>
+<li><p><strong>Convergencia computacional del algoritmo</strong>: se refiere a que la sucesión producida por un algoritmo iterativo (por ejemplo, descenso por gradiente) converge a <span class="math inline">\(\hat{\bftheta}\)</span> (aquí no escribimos el subíndice porque <span class="math inline">\(n\)</span> es fijo). Esto es: <span class="math display">\[
+\lim_{t\to\infty}\bftheta_t=\hat{\bftheta}\qquad(\bftheta_t\to\hat{\bftheta}).
+\]</span></p></li>
+</ul>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Ahora sí estamos en condiciones de revisar algunos resultados conocidos para el modelo de regresión lineal.</p>
+<ul>
+<li><em>Convergencia estadística</em>: para <span class="math inline">\(n&gt;p\)</span> y bajo los supuestos clásicos de <span class="math display">\[
+\begin{array}{cl}
+\{(\xx_i,y_i)\}_{i=1}^n\text{ i.i.d.},\; \media\left[\varepsilon_i\mid\xx_i\right]=0 &amp; \text{(Exogeneidad)} \\[2pt]
+\media\left[\varepsilon_i^2\mid \xx_i\right]=\sigma^2&lt;\infty,\;\media\left[\varepsilon_i^4\right] &amp; \text{(Momentos)} \\
+\frac{1}{n}X^\top X\xrightarrow{p}\Sigma_{X}\succ 0 &amp; \text{(Diseño bien condicionado)}
+\end{array}
+\]</span> se verifica <span class="math display">\[
+\hat{\bftheta}_n\xrightarrow{p}\bftheta^\star\qquad\text{y}\qquad\sqrt{n}\, (\hat{\bftheta}_n-\bftheta^\star)\xrightarrow{d}\mathcal{N}(0,\sigma^2\Sigma_X^{-1}).
+\]</span></li>
+</ul>
+<div style="margin-top:2em;">
+
+</div>
+<ul>
+<li><em>Convergencia computacional</em>: sean <span class="math inline">\(\lambda_{\text{min}},\lambda_{\text{max}}&gt;0\)</span> autovalores de <span class="math inline">\(X^\top X\)</span>. Si <span class="math inline">\(0&lt;\eta&lt;2/\lambda_{\text{max}}\)</span>, entonces <span class="math display">\[
+\bftheta_t\to\hat{\bftheta}\qquad\text{y}\qquad\|\bftheta_t-\hat{\bftheta}\|_2\leq\rho^t\|\bftheta_0-\hat{\bftheta}\|_2,
+\]</span> con <span class="math inline">\(\rho=\max\left\{|1-\eta\lambda_{\text{min}}|,|1-\eta\lambda_{\text{max}}|\right\}\)</span>.</li>
+</ul>
+<div style="margin-top:2.5em;">
+
+</div>
+</section>
+</section>
+<section id="regresión-logística" class="level2">
+<h2 class="anchored" data-anchor-id="regresión-logística">Regresión logística</h2>
+<p>Consideremos ahora un problema de clasificación binaria, con variable respuesta <span class="math inline">\(Y\in\{0,1\}\)</span>.</p>
+<p>Por ejemplo, si estamos tratando de construir un clasificador de spam para correos electrónicos, entonces una observación <span class="math inline">\(\xx\)</span> contendrá características de un correo electrónico, mientras que su etiqueta <span class="math inline">\(y\)</span> será 1 si es spam o 0 en caso contrario.</p>
+<p>Podríamos abordar el problema de clasificación ignorando el hecho de que <span class="math inline">\(y\)</span> toma valores discretos y usar el método de regresión lineal. Sin embargo, no tendría sentido que la predicción para un valor de <span class="math inline">\(\xx\)</span> sea un valor fuera del rango de 0 y 1. Para resolver este problema, podemos utilizar la <em>función logística</em>.</p>
+<div style="margin-top:2em;">
+
+</div>
+<div class="alert alert-light text-dark" role="important">
+<p><span class="badge bg-success text-light">Función logística</span></p>
+<p>Para <span class="math inline">\(z\in\RR\)</span>, se define la <em>función logística</em> o <em>función sigmoide</em> <span class="math inline">\(\sigma:\RR\to\RR\)</span> mediante <span class="math display">\[
+\sigma(z) := \frac{1}{1 + e^{-z}} = \frac{e^z}{1+e^z}.
+\]</span></p>
+<div id="3ab0a426" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="B1_regresion_lineal_logistica_files/figure-html/cell-3-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="517" height="358"></p>
+</figure>
+</div>
+</div>
+</div>
+<div style="margin-top:-1em;">
+
+</div>
+<p>Algunas características son:</p>
+<ul>
+<li><p>El conjunto imagen es <span class="math inline">\(\sigma(\RR)=(0,1)\)</span>.</p></li>
+<li><p><span class="math inline">\(\sigma(0) = 0.5\)</span></p></li>
+<li><p><span class="math inline">\(\displaystyle\lim_{z\to -\infty}\sigma(z)=0\)</span> y <span class="math inline">\(\displaystyle\lim_{z\to\infty} \sigma(z)=1\)</span>.</p></li>
+<li><p><span class="math inline">\(\sigma'(z)=\sigma(z)(1-\sigma(z))\)</span>.</p></li>
+</ul>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Dado <span class="math inline">\(\bftheta\in\RR^p\)</span>, definimos la función <span class="math inline">\(h_{\bftheta}:\RR^p\to\RR\)</span> como <span class="math display">\[
+h_\bftheta(\xx) := \sigma(\bftheta^\top \xx) = \frac{1}{1 + e^{-\bftheta^\top \xx}}.
+\]</span></p>
+<p>En este caso, vamos a realizar el desarrollo sin intercepto. Por supuesto, puede añadirse <span class="math inline">\(\theta_0\)</span> y trabajar con <span class="math inline">\(X\)</span>, tal como lo hicimos en regresión lineal. Por otra parte, vamos a denotar con <span class="math inline">\(\mathbb{P}(A)\)</span> la probabilidad de que ocurra un suceso <span class="math inline">\(A\)</span>.</p>
+<p>Ya estamos en condiciones de configurar el modelo de regresión logística:</p>
+<div style="margin-top:1em;">
+
+</div>
+<div class="myhighlight2">
+<span style="font-size:0.8em;"><em>Supuesto del modelo</em></span>
+<div style="margin-top:-0.1em;">
+
+</div>
+<p><span class="math display">\[
+\begin{array}{c}
+Y\in\{0,1\} \\[2pt]
+\mathbb{P}(y=1\mid\xx;\bftheta)=h_\bftheta(\xx)
+\end{array}
+\]</span></p>
+</div>
+<div style="margin-top:1em;">
+
+</div>
+<section id="distribución-condicional-1" class="level3">
+<h3 class="anchored" data-anchor-id="distribución-condicional-1">Distribución condicional</h3>
+<p>Bajo el modelo de regresión logística, resulta <span class="math display">\[
+Y|\XX=\xx\sim\text{Binom}(1,h_{\bftheta}(\xx)),
+\]</span></p>
+<p>de manera tal que <span class="math display">\[
+\begin{align*}
+p(y \mid \xx; \bftheta)&amp;=(h_{\bftheta}(\xx))^y(1-h_{\bftheta}(\xx))^{1-y} \\[2pt]
+&amp;=\left( \frac{e^{\bftheta^\top\xx}}{1 + e^{\bftheta^\top \xx}} \right)^y\,\left( 1-\frac{e^{\bftheta^\top\xx}}{1 + e^{\bftheta^\top \xx}} \right)^{1-y} \\[3pt]
+&amp;=\left( \frac{e^{\bftheta^\top\xx}}{1 + e^{\bftheta^\top \xx}} \right)^y\,\left( \frac{1}{1 + e^{\bftheta^\top \xx}} \right)^{1-y} \\
+&amp;=\frac{e^{\bftheta^\top\xx\, y}}{1+e^{\bftheta^\top\xx}}.
+\end{align*}
+\]</span></p>
+<p>Finalmente:</p>
+<div class="myhighlight">
+<p>La función de probabilidad condicional de <span class="math inline">\(Y|\XX\)</span> en el modelo de regresión logística es <span class="math display">\[
+p(y \mid \xx; \bftheta) = \frac{e^{\bftheta^\top\xx_i\, y}}{1+e^{\bftheta^\top\xx}}.
+\]</span></p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+</section>
 <section id="función-de-verosimilitud-1" class="level3">
 <h3 class="anchored" data-anchor-id="función-de-verosimilitud-1">Función de verosimilitud</h3>
 <p>Para un conjunto de datos <span class="math inline">\(\{\xx_i, y_i\}_{i=1}^n\)</span> i.i.d., la función de verosimilitud es</p>
 <p><span class="math display">\[
-\begin{align*}
-L(\bftheta) = \prod_{i=1}^n \left( h_\bftheta(\xx_i) \right)^{y_i} \left( 1 - h_\bftheta(\xx_i) \right)^{1-y_i}.
-\end{align*}
+L(\bftheta) = \prod_{i=1}^{n} \frac{e^{\bftheta^\top\xx_i\, y_i}}{1+e^{\bftheta^\top\xx_i}}.
 \]</span></p>
-<p>Como antes, será más sencillo maximizar el logaritmo de la verosimilitud:</p>
+<p>Como antes, será más sencillo maximizar el logaritmo de la función de verosimilitud:</p>
 <p><span class="math display">\[
 \begin{align*}
 \ell(\bftheta) &amp;= \log L(\bftheta) \\
-&amp;= \sum_{i=1}^n \left[y_i \log h_\theta(\xx_i) + (1 - y_i) \log \left( 1 - h_\theta(\xx_i) \right)\right].
+&amp;=\log \prod_{i=1}^{n} \frac{e^{\bftheta^\top\xx_i\, y_i}}{1+e^{\bftheta^\top\xx_i}} \\
+&amp;= \sum_{i=1}^n \left[\bftheta^\top\xx_i\,y_i-\log(1+e^{\bftheta^\top\xx_i})\right].
 \end{align*}
 \]</span></p>
+<div class="alert alert-light text-dark" role="important">
+<p><span class="badge bg-warning text-dark">Importante</span></p>
+<p>En regresión logística, maximizar <span class="math inline">\(\ell(\theta)\)</span> es equivalente a minimizar <span class="math display">\[
+J(\bftheta)=-\sum_{i=1}^{n}\left[y_i\log(\hat{y}_i)+(1-y_i)\log(1-\hat{y}_i)\right],
+\tag{3}
+\]</span></p>
+<p>con <span class="math display">\[
+\hat{y}_i:=h_{\bftheta}(\xx_i)=\frac{1}{1+e^{-\bftheta^\top\xx_i}}.
+\]</span></p>
+<p>La función <span class="math inline">\(J(\theta)\)</span> en (3), conocida como <em>entropía cruzada</em>, es la forma habitual de expresar la función de pérdida en problemas de clasificación binaria. Mide la disimilaridad entre las etiquetas reales <span class="math inline">\(y_i\)</span> y las probabilidades <span class="math inline">\(\hat{y}_i\)</span> predichas por el modelo.</p>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br></p>
+<p>Verifique que se cumple <span class="math inline">\(J(\bftheta)=-\ell(\bftheta)\)</span>.</p>
+</div>
+</div>
+</div>
+</div>
 </section>
-<section id="regla-de-ascenso-por-gradiente" class="level3">
-<h3 class="anchored" data-anchor-id="regla-de-ascenso-por-gradiente">Regla de ascenso por gradiente</h3>
-<p>¿Cómo maximizamos la verosimilitud? Similar a nuestra derivación en el caso de la regresión lineal, podemos usar <strong>ascenso por gradiente</strong>. Las actualizaciones estarán dadas por</p>
+<section id="optimalidad-1" class="level3">
+<h3 class="anchored" data-anchor-id="optimalidad-1">Optimalidad</h3>
+<p>Vamos a analizar el problema <span class="math display">\[
+\begin{array}{ll}
+\text{minimizar} &amp; \sum_{i=1}^n\left[\log(1+e^{\bftheta^\top\xx_i})-\bftheta^\top\xx_i y_i\right].
+\end{array}
+\tag{4}
+\]</span></p>
+<p>La función objetivo es convexa. Por lo tanto, la condición de optimalidad <span class="math inline">\(\nabla J(\bftheta)=\bfzero\)</span> es una condición necesaria y suficiente para el punto óptimo <span class="math inline">\(\hat{\bftheta}\)</span>.</p>
+<div class="question callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><span style="font-size: 1.3em;">📝</span><br></p>
+<p>Justifique la convexidad de la función objetivo en (4).</p>
+</div>
+</div>
+</div>
+<p>La forma matricial de la función objetivo es <span class="math display">\[
+J(\bftheta)=\mathbf{1}^\top\log\left(1+e^{X\bftheta}\right)-\yy^\top X \bftheta,
+\]</span></p>
+<p>donde las operaciones <span class="math inline">\(\log\)</span> y <span class="math inline">\(e\)</span> se aplican elemento a elemento; es decir, <span class="math inline">\(\zz=\log\left(1+e^{X\bftheta}\right)\in\RR^n\)</span> verifica <span class="math inline">\(\zz_i=\log(1+e^{\bftheta^\top\xx_i})\)</span>. Se tiene que</p>
 <p><span class="math display">\[
-\bftheta := \bftheta + \alpha \nabla_\bftheta \ell(\bftheta).
+\nabla J(\hat{\bftheta})= X^\top \hat{\yy}-X^\top\yy = X^\top(\hat{\yy}-\yy),
+\tag{5}
 \]</span></p>
-<p>Como antes, comencemos trabajando con un único ejemplo de entrenamiento <span class="math inline">\((\xx,y)\)</span>. Resulta: <span class="math display">\[
-\begin{align*}
-\frac{\partial}{\partial \theta_j} \ell(\bftheta) &amp; = \frac{\partial}{\partial\theta_j}\left[y\log h_{\bftheta}(\xx)+(1-y)\log\left(1-h_{\bftheta}(\xx)\right)\right]\\
-&amp;=
-\left[ y \frac{1}{g(\bftheta^T \xx)} - (1 - y) \frac{1}{1 - g(\bftheta^T \xx)} \right]
-\frac{\partial}{\partial \theta_j} g(\bftheta^T \xx)
-\\
-&amp;=
-\left[ y \frac{1}{g(\bftheta^T \xx)} - (1 - y) \frac{1}{1 - g(\bftheta^T \xx)} \right]
-g'(\bftheta^T\xx)x_j
-\\
-&amp;= \left[ y \frac{1}{g(\bftheta^T \xx)} - (1 - y) \frac{1}{1 - g(\bftheta^T \xx)} \right]
-g(\bftheta^T \xx) (1 - g(\bftheta^T \xx)) x_j
-\\
-&amp;= \left[ y (1 - g(\bftheta^T \xx)) - (1 - y) g(\bftheta^T \xx) \right] x_j
-\\
-&amp;= (y - h_\bftheta(\xx)) x_j.
-\end{align*}
+<p>donde <span class="math inline">\(\hat{\yy}\in\RR^n\)</span> es el vector de valores ajustados dado por <span class="math display">\[
+\hat{\yy} := (h(\bftheta^\top\xx_1),\ldots,h(\bftheta^\top\xx_n))^\top.
 \]</span></p>
-<p>En los cálculos anteriores hemos usado el hecho de que <span class="math inline">\(g'(z) = g(z)(1 - g(z))\)</span>. Esto nos da la regla de <strong>ascenso de gradiente estocástico</strong>:</p>
-<p><span class="math display">\[
-\theta_j := \theta_j + \alpha \left( y_i - h_\bftheta(\xx_i) \right) x_{ij},
-\]</span></p>
-<p>donde <span class="math inline">\(x_{ij}\)</span> es el <span class="math inline">\(j\)</span>-ésimo elemento de la observación <span class="math inline">\(\xx_i\)</span>. Si comparamos esto con la regla de actualización de LMS, podemos notar una cierta similaridad entre los factores <span class="math inline">\((y_i-\bftheta^T\xx_i)\)</span> y <span class="math inline">\((y_i-h_\bftheta(\xx))\)</span>. ¿Es esto coincidencia? Veremos este hecho cuando veamos los modelos lineales generalizados.</p>
-</section>
-</section>
-<section id="ejemplo-1" class="level2">
-<h2 class="anchored" data-anchor-id="ejemplo-1">Ejemplo</h2>
-<p>El conjunto de datos <code>Breast Cancer</code> contiene información sobre 569 muestras de tejido mamario, con 30 características que describen propiedades de las células nucleares de los tumores. El objetivo principal es clasificar los tumores como benignos o malignos.</p>
-<div>
-<div id="pyodide-4" class="exercise-cell">
+<p>La expresión (5) nos da una expresión de <span class="math inline">\(\nabla J(\bftheta)\)</span> que depende de <span class="math inline">\(\hat{\yy}=h_{\bftheta}(X)=\sigma(X\bftheta)\)</span>. Debido a la dependencia no lineal de <span class="math inline">\(\hat{\yy}\)</span> respecto de <span class="math inline">\(\bftheta\)</span>, no es posible obtener una solución explícita de <span class="math inline">\(\nabla J(\hat{\bftheta})=\bfzero\)</span>.</p>
+<div style="margin-top:1em;">
 
 </div>
-<script type="pyodide-4-contents">
-eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWUsImluY2x1ZGUiOnRydWV9LCJjb2RlIjoiaW1wb3J0IHBhbmRhcyBhcyBwZFxuZnJvbSBza2xlYXJuLmxpbmVhcl9tb2RlbCBpbXBvcnQgTG9naXN0aWNSZWdyZXNzaW9uXG5mcm9tIHNrbGVhcm4ubW9kZWxfc2VsZWN0aW9uIGltcG9ydCB0cmFpbl90ZXN0X3NwbGl0XG5mcm9tIHNrbGVhcm4ucHJlcHJvY2Vzc2luZyBpbXBvcnQgU3RhbmRhcmRTY2FsZXJcbmZyb20gc2tsZWFybi5tZXRyaWNzIGltcG9ydCBhY2N1cmFjeV9zY29yZVxuZnJvbSBza2xlYXJuLmRhdGFzZXRzIGltcG9ydCBsb2FkX2JyZWFzdF9jYW5jZXJcblxuIyBDYXJnYXIgbG9zIGRhdG9zXG5jYW5jZXIgPSBsb2FkX2JyZWFzdF9jYW5jZXIoKVxuWCA9IHBkLkRhdGFGcmFtZShjYW5jZXIuZGF0YSwgY29sdW1ucz1jYW5jZXIuZmVhdHVyZV9uYW1lcylcbnkgPSBwZC5TZXJpZXMoY2FuY2VyLnRhcmdldCwgbmFtZT0nTWFsaWduYW50JylcblxuIyBUcmFpbi10ZXN0IHNwbGl0IHkgZXNjYWxhZG86XG5YX3RyYWluLCBYX3Rlc3QsIHlfdHJhaW4sIHlfdGVzdCA9IHRyYWluX3Rlc3Rfc3BsaXQoWCwgeSwgdGVzdF9zaXplPTAuMiwgcmFuZG9tX3N0YXRlPTQyKVxuXG5zY2FsZXIgPSBTdGFuZGFyZFNjYWxlcigpXG5YX3RyYWluX3NjYWxlZCA9IHNjYWxlci5maXRfdHJhbnNmb3JtKFhfdHJhaW4pXG5YX3Rlc3Rfc2NhbGVkID0gc2NhbGVyLnRyYW5zZm9ybShYX3Rlc3QpXG5cbiMgUmVncmVzacOzbiBsb2fDrXN0aWNhOlxubW9kZWxvID0gTG9naXN0aWNSZWdyZXNzaW9uKG1heF9pdGVyPTEwMDAwKVxuXG5tb2RlbG8uZml0KFhfdHJhaW5fc2NhbGVkLCB5X3RyYWluKSAgIyBFbnRyZW5hbWllbnRvXG55X3Rlc3RfZml0ID0gbW9kZWxvLnByZWRpY3QoWF90ZXN0X3NjYWxlZCkgICMgUHJlZGljY2nDs25cblxuIyBFdmFsdWFjacOzbjpcbmFjY3VyYWN5ID0gYWNjdXJhY3lfc2NvcmUoeV90ZXN0LCB5X3Rlc3RfZml0KVxuXG4jIFJlc3VsdGFkb3M6XG5jb2VmaWNpZW50ZXMgPSBtb2RlbG8uY29lZl9cbmludGVyY2VwdG8gPSBtb2RlbG8uaW50ZXJjZXB0X1xuXG5wcmludChmXCJDYW50aWRhZCBkZSBwcmVkaWN0b3Jlczoge1guc2hhcGVbMV19XCIpXG5wcmludChmXCJJbnRlcmNlcHRvOiB7aW50ZXJjZXB0b31cIilcbnByaW50KGZcIkNvZWZpY2llbnRlcyBkZWwgbW9kZWxvOiB7Y29lZmljaWVudGVzfVwiKVxucHJpbnQoZlwiUHJlY2lzaW9uIGRlbCBtb2RlbG86IHthY2N1cmFjeX1cIikifQ==
-</script>
+</section>
+<section id="aplicación-de-descenso-por-gradiente" class="level3">
+<h3 class="anchored" data-anchor-id="aplicación-de-descenso-por-gradiente">Aplicación de descenso por gradiente</h3>
+<div style="margin-top:2em;">
+
 </div>
+<div class="highlight">
+<p><span class="badge bg-custom">Algoritmo de descenso por gradiente para regresión logística</span></p>
+<hr>
+<p>Dado un <em>parámetro inicial</em> <span class="math inline">\(\bftheta_0\in\RR^{p}\)</span> y una <em>tasa de aprendizaje</em> <span class="math inline">\(\eta&gt;0\)</span>:</p>
+<div style="margin-left: 1em">
+<p><strong>repetir</strong> para <span class="math inline">\(t = 0,1,2,\ldots\)</span>:</p>
+<blockquote class="blockquote">
+<p>Actualizar <span class="math inline">\(\bftheta_{t+1}:=\bftheta_t-\eta\, X^\top(\hat{\yy}_t-\yy)\)</span>.</p>
+</blockquote>
+<p><strong>hasta</strong> que el criterio de parada se satisfaga.</p>
+</div>
+<hr>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<p>Por último, obtengamos el algoritmo de descenso por gradiente estocástico. Para una observación <span class="math inline">\((\xx_i,y_i)\)</span> se tiene <span class="math display">\[
+J(\bftheta)=\log(1+e^{\bftheta^\top\xx_i})-\bftheta^\top\xx_iy_i,
+\]</span></p>
+<p>tal que <span class="math display">\[
+\nabla J(\bftheta)=\frac{e^{\bftheta^\top\xx_i}}{1+e^{\bftheta^\top\xx_i}}\xx_i-\xx_i y_i=\xx_i (h_{\bftheta}(\xx_i)-y_i)=-\xx_i(y_i-h_{\bftheta}(\xx_i)).
+\]</span></p>
+<div style="margin-top:2em;">
+
+</div>
+<div class="highlight">
+<p><span class="badge bg-custom">Algoritmo de descenso por gradiente estocástico para regresión logística</span></p>
+<hr>
+<p>Dado un <em>parámetro inicial</em> <span class="math inline">\(\bftheta_0\in\RR^{p}\)</span> y una <em>tasa de aprendizaje</em> <span class="math inline">\(\eta&gt;0\)</span>:</p>
+<div style="margin-left: 1em">
+<p><strong>repetir</strong> para <span class="math inline">\(t = 0,1,2,\ldots\)</span>:</p>
+<blockquote class="blockquote">
+<p><strong>1°</strong> Elegir un índice <span class="math inline">\(i\)</span> al azar de <span class="math inline">\(\{1,\dots,n\}\)</span>.</p>
+<p><strong>2°</strong> Actualizar <span class="math inline">\(\bftheta_{t+1}:=\bftheta_t+\eta\,(y_i-h_{\bftheta_t}(\xx_i))\,\xx_i\)</span>.</p>
+</blockquote>
+<p><strong>hasta</strong> que el criterio de parada se satisfaga.</p>
+</div>
+<hr>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+<div class="callout-example">
+<p><span class="badge bg-primary">Ejemplo 1</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Regresión logística en datos de cáncer </span></p>
+<p>El conjunto de datos de Breast Cancer (<a href="https://sklearner.com/scikit-learn-load_breast_cancer/">disponible aquí</a>) contiene información de tumores de mama. Consta de 569 observaciones y 30 variables predictoras. La variable respuesta indica el tipo de tumor (0 para benigno y 1 para maligno), lo que convierte este problema en una tarea de clasificación binaria.</p>
+<p>Ajustaremos un modelo de regresión lineal a los datos, evaluaremos el <em>accuracy</em> en test y presentaremos los coeficientes estimados del modelo.</p>
+<div id="6eb6b7e3" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> load_breast_cancer</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> accuracy_score</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Datos:</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> load_breast_cancer(return_X_y<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> scaler.fit_transform(X)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo:</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>logreg <span class="op">=</span> LogisticRegression(max_iter<span class="op">=</span><span class="dv">1000</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>logreg.fit(X_train, y_train)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción y accuracy:</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> logreg.predict(X_test)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>acc_test <span class="op">=</span> accuracy_score(y_test, y_pred)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 📋:</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Accuracy en test: </span><span class="sc">{</span>acc_test<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Coeficientes estimados (θ̂):"</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, coef <span class="kw">in</span> <span class="bu">enumerate</span>(logreg.coef_[<span class="dv">0</span>]):</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"θ_</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>coef<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Accuracy en test: 0.974
+Coeficientes estimados (θ̂):
+θ_1 = -0.435
+θ_2 = -0.397
+θ_3 = -0.396
+θ_4 = -0.470
+θ_5 = -0.067
+θ_6 = 0.527
+θ_7 = -0.808
+θ_8 = -1.108
+θ_9 = 0.242
+θ_10 = 0.078
+θ_11 = -1.251
+θ_12 = 0.189
+θ_13 = -0.590
+θ_14 = -0.920
+θ_15 = -0.317
+θ_16 = 0.669
+θ_17 = 0.171
+θ_18 = -0.314
+θ_19 = 0.505
+θ_20 = 0.612
+θ_21 = -0.874
+θ_22 = -1.358
+θ_23 = -0.586
+θ_24 = -0.838
+θ_25 = -0.547
+θ_26 = 0.006
+θ_27 = -0.952
+θ_28 = -0.780
+θ_29 = -1.196
+θ_30 = -0.163</code></pre>
+</div>
+</div>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+</section>
+<section id="propiedades-del-estimador-1" class="level3">
+<h3 class="anchored" data-anchor-id="propiedades-del-estimador-1">Propiedades del estimador</h3>
+<p>Para el caso de regresión logística, algunos resultados importantes son:</p>
+<ul>
+<li><p><em>Convergencia estadística</em>: bajo supuestos clásicos, tales como <span class="math display">\[
+\begin{array}{cl}
+\{(\xx_i,y_i)\}_{i=1}^n \text{ i.i.d.} &amp; (\text{Independencia e idéntica distribución}) \\[1ex]
+0&lt;\mathbb{P}(Y_i=1\mid \xx_i)&lt;1 &amp; \text{(No separabilidad)}\\[1ex]
+\mathbb{E}[\|\xx_i\|^2]&lt;\infty &amp; \text{(Momentos finitos)}\\[1ex]
+I(\bftheta^\star) = \media\left[h_{\bftheta}(\XX)(1-h_{\bftheta}(\XX))\,\XX\XX^\top\right] \succ 0 &amp; \text{(Información de Fisher definida positiva)}
+\end{array}
+\]</span></p>
+<p>se verifica <span class="math display">\[
+\hat{\bftheta}_n\xrightarrow{p}\bftheta^\star\qquad\text{y}\qquad\sqrt{n}\, (\hat{\bftheta}_n-\bftheta^\star)\xrightarrow{d}\mathcal{N}(0,\mathcal{I}(\bftheta^\star)^{-1}).
+\]</span></p></li>
+</ul>
+<div style="margin-top:2em;">
+
+</div>
+<ul>
+<li><em>Convergencia computacional</em>: como <span class="math inline">\(J\)</span> es convexa y <span class="math inline">\(L\)</span>-suave con <span class="math display">\[
+L\leq\frac{\lambda_{\text{max}(X^\top X)}}{4},
+\]</span> el método de descenso por gradiente verifica <span class="math display">\[
+J(\bftheta_t)\to\ J(\hat{\bftheta}).
+\]</span></li>
+</ul>
+<br>
+<hr>
+<p>Para finalizar esta sección, comparemos los factores en la actualización del método de descenso por gradiente estocástico para los modelos vistos:</p>
+<p><span class="math display">\[
+\begin{array}{ll}
+\bftheta_{t+1}:=\bftheta_t+\eta(y_i-\bftheta^\top\xx_i)\,\xx_i &amp; \qquad\text{(Regresión lineal)} \\
+\bftheta_{t+1}:=\bftheta_t+\eta(y_i-h_{\bftheta}(\xx_i))\,\xx_i &amp; \qquad\text{(Regresión logística)} \\
+\end{array}
+\]</span></p>
+<p>En ambos casos, la actualización depende del error entre el valor observado y la predicción del modelo: <span class="math display">\[
+y_i-\hat{y}_i,
+\]</span> donde <span class="math inline">\(\hat{y}_i=\bftheta^\top\xx_i\)</span> para regresión lineal y <span class="math inline">\(\hat{y}_i=\displaystyle\frac{e^{\bftheta^\top\xx_i}}{1+e^{\bftheta^\top \xx_i}}\)</span> para regresión logística.</p>
+<p>Esta estructura común refleja la idea de ajustar los parámetros en función de la discrepancia entre observaciones y predicciones, lo cual generalizaremos en la próxima sección cuando tratemos los modelos lineales generalizados.</p>
 <p><br><br></p>
+</section>
 </section>
 <section id="actividades" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="actividades">Actividades</h2>
 ✏️ <strong>Conceptuales</strong><br>
 
 <hr class="linea-corta">
-<ol type="1">
-<li>…</li>
-</ol>
-<div style="margin-top:2em;">
+<details>
+<summary>
+Mostrar
+</summary>
+<div style="margin-top:1em;">
 
 </div>
-💻 <strong>Prácticas</strong><br>
-
-<hr class="linea-corta">
 <ol type="1">
-<li>…</li>
+<li><p>Probar que la derivada de la función logística <span class="math inline">\(\sigma(z)=1/(1+e^{-z})\)</span> verifica <span class="math display">\[
+\sigma'(z)=\sigma(z)(1-\sigma(z)).
+\]</span></p></li>
+<li><p>Sea un conjunto de datos <span class="math inline">\(\{(\mathbf{x}_i, y_i)\}_{i=1}^n\)</span>. Defina las variables centradas por columna como <span class="math display">\[
+{\tilde{x}}_{ij} = x_{ij} - \bar{x}_j, \quad {\tilde{y}}_i = y_i - \bar{y},
+\]</span> donde <span class="math inline">\(\bar{x}_j\)</span> y <span class="math inline">\(\bar{y}\)</span> son las medias muestrales de la variable predictora <span class="math inline">\(j\)</span>-ésima y de la variable respuesta, respectivamente. Muestre que, al ajustar un modelo lineal <em>sin intercepto</em> sobre los datos centrados y obtener coeficientes <span class="math inline">\(\hat{\bfbeta}\)</span>, el intercepto del modelo ajustado sobre los datos originales puede recuperarse con la fórmula</p></li>
 </ol>
+<p><span class="math display">\[
+\hat{\beta}_0 = \bar{y} - \sum_{j=1}^p \hat{\beta}_j \bar{x}_j.
+\]</span></p>
+</details>
+<!--
+1. Mostrar que en los GLMs la derivada de la log-likelihood es
+$$
+\nabla_\theta \ell(\theta) = \sum_{i=1}^n (T(y^{(i)}) - \mathbb{E}[T(y) | \xx^{(i)}; \theta]) \xx^{(i)}.
+$$
+-->
+<div style="margin-top: 5em;">
+
+</div>
+<div class="refs">
+<p><span style="color: #444;"><strong>Referencias</strong></span></p>
+<p>Hastie, T., Tibshirani, R., &amp; Friedman, J. (2009). The Elements of Statistical Learning: Data Mining, Inference, and Prediction (2nd ed.). Springer.</p>
+<p>Ng, A. Apuntes del curso Stanford CS229: Machine Learning. Disponible <a href="https://see.stanford.edu/materials/aimlcs229/cs229-notes1.pdf">aquí</a>.</p>
+</div>
 
 
-<script type="pyodide-data">
-eyJvcHRpb25zIjp7ImVudiI6eyJQTE9UTFlfUkVOREVSRVIiOiJwbG90bHlfbWltZXR5cGUifSwiaW5kZXhVUkwiOiJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvcHlvZGlkZS92MC4yNy4wL2Z1bGwvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsicHlvZGlkZV9odHRwIiwibWljcm9waXAiLCJpcHl0aG9uIl19fQ==
-</script>
 <script type="ojs-module-contents">
-eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJweW9kaWRlLTQiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl80ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS00LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNC1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzQgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzQsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTMiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoiX3B5b2RpZGVfdmFsdWVfMyA9IHtcbiAgY29uc3QgeyBoaWdobGlnaHRQeXRob24sIGI2NERlY29kZX0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS0zLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgLy8gRGVmYXVsdCBldmFsdWF0aW9uIGNvbmZpZ3VyYXRpb25cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oe1xuICAgIGlkOiBcInB5b2RpZGUtMy1jb250ZW50c1wiLFxuICAgIGVjaG86IHRydWUsXG4gICAgb3V0cHV0OiB0cnVlXG4gIH0sIGJsb2NrLmF0dHIpO1xuXG4gIC8vIEV2YWx1YXRlIHRoZSBwcm92aWRlZCBQeXRob24gY29kZVxuICBjb25zdCByZXN1bHQgPSBweW9kaWRlT2pzLnByb2Nlc3Moe2NvZGU6IGJsb2NrLmNvZGUsIG9wdGlvbnN9LCB7fSk7XG5cbiAgLy8gRWFybHkgeWllbGQgd2hpbGUgd2Ugd2FpdCBmb3IgdGhlIGZpcnN0IGV2YWx1YXRpb24gYW5kIHJlbmRlclxuICBpZiAob3B0aW9ucy5vdXRwdXQgJiYgIShcIjNcIiBpbiBweW9kaWRlT2pzLnJlbmRlcmVkT2pzKSkge1xuICAgIGNvbnN0IGNvbnRhaW5lciA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XG4gICAgY29uc3Qgc3Bpbm5lciA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIik7XG5cbiAgICBpZiAob3B0aW9ucy5lY2hvKSB7XG4gICAgICAvLyBTaG93IG91dHB1dCBhcyBoaWdobGlnaHRlZCBzb3VyY2VcbiAgICAgIGNvbnN0IHByZUVsZW0gPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KFwicHJlXCIpO1xuICAgICAgY29udGFpbmVyLmNsYXNzTmFtZSA9IFwic291cmNlQ29kZVwiO1xuICAgICAgcHJlRWxlbS5jbGFzc05hbWUgPSBcInNvdXJjZUNvZGUgcHl0aG9uXCI7XG4gICAgICBwcmVFbGVtLmFwcGVuZENoaWxkKGhpZ2hsaWdodFB5dGhvbihibG9jay5jb2RlKSk7XG4gICAgICBzcGlubmVyLmNsYXNzTmFtZSA9IFwic3Bpbm5lci1ncm93IHNwaW5uZXItZ3Jvdy1zbSBtLTIgcG9zaXRpb24tYWJzb2x1dGUgdG9wLTAgZW5kLTBcIjtcbiAgICAgIHByZUVsZW0uYXBwZW5kQ2hpbGQoc3Bpbm5lcik7XG4gICAgICBjb250YWluZXIuYXBwZW5kQ2hpbGQocHJlRWxlbSk7XG4gICAgfSBlbHNlIHtcbiAgICAgIHNwaW5uZXIuY2xhc3NOYW1lID0gXCJzcGlubmVyLWJvcmRlciBzcGlubmVyLWJvcmRlci1zbVwiO1xuICAgICAgY29udGFpbmVyLmFwcGVuZENoaWxkKHNwaW5uZXIpO1xuICAgIH1cblxuICAgIHlpZWxkIGNvbnRhaW5lcjtcbiAgfVxuXG4gIHB5b2RpZGVPanMucmVuZGVyZWRPanNbXCIzXCJdID0gdHJ1ZTtcbiAgeWllbGQgYXdhaXQgcmVzdWx0O1xufVxuIn0seyJjZWxsTmFtZSI6InB5b2RpZGUtMiIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3B5b2RpZGVfZWRpdG9yXzIgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTItY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICBjb25zdCBvcHRpb25zID0gT2JqZWN0LmFzc2lnbih7IGlkOiBgcHlvZGlkZS0yLWNvbnRlbnRzYCB9LCBibG9jay5hdHRyKTtcbiAgY29uc3QgZWRpdG9yID0gbmV3IFB5b2RpZGVFeGVyY2lzZUVkaXRvcihcbiAgICBweW9kaWRlT2pzLnB5b2RpZGVQcm9taXNlLFxuICAgIGJsb2NrLmNvZGUsXG4gICAgb3B0aW9uc1xuICApO1xuXG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxuX3B5b2RpZGVfdmFsdWVfMiA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMiwge30pO1xuIn0seyJjZWxsTmFtZSI6InB5b2RpZGUtMSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJzb3VyY2UiOiJ2aWV3b2YgX3B5b2RpZGVfZWRpdG9yXzEgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTEtY29udGVudHNcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBibG9jayA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKHNjcmlwdENvbnRlbnQpKTtcblxuICBjb25zdCBvcHRpb25zID0gT2JqZWN0LmFzc2lnbih7IGlkOiBgcHlvZGlkZS0xLWNvbnRlbnRzYCB9LCBibG9jay5hdHRyKTtcbiAgY29uc3QgZWRpdG9yID0gbmV3IFB5b2RpZGVFeGVyY2lzZUVkaXRvcihcbiAgICBweW9kaWRlT2pzLnB5b2RpZGVQcm9taXNlLFxuICAgIGJsb2NrLmNvZGUsXG4gICAgb3B0aW9uc1xuICApO1xuXG4gIHJldHVybiBlZGl0b3IuY29udGFpbmVyO1xufVxuX3B5b2RpZGVfdmFsdWVfMSA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMSwge30pO1xuIn0seyJjZWxsTmFtZSI6InB5b2RpZGUtcHJlbHVkZSIsImlubGluZSI6ZmFsc2UsIm1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InB5b2RpZGVPanMgPSB7XG4gIGNvbnN0IHtcbiAgICBQeW9kaWRlRXZhbHVhdG9yLFxuICAgIFB5b2RpZGVFbnZpcm9ubWVudE1hbmFnZXIsXG4gICAgc2V0dXBQeXRob24sXG4gICAgc3RhcnRQeW9kaWRlV29ya2VyLFxuICAgIGI2NERlY29kZSxcbiAgICBjb2xsYXBzZVBhdGgsXG4gIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHN0YXR1c0NvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwiZXhlcmNpc2UtbG9hZGluZy1zdGF0dXNcIik7XG4gIGNvbnN0IGluZGljYXRvckNvbnRhaW5lciA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKFwiZXhlcmNpc2UtbG9hZGluZy1pbmRpY2F0b3JcIik7XG4gIGluZGljYXRvckNvbnRhaW5lci5jbGFzc0xpc3QucmVtb3ZlKFwiZC1ub25lXCIpO1xuXG4gIGxldCBzdGF0dXNUZXh0ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudChcImRpdlwiKVxuICBzdGF0dXNUZXh0LmNsYXNzTGlzdCA9IFwiZXhlcmNpc2UtbG9hZGluZy1kZXRhaWxzXCI7XG4gIHN0YXR1c1RleHQgPSBzdGF0dXNDb250YWluZXIuYXBwZW5kQ2hpbGQoc3RhdHVzVGV4dCk7XG4gIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgSW5pdGlhbGlzZWA7XG5cbiAgLy8gSG9pc3QgaW5kaWNhdG9yIG91dCBmcm9tIGZpbmFsIHNsaWRlIHdoZW4gcnVubmluZyB1bmRlciByZXZlYWxcbiAgY29uc3QgcmV2ZWFsU3RhdHVzID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcihcIi5yZXZlYWwgLmV4ZXJjaXNlLWxvYWRpbmctaW5kaWNhdG9yXCIpO1xuICBpZiAocmV2ZWFsU3RhdHVzKSB7XG4gICAgcmV2ZWFsU3RhdHVzLnJlbW92ZSgpO1xuICAgIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIucmV2ZWFsID4gLnNsaWRlc1wiKS5hcHBlbmRDaGlsZChyZXZlYWxTdGF0dXMpO1xuICB9XG5cbiAgLy8gTWFrZSBhbnkgcmV2ZWFsIHNsaWRlcyB3aXRoIGxpdmUgY2VsbHMgc2Nyb2xsYWJsZVxuICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKFwiLnJldmVhbCAuZXhlcmNpc2UtY2VsbFwiKS5mb3JFYWNoKChlbCkgPT4ge1xuICAgIGVsLmNsb3Nlc3QoJ3NlY3Rpb24uc2xpZGUnKS5jbGFzc0xpc3QuYWRkKFwic2Nyb2xsYWJsZVwiKTtcbiAgfSlcblxuICAvLyBQeW9kaWRlIHN1cHBsZW1lbnRhbCBkYXRhIGFuZCBvcHRpb25zXG4gIGNvbnN0IGRhdGFDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcInB5b2RpZGUtZGF0YVxcXCJdYCkudGV4dENvbnRlbnQ7XG4gIGNvbnN0IGRhdGEgPSBKU09OLnBhcnNlKGI2NERlY29kZShkYXRhQ29udGVudCkpO1xuXG4gIC8vIEdyYWIgbGlzdCBvZiByZXNvdXJjZXMgdG8gYmUgZG93bmxvYWRlZFxuICBjb25zdCBmaWxlc0NvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwidmZzLWZpbGVcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBmaWxlcyA9IEpTT04ucGFyc2UoYjY0RGVjb2RlKGZpbGVzQ29udGVudCkpO1xuXG4gIGxldCBweW9kaWRlUHJvbWlzZSA9IChhc3luYyAoKSA9PiB7XG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyBQeW9kaWRlYDtcbiAgICBjb25zdCBweW9kaWRlID0gYXdhaXQgc3RhcnRQeW9kaWRlV29ya2VyKGRhdGEub3B0aW9ucyk7XG5cbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYERvd25sb2FkaW5nIHBhY2thZ2U6IG1pY3JvcGlwYDtcbiAgICBhd2FpdCBweW9kaWRlLmxvYWRQYWNrYWdlKFwibWljcm9waXBcIik7XG4gICAgY29uc3QgbWljcm9waXAgPSBhd2FpdCBweW9kaWRlLnB5aW1wb3J0KFwibWljcm9waXBcIik7XG4gICAgYXdhaXQgZGF0YS5wYWNrYWdlcy5wa2dzLm1hcCgocGtnKSA9PiAoKSA9PiB7XG4gICAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYERvd25sb2FkaW5nIHBhY2thZ2U6ICR7cGtnfWA7XG4gICAgICByZXR1cm4gbWljcm9waXAuaW5zdGFsbChwa2cpO1xuICAgIH0pLnJlZHVjZSgoY3VyLCBuZXh0KSA9PiBjdXIudGhlbihuZXh0KSwgUHJvbWlzZS5yZXNvbHZlKCkpO1xuICAgIGF3YWl0IG1pY3JvcGlwLmRlc3Ryb3koKTtcblxuICAgIC8vIERvd25sb2FkIGFuZCBpbnN0YWxsIHJlc291cmNlc1xuICAgIGF3YWl0IGZpbGVzLm1hcCgoZmlsZSkgPT4gYXN5bmMgKCkgPT4ge1xuICAgICAgY29uc3QgbmFtZSA9IGZpbGUuc3Vic3RyaW5nKGZpbGUubGFzdEluZGV4T2YoJy8nKSArIDEpO1xuICAgICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyByZXNvdXJjZTogJHtuYW1lfWA7XG4gICAgICBjb25zdCByZXNwb25zZSA9IGF3YWl0IGZldGNoKGZpbGUpO1xuICAgICAgaWYgKCFyZXNwb25zZS5vaykge1xuICAgICAgICB0aHJvdyBuZXcgRXJyb3IoYENhbid0IGRvd25sb2FkIFxcYCR7ZmlsZX1cXGAuIEVycm9yICR7cmVzcG9uc2Uuc3RhdHVzfTogXCIke3Jlc3BvbnNlLnN0YXR1c1RleHR9XCIuYCk7XG4gICAgICB9XG4gICAgICBjb25zdCBkYXRhID0gYXdhaXQgcmVzcG9uc2UuYXJyYXlCdWZmZXIoKTtcblxuICAgICAgLy8gU3RvcmUgVVJMcyBpbiB0aGUgY3dkIHdpdGhvdXQgYW55IHN1YmRpcmVjdG9yeSBzdHJ1Y3R1cmVcbiAgICAgIGlmIChmaWxlLmluY2x1ZGVzKFwiOi8vXCIpKSB7XG4gICAgICAgIGZpbGUgPSBuYW1lO1xuICAgICAgfVxuXG4gICAgICAvLyBDb2xsYXBzZSBoaWdoZXIgZGlyZWN0b3J5IHN0cnVjdHVyZVxuICAgICAgZmlsZSA9IGNvbGxhcHNlUGF0aChmaWxlKTtcblxuICAgICAgLy8gQ3JlYXRlIGRpcmVjdG9yeSB0cmVlLCBpZ25vcmluZyBcImRpcmVjdG9yeSBleGlzdHNcIiBWRlMgZXJyb3JzXG4gICAgICBjb25zdCBwYXJ0cyA9IGZpbGUuc3BsaXQoJy8nKS5zbGljZSgwLCAtMSk7XG4gICAgICBsZXQgcGF0aCA9ICcnO1xuICAgICAgd2hpbGUgKHBhcnRzLmxlbmd0aCA+IDApIHtcbiAgICAgICAgcGF0aCArPSBwYXJ0cy5zaGlmdCgpICsgJy8nO1xuICAgICAgICB0cnkge1xuICAgICAgICAgIGF3YWl0IHB5b2RpZGUuRlMubWtkaXIocGF0aCk7XG4gICAgICAgIH0gY2F0Y2ggKGUpIHtcbiAgICAgICAgICBpZiAoZS5uYW1lICE9PSBcIkVycm5vRXJyb3JcIikgdGhyb3cgZTtcbiAgICAgICAgICBpZiAoZS5lcnJubyAhPT0gMjApIHtcbiAgICAgICAgICAgIGNvbnN0IGVycm9yVGV4dFB0ciA9IGF3YWl0IHB5b2RpZGUuX21vZHVsZS5fc3RyZXJyb3IoZS5lcnJubyk7XG4gICAgICAgICAgICBjb25zdCBlcnJvclRleHQgPSBhd2FpdCBweW9kaWRlLl9tb2R1bGUuVVRGOFRvU3RyaW5nKGVycm9yVGV4dFB0cik7XG4gICAgICAgICAgICB0aHJvdyBuZXcgRXJyb3IoYEZpbGVzeXN0ZW0gRXJyb3IgJHtlLmVycm5vfSBcIiR7ZXJyb3JUZXh0fVwiLmApO1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfVxuXG4gICAgICAvLyBXcml0ZSB0aGlzIGZpbGUgdG8gdGhlIFZGU1xuICAgICAgdHJ5IHtcbiAgICAgICAgcmV0dXJuIGF3YWl0IHB5b2RpZGUuRlMud3JpdGVGaWxlKGZpbGUsIG5ldyBVaW50OEFycmF5KGRhdGEpKTtcbiAgICAgIH0gY2F0Y2ggKGUpIHtcbiAgICAgICAgaWYgKGUubmFtZSAhPT0gXCJFcnJub0Vycm9yXCIpIHRocm93IGU7XG4gICAgICAgIGNvbnN0IGVycm9yVGV4dFB0ciA9IGF3YWl0IHB5b2RpZGUuX21vZHVsZS5fc3RyZXJyb3IoZS5lcnJubyk7XG4gICAgICAgIGNvbnN0IGVycm9yVGV4dCA9IGF3YWl0IHB5b2RpZGUuX21vZHVsZS5VVEY4VG9TdHJpbmcoZXJyb3JUZXh0UHRyKTtcbiAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBGaWxlc3lzdGVtIEVycm9yICR7ZS5lcnJub30gXCIke2Vycm9yVGV4dH1cIi5gKTtcbiAgICAgIH1cbiAgICB9KS5yZWR1Y2UoKGN1ciwgbmV4dCkgPT4gY3VyLnRoZW4obmV4dCksIFByb21pc2UucmVzb2x2ZSgpKTtcblxuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgUHlvZGlkZSBlbnZpcm9ubWVudCBzZXR1cGA7XG4gICAgYXdhaXQgc2V0dXBQeXRob24ocHlvZGlkZSk7XG5cbiAgICBzdGF0dXNUZXh0LnJlbW92ZSgpO1xuICAgIGlmIChzdGF0dXNDb250YWluZXIuY2hpbGRyZW4ubGVuZ3RoID09IDApIHtcbiAgICAgIHN0YXR1c0NvbnRhaW5lci5wYXJlbnROb2RlLnJlbW92ZSgpO1xuICAgIH1cbiAgICByZXR1cm4gcHlvZGlkZTtcbiAgfSkoKS5jYXRjaCgoZXJyKSA9PiB7XG4gICAgc3RhdHVzVGV4dC5zdHlsZS5jb2xvciA9IFwidmFyKC0tZXhlcmNpc2UtZWRpdG9yLWhsLWVyLCAjQUQwMDAwKVwiO1xuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBlcnIubWVzc2FnZTtcbiAgICAvL2luZGljYXRvckNvbnRhaW5lci5xdWVyeVNlbGVjdG9yKFwiLnNwaW5uZXItZ3Jvd1wiKS5jbGFzc0xpc3QuYWRkKFwiZC1ub25lXCIpO1xuICAgIHRocm93IGVycjtcbiAgfSk7XG5cbiAgLy8gS2VlcCB0cmFjayBvZiBpbml0aWFsIE9KUyBibG9jayByZW5kZXJcbiAgY29uc3QgcmVuZGVyZWRPanMgPSB7fTtcblxuICBjb25zdCBwcm9jZXNzID0gYXN5bmMgKGNvbnRleHQsIGlucHV0cykgPT4ge1xuICAgIGNvbnN0IHB5b2RpZGUgPSBhd2FpdCBweW9kaWRlUHJvbWlzZTtcbiAgICBjb25zdCBldmFsdWF0b3IgPSBuZXcgUHlvZGlkZUV2YWx1YXRvcihweW9kaWRlLCBjb250ZXh0KTtcbiAgICBhd2FpdCBldmFsdWF0b3IucHJvY2VzcyhpbnB1dHMpO1xuICAgIHJldHVybiBldmFsdWF0b3IuY29udGFpbmVyO1xuICB9XG5cbiAgcmV0dXJuIHtcbiAgICBweW9kaWRlUHJvbWlzZSxcbiAgICByZW5kZXJlZE9qcyxcbiAgICBwcm9jZXNzLFxuICB9O1xufVxuIn1dfQ==
+eyJjb250ZW50cyI6W119
 </script>
 <div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
 <div id="exercise-loading-status" class="d-flex gap-2">
@@ -551,7 +1007,6 @@ eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJweW9kaWRlLTQiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2RO
 <script type="vfs-file">
 W10=
 </script>
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -656,7 +1111,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/isaiasibanez\.github\.io\/OAA2-FIQ-UNL\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -990,9 +1445,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../CAPITULO_2/B2_glm.html" class="pagination-link" aria-label="2.2 Modelos lineales generalizados">
-        <span class="nav-page-text">2.2 Modelos lineales generalizados</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
