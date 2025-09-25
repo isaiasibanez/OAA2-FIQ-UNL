@@ -255,6 +255,8 @@ window.Quarto = {
 \def\ZZ{\mathbb{Z}}
 \def\RR{\mathbb{R}}
 \def\media{\mathbb{E}}
+\def\cov{\text{Cov}}
+\def\prob{\mathbb{P}}
 \def\calL{\mathcal{L}}
 \def\calG{\mathcal{G}}
 \def\calD{\mathcal{D}}
@@ -274,6 +276,7 @@ window.Quarto = {
 \def\XX{{\bf X}}
 \def\TT{{\bf T}}
 \def\SS{{\bf S}}
+\def\bfZ{{\bf Z}}
 \def\bfg{{\bf g}}
 \def\bftheta{\boldsymbol{\theta}}
 \def\bfmu{\boldsymbol{\mu}}
@@ -285,6 +288,7 @@ window.Quarto = {
 \def\bfeta{\boldsymbol{\eta}}
 \def\bfmu{\boldsymbol{\mu}}
 \def\bfnu{\boldsymbol{\nu}}
+\def\bfTheta{\boldsymbol{\Theta}}
 \def\bfSigma{\boldsymbol{\Sigma}}
 \def\bfone{\mathbf{1}}
 \def\bfzero{\mathbf{0}}
@@ -696,7 +700,7 @@ seria importante poner algo
 
 Implementemos un ejemplo práctico para un problema de clasificación multiclase.
 
-::: {#7958d108 .cell execution_count=1}
+::: {#2db3dd3a .cell execution_count=1}
 ``` {.python .cell-code}
 import numpy as np
 import matplotlib.pyplot as plt
