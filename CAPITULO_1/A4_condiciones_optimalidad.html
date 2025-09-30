@@ -202,6 +202,12 @@ window.Quarto = {
  <span class="menu-text">2.2 Modelos lineales generalizados</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CAPITULO_2/B3_ridge_lasso.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2.3 Métodos de regularización</span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -289,6 +295,7 @@ window.Quarto = {
 \def\bfZ{{\bf Z}}
 \def\bfg{{\bf g}}
 \def\bftheta{\boldsymbol{\theta}}
+\def\bfphi{\boldsymbol{\phi}}
 \def\bfmu{\boldsymbol{\mu}}
 \def\bfxi{\boldsymbol{\xi}}
 \def\bflambda{\boldsymbol{\lambda}}
@@ -1099,7 +1106,7 @@ h_j(\xx)=0, &amp; j=1,\cdots,m
 <p>Se denomina <em>Lagrangiano</em> a la función <span class="math inline">\(\calL:\RR^p\times\RR^r\times\RR^m\to\RR\)</span> definida por <span class="math display">\[
 \calL(\xx,\bflambda,\bfnu):=f(\xx)+\sum_{i=1}^r\lambda_i g_i(\xx)+\sum_{j=1}^m\nu_j h_j(\xx),
 \]</span></p>
-<p>con <span class="math inline">\(\text{dom}\,L:=\mathcal{D}\times\RR^r\times\RR^m\)</span>. Las componentes de los vectores <span class="math inline">\(\bflambda\)</span> y <span class="math inline">\(\bfnu\)</span> se denominan <em>multiplicadores de Lagrange</em>.</p>
+<p>con <span class="math inline">\(\text{dom}\,\calL:=\mathcal{D}\times\RR^r\times\RR^m\)</span>. Las componentes de los vectores <span class="math inline">\(\bflambda\)</span> y <span class="math inline">\(\bfnu\)</span> se denominan <em>multiplicadores de Lagrange</em>.</p>
 </div>
 <div style="margin-top:1em;">
 
@@ -1166,9 +1173,9 @@ h_j(\xx)=0, &amp; j=1,\cdots,m
 \end{array}
 \]</span></p>
 <p>Al no haber restricciones de desigualdad, el Lagrangiano es <span class="math display">\[
-L(\xx,\bfnu)=\xx^\top\xx+\bfnu^\top (A\xx-\bb).
+\calL(\xx,\bfnu)=\xx^\top\xx+\bfnu^\top (A\xx-\bb).
 \]</span></p>
-<p>Teniendo en cuenta el Ejemplo 12 de <a href="A2_optimizacion_convexa.html">C1-S2</a>, podemos afirmar que <span class="math inline">\(L\)</span> es una función convexa. Por lo tanto, podemos minimizar respecto de <span class="math inline">\(\xx\)</span> usando la condición de optimalidad <span class="math inline">\(\nabla_{\xx}L(\xx,\bfnu)=\bfzero\)</span>: <span class="math display">\[
+<p>Teniendo en cuenta el Ejemplo 12 de <a href="A2_optimizacion_convexa.html">C1-S2</a>, podemos afirmar que <span class="math inline">\(\calL\)</span> es una función convexa. Por lo tanto, podemos minimizar respecto de <span class="math inline">\(\xx\)</span> usando la condición de optimalidad <span class="math inline">\(\nabla_{\xx}\calL(\xx,\bfnu)=\bfzero\)</span>: <span class="math display">\[
 \begin{align*}
 \nabla_{\xx}L(\xx,\bfnu)=2\xx+A^\top\bfnu&amp;=\bfzero\\
 \xx&amp;=-\frac{1}{2}A^\top\bfnu.
@@ -1176,7 +1183,7 @@ L(\xx,\bfnu)=\xx^\top\xx+\bfnu^\top (A\xx-\bb).
 \]</span></p>
 <p>La función dual es <span class="math display">\[
 \begin{align*}
-\calG(\bfnu)&amp;=L\left(-\frac{1}{2}A^\top\bfnu,\bfnu\right)\\
+\calG(\bfnu)&amp;=\calL\left(-\frac{1}{2}A^\top\bfnu,\bfnu\right)\\
 &amp;=\left(-\frac{1}{2}A^\top\bfnu\right)^\top\left(-\frac{1}{2}A^\top\bfnu\right)+\bfnu^\top\left(A\left(-\frac{1}{2}A^\top\bfnu\right)-\bb\right)\\
 &amp;=-\frac{1}{4}\bfnu^\top AA^\top \bfnu-\bfnu^\top \bb,
 \end{align*}
@@ -1326,18 +1333,18 @@ p^\star=-\frac{3b^2}{\|\aa\|_2^2}.
 </div>
 <p>Para ello, vamos a suponer que los puntos óptimos existen, tanto para el problema primal (<span class="math inline">\(\xx^\star\)</span>) como para el problema dual (<span class="math inline">\(\bflambda^\star\)</span> y <span class="math inline">\(\bfnu^\star\)</span>). Además, es importante recordar que en el problema dual se impone la restricción <span class="math inline">\(\bflambda\succeq\bfzero\)</span>.</p>
 <p>La dualidad fuerte significa que <span class="math display">\[
-\underbrace{f(\xx^\star)}_{p^\star}=\underbrace{\calG(\bflambda^\star,\bfnu^\star)}_{d^\star}=\inf_{\xx}L(\xx,\bflambda^\star,\bfnu^\star).
+\underbrace{f(\xx^\star)}_{p^\star}=\underbrace{\calG(\bflambda^\star,\bfnu^\star)}_{d^\star}=\inf_{\xx}\calL(\xx,\bflambda^\star,\bfnu^\star).
 \tag{15}
 \]</span></p>
 <p>Hay que tener cuidado al interpretar la expresión (15): si bien garantiza que <span class="math inline">\(f(\xx^\star)\)</span> es el valor ínfimo del Lagrangiano, no nos dice nada acerca de cuál es el valor de <span class="math inline">\(\xx\)</span> donde dicho ínfimo se alcanza. No obstante, la naturaleza de los multiplicadores de Lagrange y las restricciones funcionales nos permiten deducir, a partir de (15), lo siguiente: <span class="math display">\[
 \begin{align*}
-f(\xx^\star)&amp;\leq L(\xx^\star,\bflambda^\star,\bfnu^\star)\\
+f(\xx^\star)&amp;\leq \calL(\xx^\star,\bflambda^\star,\bfnu^\star)\\
 &amp;=f(\xx^\star)+\underbrace{\sum_{i=1}^r\lambda_ig_i(\xx^\star)}_{\leq\, 0}+\underbrace{\sum_{j=1}^m\nu_j h_j(\xx^\star)}_{=\,0}\\
 &amp;\leq f(\xx^\star)
 \end{align*}
 \]</span></p>
 <p>Luego, por antisimetría, debe ser <span class="math display">\[
-f(\xx^\star)=\underbrace{f(\xx^\star)+\sum_{i=1}^r\lambda_ig_i(\xx^\star)}_{L(\xx^\star,\bflambda^\star,\bfnu^\star)}.
+f(\xx^\star)=\underbrace{f(\xx^\star)+\sum_{i=1}^r\lambda_ig_i(\xx^\star)}_{\calL(\xx^\star,\bflambda^\star,\bfnu^\star)}.
 \tag{16}
 \]</span></p>
 <p>A partir de (15) y (16) podemos concluir que, bajo dualidad fuerte, la terna <span class="math inline">\((\xx^\star,\bflambda^\star,\bfnu^\star)\)</span> verifica dos condiciones KKT de la Definición 2: holgura complementaria y estacionariedad.</p>
@@ -1357,21 +1364,21 @@ f(\xx^\star)=\underbrace{f(\xx^\star)+\sum_{i=1}^r\lambda_ig_i(\xx^\star)}_{L(\x
 \]</span></p>
 </div>
 <div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
-<p>El ínfimo de <span class="math inline">\(L(\xx,\bflambda^\star,\bfnu^\star)\)</span> sí ocurre en <span class="math inline">\(\xx^\star\)</span>: <span class="math display">\[
-L(\xx^\star,\bflambda^\star,\bfnu^\star)=\inf_{\xx}L(\xx,\bflambda^\star,\bfnu^\star).
+<p>El ínfimo de <span class="math inline">\(\calL(\xx,\bflambda^\star,\bfnu^\star)\)</span> sí ocurre en <span class="math inline">\(\xx^\star\)</span>: <span class="math display">\[
+\calL(\xx^\star,\bflambda^\star,\bfnu^\star)=\inf_{\xx}\calL(\xx,\bflambda^\star,\bfnu^\star).
 \]</span></p>
 <p>Esto es:</p>
 <div class="myhighlight">
-<p>Bajo dualidad fuerte, <span class="math inline">\(\xx^\star\)</span> es un minimizador de <span class="math inline">\(L(\xx,\bflambda^\star,\bfnu^\star)\)</span>.</p>
+<p>Bajo dualidad fuerte, <span class="math inline">\(\xx^\star\)</span> es un minimizador de <span class="math inline">\(\calL(\xx,\bflambda^\star,\bfnu^\star)\)</span>.</p>
 </div>
 <div style="margin-top:2em;">
 
 </div>
-<p>La suposición de que la función objetivo y las funciones de restricción son diferenciables garantiza que el Lagrangiano también lo es. Además, si las funciones involucradas están definidas en conjuntos abiertos, podemos asegurar que <span class="math inline">\(\text{dom}\,L:=\mathcal{D}\times\RR^r\times\RR^m\)</span> es un conjunto abierto de <span class="math inline">\(\RR^{p+r+m}\)</span>. Así, <span class="math inline">\(\xx^\star\)</span> es un punto interior de <span class="math inline">\(\text{dom}\,L\)</span> y, por lo tanto, la condición de optimalidad de primer orden asegura que <span class="math display">\[
-\nabla L(\xx^\star,\bflambda^\star,\bfnu^\star)=\bfzero.
+<p>La suposición de que la función objetivo y las funciones de restricción son diferenciables garantiza que el Lagrangiano también lo es. Además, si las funciones involucradas están definidas en conjuntos abiertos, podemos asegurar que <span class="math inline">\(\text{dom}\,\calL:=\mathcal{D}\times\RR^r\times\RR^m\)</span> es un conjunto abierto de <span class="math inline">\(\RR^{p+r+m}\)</span>. Así, <span class="math inline">\(\xx^\star\)</span> es un punto interior de <span class="math inline">\(\text{dom}\,\calL\)</span> y, por lo tanto, la condición de optimalidad de primer orden asegura que <span class="math display">\[
+\nabla \calL(\xx^\star,\bflambda^\star,\bfnu^\star)=\bfzero.
 \]</span></p>
 <p>Reemplazando <span class="math display">\[
-\nabla L(\xx^\star,\bflambda^\star,\bfnu^\star)=\nabla f(\xx^\star)+\sum_{i=1}^r\lambda_i^\star\nabla g_i(\xx^\star)+\sum_{j=1}^m\nu_j^\star\nabla h_j(\xx^\star),
+\nabla \calL(\xx^\star,\bflambda^\star,\bfnu^\star)=\nabla f(\xx^\star)+\sum_{i=1}^r\lambda_i^\star\nabla g_i(\xx^\star)+\sum_{j=1}^m\nu_j^\star\nabla h_j(\xx^\star),
 \]</span> obtenemos <span class="math display">\[
 -\nabla f(\xx^\star)=\sum_{i=1}^r\lambda_i^\star\nabla g_i(\xx^\star)+\sum_{j=1}^m\nu_j^\star\nabla h_j(\xx^\star).
 \]</span></p>
@@ -1417,9 +1424,9 @@ L(\xx^\star,\bflambda^\star,\bfnu^\star)=\inf_{\xx}L(\xx,\bflambda^\star,\bfnu^\
 \]</span> lo que permite combinarla con las demás condiciones que involucran <span class="math inline">\(\bflambda\)</span>, facilitando así la eliminación de este multiplicador. Nos quedan así las siguientes expresiones: <span class="math display">\[
 \xx^\star\succeq\bfzero,\;\mathbf{1}^\top\xx^\star=1,
 \]</span> <span class="math display">\[
-\nu^\star-\frac{1}{x_i^\star+\alpha_i}\geq 0\qquad\forall i=1,\ldots,p.
-\]</span> <span class="math display">\[
 \left(\nu^\star-\displaystyle\frac{1}{x_i^\star+\alpha_i}\right)x_i^\star=0\qquad\forall i = 1,\ldots,p,
+\]</span> <span class="math display">\[
+\nu^\star-\frac{1}{x_i^\star+\alpha_i}\geq 0\qquad\forall i=1,\ldots,p.
 \]</span></p>
 <p>El análisis de las últimas dos expresiones permite deducir que <span class="math display">\[
 x_i^\star=\left\{\begin{array}{cl}
