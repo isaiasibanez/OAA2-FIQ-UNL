@@ -651,7 +651,7 @@ y_i((\bfbeta^\star)^\top\xx_i+\beta_0^\star)=1,
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 1</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Datos linealmente separables </span></p>
 <p>Vamos a simular un conjunto de datos linealmente separables. Luego, obtendremos el hiperplano separador óptimo e identificaremos los vectores soporte.</p>
-<div id="456a3b1e" class="cell" data-execution_count="1">
+<div id="897d11b9" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1431,7 +1431,50 @@ Mostrar
 
 </div>
 <ol type="1">
-<li>…</li>
+<li><p>Supongamos que usamos un clasificador SVM lineal para un problema de clasificación binaria con el conjunto de puntos que se muestra en la Figura. Los puntos positivos (muestras rojas) y negativos (muestras azules) están distribuidos según las coordenadas indicadas. La línea sólida representa el hiperplano separador y las líneas punteadas los márgenes del clasificador.</p>
+<figure style="text-align: center;" class="figure">
+<p><img src="figuras/ejercicio_A.png" alt="…" width="400px" class="figure-img"></p>
+</figure>
+<ol type="a">
+<li><p>Liste los vectores soporte.</p></li>
+<li><p>Seleccione dos observaciones y calcule sus distancias al hiperplano <span class="math inline">\(x_1 - x_2 = 0\)</span>.</p></li>
+<li><p>Si se elimina la observación <span class="math inline">\((0, 1)\)</span>, ¿cambiaría la frontera de decisión? ¿Qué sucede si en cambio se elimina la muestra <span class="math inline">\((-1, -2.5)\)</span>?</p></li>
+<li><p>Si se agrega una nueva observación <span class="math inline">\((2, 0.5)\)</span> con target positivo, ¿cambiaría la frontera de decisión? En caso afirmativo, ¿qué método usaría en este caso?</p></li>
+<li><p>En el método SVM de , <span class="math inline">\(C\)</span> es un hiperparámetro. ¿Qué ocurriría al usar un valor de <span class="math inline">\(C\)</span> muy grande? ¿Y qué pasaría si <span class="math inline">\(C\)</span> es muy pequeño?</p></li>
+</ol></li>
+</ol>
+<div style="margin-top:1em;">
+
+</div>
+<ol start="2" type="1">
+<li><p>A continuación se presentan los resultados de aplicar un SVM lineal con margen suave a un mismo conjunto de datos, variando el valor del hiperparámetro <span class="math inline">\(C\)</span>.</p>
+<figure style="text-align: center;" class="figure">
+<p><img src="figuras/ejercicio_B.png" alt="…" width="800px" class="figure-img"></p>
+</figure>
+<ol type="a">
+<li><p>Ordene las figuras según los valores de <span class="math inline">\(C\)</span> utilizados para obtener cada solución (de manera creciente), justificando brevemente su elección.</p></li>
+<li><p>Identifique en cada caso cuáles son los vectores soporte.</p></li>
+<li><p>Para los vectores soporte encontrados, analice los valores de <span class="math inline">\(\lambda_i\)</span>, <span class="math inline">\(\mu_i\)</span> y <span class="math inline">\(\xi_i\)</span>, indicando qué representan y qué relación existe entre ellos según las condiciones KKT.</p></li>
+</ol></li>
+</ol>
+<div style="margin-top:1em;">
+
+</div>
+<ol start="3" type="1">
+<li><p>Considere el siguiente conjunto de datos de la forma <span class="math inline">\((x_i,y_i)\)</span>: <span class="math display">\[
+D = \{(-1, 1), (0, -1), (1, -1)\}
+\]</span></p>
+<ol type="a">
+<li><p>Analice graficamente el problema.</p></li>
+<li><p>¿Son linealmente separables? En base a su respuesta plantee el SVM que considere apropiado y encuentre el hiperplano de separación óptimo.</p></li>
+</ol></li>
+<li><p>Considere el siguiente conjunto de datos de la forma <span class="math inline">\((x_i,y_i)\)</span>: <span class="math display">\[
+D = \{ (-1, 1),(0, -1),(1, 1) \}.
+\]</span></p>
+<ol type="a">
+<li><p>Analice graficamente el problema</p></li>
+<li><p>¿Son linealmente separables? En base a su respuesta plantee el SVM que considere apropiado y encuentre el hiperplano de separación óptimo.</p></li>
+</ol></li>
 </ol>
 </details>
 <div style="margin-top:2em;">
