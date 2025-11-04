@@ -506,23 +506,23 @@ p(\xx)&amp;=\frac{1}{2\pi\sqrt{\frac{7}{4}}}\exp\left\{-\frac{1}{2}(x_1,x_2)^\to
 
 </div>
 <p>Veamos a continuación cómo obtener los estimadores MLE de los parámetros <span class="math inline">\(\bfmu\)</span> y <span class="math inline">\(\Sigma\)</span> a partir de un conjunto de datos <span class="math inline">\(\{\xx_1,\ldots,\xx_n\}\)</span>. La función de log-verosimilitud es <span class="math display">\[
-\ell(\bfmu,\Sigma)=\sum_{i=1}^n\left(-\frac{p}{2}\log(2\pi)-\frac{1}{2}\log|\Sigma|-\frac{1}{2}(\xx-\bfmu)^\top\Sigma^{-1}(\xx-\bfmu)\right)
+\ell(\bfmu,\Sigma)=\sum_{i=1}^n\left(-\frac{p}{2}\log(2\pi)-\frac{1}{2}\log|\Sigma|-\frac{1}{2}(\xx_i-\bfmu)^\top\Sigma^{-1}(\xx_i-\bfmu)\right)
 \]</span></p>
 <p>En primer lugar, mantendremos <span class="math inline">\(\Sigma\)</span> fijo, de manera tal de trabajar con el problema <span class="math display">\[
 \begin{array}{ll}
-\text{maximizar } &amp; -\frac{1}{2}\displaystyle\sum_{i=1}^n(\xx-\bfmu)^\top\Sigma^{-1}(\xx-\bfmu).
+\text{maximizar } &amp; -\frac{1}{2}\displaystyle\sum_{i=1}^n(\xx_i-\bfmu)^\top\Sigma^{-1}(\xx_i  -\bfmu).
 \end{array}
 \]</span></p>
 <p>La condición de optimalidad resulta <span class="math display">\[
 \begin{align}
-\sum_{i=1}^n\Sigma^{-1}(\xx-\hat{\bfmu})&amp;=0\\
-\Sigma^{-1}\left(\sum_{i=1}^n\xx-n\hat{\bfmu}\right) &amp;=0 \\
+\sum_{i=1}^n\Sigma^{-1}(\xx_i-\hat{\bfmu})&amp;=0\\
+\Sigma^{-1}\left(\sum_{i=1}^n\xx_i-n\hat{\bfmu}\right) &amp;=0 \\
 \hat{\bfmu} &amp;=\frac{1}{n}\sum_{i=1}^n\xx_i.
 \end{align}
 \]</span></p>
 <p>Dado que el estimador obtenido es independiente de <span class="math inline">\(\Sigma\)</span>, podemos reemplazarlo en la función de log-verosimilitud y, a partir de allí, optimizar respecto a <span class="math inline">\(\Sigma\)</span>. Esto deriva en el problema <span class="math display">\[
 \begin{array}{ll}
-\text{maximizar } &amp; -\frac{n}{2}\log|\Sigma|-\frac{1}{2}\sum_{i=1}^n(\xx-\hat{\bfmu})^\top\Sigma^{-1}(\xx-\hat{\bfmu}).
+\text{maximizar } &amp; -\frac{n}{2}\log|\Sigma|-\frac{1}{2}\sum_{i=1}^n(\xx_i-\hat{\bfmu})^\top\Sigma^{-1}(\xx_i-\hat{\bfmu}).
 \end{array}
 \tag{2}
 \]</span></p>
@@ -534,8 +534,8 @@ p(\xx)&amp;=\frac{1}{2\pi\sqrt{\frac{7}{4}}}\exp\left\{-\frac{1}{2}(x_1,x_2)^\to
 \]</span></p>
 <p>Resulta: <span class="math display">\[
 \begin{align}
-\frac{n}{2}\hat{\Sigma}-\frac{1}{2}\sum_{i=1}^n(\xx-\hat{\bfmu})(\xx-\hat{\bfmu})^\top &amp;= \bfzero \\
-\hat{\Sigma} &amp;= \frac{1}{n}\sum_{i=1}^n(\xx-\hat{\bfmu})(\xx-\hat{\bfmu})^\top.
+\frac{n}{2}\hat{\Sigma}-\frac{1}{2}\sum_{i=1}^n(\xx_i-\hat{\bfmu})(\xx_i-\hat{\bfmu})^\top &amp;= \bfzero \\
+\hat{\Sigma} &amp;= \frac{1}{n}\sum_{i=1}^n(\xx_i-\hat{\bfmu})(\xx_i-\hat{\bfmu})^\top.
 \end{align}
 \]</span></p>
 <div style="margin-top:2.5em;">
@@ -646,19 +646,40 @@ p(y\mid\xx)\propto p(\xx\mid y)\,p(y).
 <div style="margin-top:2em;">
 
 </div>
+<p>Para concluir, haremos énfasis en la regla de clasificación para un <mark>problema multiclase</mark>:</p>
+<p><span class="math display">\[
+\begin{align*}
+\hat{y}(x) &amp;= \arg\max_{y} p(y\mid \xx) \\
+&amp;=\arg\max_{y} p(\xx\mid y)\,p(y) \\
+&amp; = \arg\max{y} \left[\log p(\xx\mid y)+\log p(y)\right]
+\end{align*}
+\]</span></p>
+<p>Además, denotamos <span class="math inline">\(\pi_y:=\mathbb{P}\{Y=y\}\)</span> las probabilidades <em>a priori</em> de cada clase. De esta manera, y tras eliminar los términos constantes que no dependen de <span class="math inline">\(\xx\)</span>, se obtiene el siguiente resultado.</p>
+<div style="margin-top:2em;">
+
+</div>
+<div class="myhighlight">
+<p>Para un problema de clasificación multiclase, la regla de decisión del modelo LDA es <span class="math display">\[
+\hat{y}(\xx)=\arg\max_{y}\left[-\frac{1}{2}(\xx-\bfmu_y)^\top\Sigma^{-1}(\xx-\bfmu_y)+\log\pi_y\right].
+\]</span></p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
 </section>
 <section id="estimación-por-máxima-verosimilitud" class="level3">
 <h3 class="anchored" data-anchor-id="estimación-por-máxima-verosimilitud">Estimación por máxima verosimilitud</h3>
 <p>Los parámetros del modelo son <span class="math inline">\(\varphi\in\RR\)</span>, <span class="math inline">\(\bfmu_0,\bfmu_1\in\RR^p\)</span> y <span class="math inline">\(\Sigma\in\mathbf{S}_{++}^p\)</span>. La estimación por máxima verosimilitud resulta de maximizar <span class="math display">\[
 \begin{align}
 \ell(\varphi,\bfmu_0,\bfmu_1,\Sigma)&amp;=\sum_{i=1}^n\log p(\xx_i,y_i\mid\varphi,\bfmu_0,\bfmu_1,\Sigma) \\
-&amp; = \sum_{i=1}^n\log p(y\mid\varphi)+\sum_{i=1}^n\log p(\xx_i\mid y_i,\bfmu_{y_i},\Sigma).
+&amp; = \sum_{i=1}^n\log\left[p(\xx_i\mid y_i;\bfmu_{y_i},\Sigma)\,p(y_i\mid\varphi)\right]\\
+&amp; = \sum_{i=1}^n\log p(\xx_i\mid y_i;\bfmu_{y_i},\Sigma) + \sum_{i=1}^n\log p(y_i\mid\varphi).
 \end{align}
 \tag{4}
 \]</span></p>
 <p>Obtengamos en primer lugar el MLE de <span class="math inline">\(\varphi\)</span>. Este es el punto óptimo de <span class="math display">\[
 \begin{array}{ll}
-\text{maximizar } &amp; \displaystyle\sum_{i=1}^n\log p(y\mid\varphi),
+\text{maximizar } &amp; \displaystyle\sum_{i=1}^n\log p(y_i\mid\varphi),
 \end{array}
 \]</span></p>
 <p>cuya función objetivo es la función de verosimilitud de <span class="math inline">\(Y\sim\text{Bernoulli}(\varphi)\)</span>. Es fácil ver que <span class="math display">\[
@@ -734,7 +755,7 @@ p(y\mid\xx)\propto p(\xx\mid y)\,p(y).
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 2</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> LDA en datos simulados de clasificación binaria </span></p>
 <p>Simulamos un conjunto de datos en <span class="math inline">\(\RR^2\)</span> perteneciente a dos clases. Al aplicar LDA, el modelo estima una frontera lineal de decisión que separa ambas regiones.</p>
-<div id="f8fdc913" class="cell" data-execution_count="1">
+<div id="ac5853bc" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -792,7 +813,7 @@ p(y\mid\xx)\propto p(\xx\mid y)\,p(y).
 <p><span class="badge bg-primary">Ejemplo 3</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> LDA en datos de clasificación multiclase </span></p>
 <p>En este ejemplo utilizamos el conjunto de datos <em>wine</em> disponible en <code>scikit-learn</code>, que contiene mediciones químicas de tres tipos de vino. Para visualizar el resultado de la clasificación, consideramos únicamente dos variables predictoras: la intensidad de color y el matiz.</p>
 <p>El modelo LDA estima las fronteras lineales que separan las tres clases, utilizando la comparación de a pares.</p>
-<div id="8770272d" class="cell" data-execution_count="2">
+<div id="e5e749d3" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -903,7 +924,7 @@ p(\xx\mid y=1)=\frac{1}{(2\pi)^{d/2}|\Sigma_1|^{1/2}}\exp\left\{-\frac{1}{2}(\xx
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 4</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> QDA en datos de clasificación multiclase </span></p>
 <p>En este ejemplo utilizamos los mismos datos del Ejemplo 3, pero aplicamos el modelo QDA. A diferencia del LDA, este modelo permite que cada clase tenga su propia matriz de covarianza, lo que da lugar a fronteras de decisión no lineales que se adaptan mejor a la estructura de los datos.</p>
-<div id="e5f0ac60" class="cell" data-execution_count="3">
+<div id="9873e1d1" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1109,7 +1130,7 @@ Mostrar
 
 <hr class="linea-corta">
 <div style="text-align:left;">
-<p><a href="" target="_blank"> <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:1.4em;"> </a></p>
+<p><a href="https://colab.research.google.com/drive/1N_Ne6Aop8DJ39X0xMIHADey6dgqu_Gch?usp=drive_link" target="_blank"> <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Colab" style="height:1.4em;"> </a></p>
 </div>
 <div style="margin-top: 5em;">
 
