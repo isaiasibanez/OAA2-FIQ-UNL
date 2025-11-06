@@ -371,7 +371,7 @@ p(\xx,y):=p(\xx\mid y)\, p(y),
 p(y\mid\xx)=\frac{p(\xx\mid y)\,p(y)}{p(\xx)}.
 \]</span></p>
 <p>Observar que, al momento de clasificar una observación <span class="math inline">\(\xx\)</span>, es suficiente comparar los numeradores <span class="math inline">\(p(\xx\mid y)\,p(y)\)</span> para cada clase, puesto que <span class="math inline">\(p(\xx)\)</span> actúa como una constante de normalización que no depende de <span class="math inline">\(y\)</span>. De esta forma, la regla de decisión bayesiana es <span class="math display">\[
-\hat{y}(\xx):=\arg\max_{y} p(\xx\mid y)\,p(y).
+h*(\xx):=\arg\max_{y} p(\xx\mid y)\,p(y).
 \]</span></p>
 <p>En esta sección estudiaremos tres ejemplos representativos de modelos generativos utilizados en clasificación: los modelos discriminativos gaussianos (LDA y QDA) y Naive Bayes.</p>
 <div style="margin-top:2em;">
@@ -620,7 +620,7 @@ p(y=1\mid\xx)&amp;=\frac{e^{\bftheta^\top\xx+\theta_0}}{1+e^{\bftheta^\top\xx+\t
 p(y\mid\xx)\propto p(\xx\mid y)\,p(y).
 \]</span></p>
 <p>Otro punto de vista es el <em>cociente de verosimilitudes</em>, que determina el criterio de decisión de la siguiente manera: <span class="math display">\[
-\hat{y}(\xx)=1\quad\text{si}\quad \log\frac{p(y=1\mid \xx)}{p(y=0\mid \xx)}&gt;0.
+G(\xx)=1\quad\text{si}\quad \log\frac{p(y=1\mid \xx)}{p(y=0\mid \xx)}&gt;0.
 \tag{3}
 \]</span></p>
 <p>Claramente, la frontera de decisión está determinada por <span class="math display">\[
@@ -649,7 +649,7 @@ p(y\mid\xx)\propto p(\xx\mid y)\,p(y).
 <p>Para concluir, haremos énfasis en la regla de clasificación para un <mark>problema multiclase</mark>:</p>
 <p><span class="math display">\[
 \begin{align*}
-\hat{y}(x) &amp;= \arg\max_{y} p(y\mid \xx) \\
+G(x) &amp;= \arg\max_{y} p(y\mid \xx) \\
 &amp;=\arg\max_{y} p(\xx\mid y)\,p(y) \\
 &amp; = \arg\max_{y} \left[\log p(\xx\mid y)+\log p(y)\right]
 \end{align*}
@@ -660,7 +660,7 @@ p(y\mid\xx)\propto p(\xx\mid y)\,p(y).
 </div>
 <div class="myhighlight">
 <p>Para un problema de clasificación multiclase, la regla de decisión del modelo LDA es <span class="math display">\[
-\hat{y}(\xx)=\arg\max_{y}\left[-\frac{1}{2}(\xx-\bfmu_y)^\top\Sigma^{-1}(\xx-\bfmu_y)+\log\pi_y\right].
+G(\xx)=\arg\max_{y}\left[-\frac{1}{2}(\xx-\bfmu_y)^\top\Sigma^{-1}(\xx-\bfmu_y)+\log\pi_y\right].
 \]</span></p>
 </div>
 <div style="margin-top:2em;">
@@ -755,7 +755,7 @@ p(y\mid\xx)\propto p(\xx\mid y)\,p(y).
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 2</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> LDA en datos simulados de clasificación binaria </span></p>
 <p>Simulamos un conjunto de datos en <span class="math inline">\(\RR^2\)</span> perteneciente a dos clases. Al aplicar LDA, el modelo estima una frontera lineal de decisión que separa ambas regiones.</p>
-<div id="0a6c7342" class="cell" data-execution_count="1">
+<div id="8e3e3f61" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -813,7 +813,7 @@ p(y\mid\xx)\propto p(\xx\mid y)\,p(y).
 <p><span class="badge bg-primary">Ejemplo 3</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> LDA en datos de clasificación multiclase </span></p>
 <p>En este ejemplo utilizamos el conjunto de datos <em>wine</em> disponible en <code>scikit-learn</code>, que contiene mediciones químicas de tres tipos de vino. Para visualizar el resultado de la clasificación, consideramos únicamente dos variables predictoras: la intensidad de color y el matiz.</p>
 <p>El modelo LDA estima las fronteras lineales que separan las tres clases, utilizando la comparación de a pares.</p>
-<div id="5a3c5a4f" class="cell" data-execution_count="2">
+<div id="2832bbdc" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -924,7 +924,7 @@ p(\xx\mid y=1)=\frac{1}{(2\pi)^{d/2}|\Sigma_1|^{1/2}}\exp\left\{-\frac{1}{2}(\xx
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 4</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> QDA en datos de clasificación multiclase </span></p>
 <p>En este ejemplo utilizamos los mismos datos del Ejemplo 3, pero aplicamos el modelo QDA. A diferencia del LDA, este modelo permite que cada clase tenga su propia matriz de covarianza, lo que da lugar a fronteras de decisión no lineales que se adaptan mejor a la estructura de los datos.</p>
-<div id="bd0d60bc" class="cell" data-execution_count="3">
+<div id="497d15a6" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1079,7 +1079,7 @@ L(\varphi,\phi_{i\mid y=0},\phi_{i\mid y=1})&amp;=\prod_{i=1}^n p(\xx_i\mid y_i;
 
 </div>
 <p>Luego, dada una nueva observación <span class="math inline">\(\xx\)</span>, el clasificador es <span class="math display">\[
-\hat{y}(\xx)=\arg\max_{y} p(\xx\mid y)\,p(y)=\arg\max_{y} \left(\hat{\varphi}^{y}(1-\hat{\varphi})^{1-y}\prod_{j=1}^p\hat{\phi}_{j\mid y}^{x_{j}}(1-\hat{\phi}_{j\mid y})^{1-x_{j}}\right).
+G(\xx)=\arg\max_{y} p(\xx\mid y)\,p(y)=\arg\max_{y} \left(\hat{\varphi}^{y}(1-\hat{\varphi})^{1-y}\prod_{j=1}^p\hat{\phi}_{j\mid y}^{x_{j}}(1-\hat{\phi}_{j\mid y})^{1-x_{j}}\right).
 \]</span></p>
 <p>Con esto hemos desarrollado el método de Naive Bayes para el caso de características binarias <span class="math inline">\(X_i\)</span>. La generalización al caso de variables discretas que toman valores en <span class="math inline">\(\{1,2,\ldots,k\}\)</span> es directa, mediante el uso de la <em>distribución categórica</em>.</p>
 <div style="margin-top:2em;">
@@ -1121,7 +1121,224 @@ Mostrar
 <div style="margin-top:1em;">
 
 </div>
-<p>…</p>
+<ol type="1">
+<li><p>Construya un clasificador para <span class="math inline">\(Y \in \{0,1\}\)</span> dado <span class="math inline">\(X \in [0,6)\)</span> utilizando el Teorema de Bayes. Las funciones de densidad condicional para cada clase son las siguientes: <span class="math display">\[
+P(X=x \mid Y=0) =
+\begin{cases}
+\dfrac{1}{6}, &amp; 0 \le x &lt; 6,\\[6pt]
+0, &amp; \text{en otro caso.}
+\end{cases}
+\]</span> <span class="math display">\[
+P(X=x \mid Y=1) =
+\begin{cases}
+\dfrac{x-1}{4}, &amp; 1 \le x &lt; 3,\\[6pt]
+\dfrac{5-x}{4}, &amp; 3 \le x &lt; 5,\\[6pt]
+0, &amp; \text{en otro caso.}
+\end{cases}
+\]</span></p>
+<ol type="a">
+<li><p>Suponiendo probabilidades a priori iguales, <span class="math inline">\(P(Y=0)=P(Y=1)=0.5\)</span>, clasificar una observación con <span class="math inline">\(x=2.5\)</span>.</p></li>
+<li><p>Suponiendo probabilidades a priori desiguales, <span class="math inline">\(P(Y=0)=0.7\)</span> y <span class="math inline">\(P(Y=1)=0.3\)</span>, clasificar una observación con <span class="math inline">\(x=4\)</span>.</p></li>
+</ol></li>
+<li><p>Considere el modelo QDA.</p>
+<ol type="a">
+<li>Demuestre que los MLE de los parámetros son: <span class="math display">\[
+\widehat{\varphi} = \frac{1}{n} \sum_{i=1}^{n} \mathbf{1}\{ y_i = 1 \},
+\]</span> <span class="math display">\[
+\widehat{\boldsymbol{\mu}}_y =
+\frac{\sum_{i=1}^{n} \mathbf{1}\{ y_i = y \} \mathbf{x}_i}
+{\sum_{i=1}^{n} \mathbf{1}\{ y_i = y \}},
+\]</span> <span class="math display">\[
+\widehat{\boldsymbol{\Sigma}}_y =
+\frac{\sum_{i=1}^{n} \mathbf{1}\{ y_i = y \}
+(\mathbf{x}_i - \widehat{\boldsymbol{\mu}}_{y})
+(\mathbf{x}_i - \widehat{\boldsymbol{\mu}}_{y})^{\top}}
+{\sum_{i=1}^{n} \mathbf{1}\{ y_i = y \}}.
+\]</span></li>
+</ol>
+<p><em>Ayuda</em>: sean <span class="math inline">\(\mathbf{x} \in \mathbb{R}^{n}\)</span>, <span class="math inline">\(\mathbf{A} \in \mathbb{R}^{n \times n}\)</span> simétrica y <span class="math inline">\(\mathbf{X}, \mathbf{B} \in \mathbb{R}^{n \times n}\)</span>, se cumple:</p>
+<ul>
+<li><span class="math inline">\(\frac{\partial (\mathbf{x}^\top\mathbf{A}\mathbf{x})}{\partial \mathbf{x}} = 2\mathbf{A}\mathbf{x}\)</span>.</li>
+<li><span class="math inline">\(\frac{\partial \ \text{tr}(\mathbf{X}^{-1}\mathbf{B})}{\partial \mathbf{X}} = -\mathbf{X}^{-1}\mathbf{B}\mathbf{X}^{-1}\)</span>.</li>
+<li><span class="math inline">\(\frac{\partial \ \ln|\mathbf{X}|}{\partial \mathbf{X}} = \mathbf{X}^{-1}\)</span>.</li>
+</ul>
+<ol start="2" type="a">
+<li><p>Construya el clasificador de Bayes usando los estimadores obtenidos.</p></li>
+<li><p>Encuentre la frontera de decisión e indique las diferencias con la hallada para el modelo LDA.</p></li>
+</ol></li>
+<li><p>En un estudio médico, 100 pacientes fueron clasificados en una de tres clases: <strong>Neumonía</strong>, <strong>Gripe</strong> o <strong>Sano</strong>. La siguiente base de datos indica cuántos pacientes en cada clase presentaron fiebre y dolor de cabeza.</p>
+<p><strong>Neumonía</strong>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Fiebre</th>
+<th style="text-align: center;">Dolor de cabeza</th>
+<th style="text-align: center;">Frecuencia</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">T</td>
+<td style="text-align: center;">T</td>
+<td style="text-align: center;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">T</td>
+<td style="text-align: center;">F</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F</td>
+<td style="text-align: center;">T</td>
+<td style="text-align: center;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F</td>
+<td style="text-align: center;">F</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>—</strong></td>
+<td style="text-align: center;"><strong>Total:</strong></td>
+<td style="text-align: center;"><strong>10</strong></td>
+</tr>
+</tbody>
+</table>
+<div style="margin-top:2em;">
+
+</div>
+<p><strong>Gripe</strong>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Fiebre</th>
+<th style="text-align: center;">Dolor de cabeza</th>
+<th style="text-align: center;">Frecuencia</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">T</td>
+<td style="text-align: center;">T</td>
+<td style="text-align: center;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">T</td>
+<td style="text-align: center;">F</td>
+<td style="text-align: center;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F</td>
+<td style="text-align: center;">T</td>
+<td style="text-align: center;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F</td>
+<td style="text-align: center;">F</td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>—</strong></td>
+<td style="text-align: center;"><strong>Total:</strong></td>
+<td style="text-align: center;"><strong>20</strong></td>
+</tr>
+</tbody>
+</table>
+<div style="margin-top:2em;">
+
+</div>
+<p><strong>Sano</strong>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Fiebre</th>
+<th style="text-align: center;">Dolor de cabeza</th>
+<th style="text-align: center;">Frecuencia</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">T</td>
+<td style="text-align: center;">T</td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">T</td>
+<td style="text-align: center;">F</td>
+<td style="text-align: center;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">F</td>
+<td style="text-align: center;">T</td>
+<td style="text-align: center;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F</td>
+<td style="text-align: center;">F</td>
+<td style="text-align: center;">58</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>—</strong></td>
+<td style="text-align: center;"><strong>Total:</strong></td>
+<td style="text-align: center;"><strong>70</strong></td>
+</tr>
+</tbody>
+</table>
+<div style="margin-top:2em;">
+
+</div>
+<p>Considere un paciente con fiebre pero sin dolor de cabeza.</p>
+<ol type="a">
+<li><p>¿Qué valores asignaría un clasificador Bayesiano óptimo a los tres diagnósticos? (un clasificador Bayesiano óptimo no realiza ninguna suposición de independencia sobre las variables). <em>Sus respuestas no necesitan sumar 1 — explique por qué.</em></p></li>
+<li><p>¿Qué probabilidad asignaría un clasificador Bayesiano óptimo a la proposición de que un paciente es sano? Muestre su procedimiento (los tres valores deben sumar 1).</p></li>
+<li><p>¿Qué valores asignaría un clasificador naive Bayes a los tres posibles diagnósticos? Muestre su procedimiento.</p></li>
+<li><p>¿Qué probabilidad asignaría un clasificador naive Bayes a la proposición de que un paciente es sano? Muestre su procedimiento.</p></li>
+</ol></li>
+<li><p>Se quiere predecir si a una persona le gusta <em>Pokémon</em>, utilizando información sobre sus preferencias por otros programas populares. Para ello, se recolectaron datos de <span class="math inline">\(n=30\)</span> individuos, registrando si a cada uno le gusta <em>Star Wars</em> y <em>Harry Potter</em>, además de si le gusta <em>Pokémon</em>. Considere <span class="math inline">\(X_1 = 1\)</span> si le gusta <em>Star Wars</em>, <span class="math inline">\(X_2 = 1\)</span> si le gusta <em>Harry Potter</em> e <span class="math inline">\(Y = 1\)</span> si le gusta <em>Pokémon</em> (en caso negativo toman el valor 0). Los datos de entrenamiento son:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Y/X1</th>
+<th style="text-align: center;">0</th>
+<th style="text-align: center;">1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">13</td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Y/X2</th>
+<th style="text-align: center;">0</th>
+<th style="text-align: center;">1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">10</td>
+</tr>
+</tbody>
+</table>
+<p>Suponga que a una nueva persona le gusta <em>Star Wars</em> pero no le gusta <em>Harry Potter</em>. ¿Le gustará <em>Pokémon</em>? ¿Qué tipo de clasificador de Bayes (naive u óptimo) puede construir con la información dada para responder a la pregunta?</p></li>
+</ol>
 </details>
 <div style="margin-top:2em;">
 
