@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.40">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,7 +70,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-327735d1480bff6f7510335fe22ad292.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -282,7 +282,11 @@ window.Quarto = {
   <li><a href="#regla-de-decisión" id="toc-regla-de-decisión" class="nav-link" data-scroll-target="#regla-de-decisión">Regla de decisión</a></li>
   <li><a href="#estimación-por-máxima-verosimilitud" id="toc-estimación-por-máxima-verosimilitud" class="nav-link" data-scroll-target="#estimación-por-máxima-verosimilitud">Estimación por máxima verosimilitud</a></li>
   </ul></li>
-  <li><a href="#análisis-discriminante-cuadrático-qda" id="toc-análisis-discriminante-cuadrático-qda" class="nav-link" data-scroll-target="#análisis-discriminante-cuadrático-qda">Análisis discriminante cuadrático (QDA)</a></li>
+  <li><a href="#análisis-discriminante-cuadrático-qda" id="toc-análisis-discriminante-cuadrático-qda" class="nav-link" data-scroll-target="#análisis-discriminante-cuadrático-qda">Análisis discriminante cuadrático (QDA)</a>
+  <ul class="collapse">
+  <li><a href="#regla-de-decisión-1" id="toc-regla-de-decisión-1" class="nav-link" data-scroll-target="#regla-de-decisión-1">Regla de decisión</a></li>
+  <li><a href="#estimación-por-máxima-verosimilitud-1" id="toc-estimación-por-máxima-verosimilitud-1" class="nav-link" data-scroll-target="#estimación-por-máxima-verosimilitud-1">Estimación por máxima verosimilitud</a></li>
+  </ul></li>
   <li><a href="#naive-bayes" id="toc-naive-bayes" class="nav-link" data-scroll-target="#naive-bayes">Naive Bayes</a>
   <ul class="collapse">
   <li><a href="#clasificación-de-texto" id="toc-clasificación-de-texto" class="nav-link" data-scroll-target="#clasificación-de-texto">Clasificación de texto</a></li>
@@ -367,7 +371,7 @@ window.Quarto = {
 <p>En el capítulo anerior hemos trabajado con métodos que modelan la distribución condicional <span class="math inline">\(p(y\mid \xx; \bftheta)\)</span>. Como caso general, los modelos lineales generalizados asumen dicha distribución en una familia exponencial con parámetro natural <span class="math inline">\(\bfeta=\bfTheta^\top\xx\)</span>.</p>
 <p>En este capítulo adoptaremos un enfoque diferente. Dado un problema de clasificación <span class="math inline">\(Y|\XX\)</span>, el propósito será modelar la distribución conjunta <span class="math display">\[
 p(\xx,y):=p(\xx\mid y)\, p(y),
-\]</span> donde <span class="math inline">\(p(\xx\mid y)\)</span> es la distribución condicional de las variables predictoras para la clase <span class="math inline">\(Y=y\)</span>, y <span class="math inline">\(p(y)\)</span> es la distribución de probabilidad <em>a priori</em> de dicha clase. Esto conduce a modelos generativos que describen el proceso de generación de los datos. No obstante, para fines de clasificación, lo que nos interesa es determinar la clase más probable dada una observación. En este contexto, la <em>regla de Bayes</em> nos indica que <span class="math display">\[
+\]</span> donde <span class="math inline">\(p(\xx\mid y)\)</span> es la distribución condicional de las variables predictoras para la clase <span class="math inline">\(Y=y\)</span>, y <span class="math inline">\(p(y)\)</span> es la distribución de probabilidad <em>a priori</em> de dicha clase. Esto conduce a modelos generativos que describen el proceso de generación de los datos. No obstante, para fines de clasificación, lo que nos interesa es determinar la clase más probable dada una observación. En este contexto, la * Bayes* nos indica que <span class="math display">\[
 p(y\mid\xx)=\frac{p(\xx\mid y)\,p(y)}{p(\xx)}.
 \]</span></p>
 <p>Observar que, al momento de clasificar una observación <span class="math inline">\(\xx\)</span>, es suficiente comparar los numeradores <span class="math inline">\(p(\xx\mid y)\,p(y)\)</span> para cada clase, puesto que <span class="math inline">\(p(\xx)\)</span> actúa como una constante de normalización que no depende de <span class="math inline">\(y\)</span>. De esta forma, la regla de decisión bayesiana es <span class="math display">\[
@@ -755,7 +759,7 @@ G(\xx)=\arg\max_{y}\left[-\frac{1}{2}(\xx-\bfmu_y)^\top\Sigma^{-1}(\xx-\bfmu_y)+
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 2</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> LDA en datos simulados de clasificación binaria </span></p>
 <p>Simulamos un conjunto de datos en <span class="math inline">\(\RR^2\)</span> perteneciente a dos clases. Al aplicar LDA, el modelo estima una frontera lineal de decisión que separa ambas regiones.</p>
-<div id="8e3e3f61" class="cell" data-execution_count="1">
+<div id="a3d1fb72" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -803,7 +807,7 @@ G(\xx)=\arg\max_{y}\left[-\frac{1}{2}(\xx-\bfmu_y)^\top\Sigma^{-1}(\xx-\bfmu_y)+
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="C1_gda_files/figure-html/cell-2-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="663" height="471"></p>
+<p><img src="C1_gda_files/figure-html/cell-2-output-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
 </figure>
 </div>
 </div>
@@ -813,7 +817,7 @@ G(\xx)=\arg\max_{y}\left[-\frac{1}{2}(\xx-\bfmu_y)^\top\Sigma^{-1}(\xx-\bfmu_y)+
 <p><span class="badge bg-primary">Ejemplo 3</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> LDA en datos de clasificación multiclase </span></p>
 <p>En este ejemplo utilizamos el conjunto de datos <em>wine</em> disponible en <code>scikit-learn</code>, que contiene mediciones químicas de tres tipos de vino. Para visualizar el resultado de la clasificación, consideramos únicamente dos variables predictoras: la intensidad de color y el matiz.</p>
 <p>El modelo LDA estima las fronteras lineales que separan las tres clases, utilizando la comparación de a pares.</p>
-<div id="2832bbdc" class="cell" data-execution_count="2">
+<div id="476838ce" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -862,7 +866,7 @@ G(\xx)=\arg\max_{y}\left[-\frac{1}{2}(\xx-\bfmu_y)^\top\Sigma^{-1}(\xx-\bfmu_y)+
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="C1_gda_files/figure-html/cell-3-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="662" height="470"></p>
+<p><img src="C1_gda_files/figure-html/cell-3-output-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
 </figure>
 </div>
 </div>
@@ -905,6 +909,30 @@ p(\xx\mid y=0)=\frac{1}{(2\pi)^{d/2}|\Sigma_0|^{1/2}}\exp\left\{-\frac{1}{2}(\xx
 \]</span> <span class="math display">\[
 p(\xx\mid y=1)=\frac{1}{(2\pi)^{d/2}|\Sigma_1|^{1/2}}\exp\left\{-\frac{1}{2}(\xx-\bfmu_1)^\top\Sigma_1^{-1}(\xx-\bfmu_1)\right\}.
 \]</span></p>
+<section id="regla-de-decisión-1" class="level3">
+<h3 class="anchored" data-anchor-id="regla-de-decisión-1">Regla de decisión</h3>
+<div style="margin-top:2em;">
+
+</div>
+<p>El no suponer la misma matriz de covarianza para todas las clases tiene las siguientes consecuencias a la hora de determinar la regla de decisión:</p>
+<ul>
+<li><p>El término <span class="math inline">\(-\log |\Sigma_y|\)</span> no puede ser descartado, pues es diferente para cada clase.</p></li>
+<li><p>Los términos cuadráticos <span class="math inline">\(\xx^\top\Sigma_y^{-1}\xx\)</span> no se cancelan y, por lo tanto, la frontera de decisión es cuadrática con término cuadrático <span class="math inline">\(\xx^\top(\Sigma_1-\Sigma_0)^{-1}\xx\)</span>.</p></li>
+</ul>
+<div style="margin-top:2em;">
+
+</div>
+<div class="myhighlight">
+<p>Para un problema de clasificación multiclase, la regla de decisión del modelo QDA es <span class="math display">\[
+G(\xx)=\arg\max_{y}\left[-\frac{1}{2}\log |\Sigma_y|-\frac{1}{2}(\xx-\bfmu_y)^\top\Sigma_y^{-1}(\xx-\bfmu_y)+\log\pi_y\right].
+\]</span></p>
+</div>
+<div style="margin-top:2em;">
+
+</div>
+</section>
+<section id="estimación-por-máxima-verosimilitud-1" class="level3">
+<h3 class="anchored" data-anchor-id="estimación-por-máxima-verosimilitud-1">Estimación por máxima verosimilitud</h3>
 <p>De manera similar al caso de LDA, se obtienen los estimadores por máxima verosimilitud para los parámetros <span class="math inline">\(\varphi\in\RR\)</span>, <span class="math inline">\(\bfmu_0, \bfmu_1\in\RR^p\)</span> y <span class="math inline">\(\Sigma_0, \Sigma_1\in\mathbf{S}_{++}^p\)</span>.</p>
 <div style="margin-top:2em;">
 
@@ -914,9 +942,12 @@ p(\xx\mid y=1)=\frac{1}{(2\pi)^{d/2}|\Sigma_1|^{1/2}}\exp\left\{-\frac{1}{2}(\xx
 \hat{\varphi}=\frac{1}{n}\sum_{i=1}^n\bfone\{y_i=1\},
 \]</span> <span class="math display">\[
 \hat{\bfmu}_y = \frac{\sum_{i=1}^n\bfone\{y_i=y\}\xx_i}{\sum_{i=1}^n\bfone\{y_i=y\}},
-\]</span> <span class="math display">\[
-\hat{\Sigma} =\frac{1}{n}\sum_{i=1}^n(\xx_i-\hat{\bfmu}_{y_i})(\xx_i+\hat{\bfmu}_{y_i})^\top.
-\]</span></p>
+\]</span> <span class="math display">\[\hat{\Sigma}_y =
+    \frac{\sum_{i=1}^{n} \mathbf{1}\{ y_i = y \}
+    (\mathbf{x}_i - \hat{\boldsymbol{\mu}}_{y})
+    (\mathbf{x}_i - \hat{\boldsymbol{\mu}}_{y})^{\top}}
+    {\sum_{i=1}^{n} \mathbf{1}\{ y_i = y \}}.
+    \]</span></p>
 </div>
 <div style="margin-top:2em;">
 
@@ -924,7 +955,7 @@ p(\xx\mid y=1)=\frac{1}{(2\pi)^{d/2}|\Sigma_1|^{1/2}}\exp\left\{-\frac{1}{2}(\xx
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 4</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> QDA en datos de clasificación multiclase </span></p>
 <p>En este ejemplo utilizamos los mismos datos del Ejemplo 3, pero aplicamos el modelo QDA. A diferencia del LDA, este modelo permite que cada clase tenga su propia matriz de covarianza, lo que da lugar a fronteras de decisión no lineales que se adaptan mejor a la estructura de los datos.</p>
-<div id="497d15a6" class="cell" data-execution_count="3">
+<div id="6cc2ec59" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -972,7 +1003,7 @@ p(\xx\mid y=1)=\frac{1}{(2\pi)^{d/2}|\Sigma_1|^{1/2}}\exp\left\{-\frac{1}{2}(\xx
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="C1_gda_files/figure-html/cell-4-output-1.png" class="quarto-figure quarto-figure-center figure-img" width="662" height="470"></p>
+<p><img src="C1_gda_files/figure-html/cell-4-output-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
 </figure>
 </div>
 </div>
@@ -981,6 +1012,7 @@ p(\xx\mid y=1)=\frac{1}{(2\pi)^{d/2}|\Sigma_1|^{1/2}}\exp\left\{-\frac{1}{2}(\xx
 <div style="margin-top:2.5em;">
 
 </div>
+</section>
 </section>
 <section id="naive-bayes" class="level2">
 <h2 class="anchored" data-anchor-id="naive-bayes">Naive Bayes</h2>
@@ -1028,7 +1060,7 @@ p(\xx\mid y)=\prod_{i=1}^p p(x_i\mid y).
 \vdots \\
 \text{perro}\end{matrix}
 \]</span></p>
-<p>representa un documento que contiene las palabras “casa” y “comprar”, pero no “bicicleta”, “zapato” y “perro”. Ahora bien, si suponemos que el vocabulario está compuesto por 50000 palabras, modelar cada observación <span class="math inline">\(\xx\)</span> por separado y utilizar la distribución multinomial da lugar a <span class="math inline">\(2^{50000}-1\)</span> parámetros. Por tal motivo, el uso de Naive Bayes simplifica mucho el problema; el precio a pagar es la suposición ingenua de independencia: se asume que saber si la <span class="math inline">\(i\)</span>-ésima palabra aparece o no en un documento no aporta información sobre la presencia o ausencia de la <span class="math inline">\(j\)</span>-ésima palabra.</p>
+<p>representa un documento que contiene las palabras “casa” y “comprar”, pero no “bicicleta”, “zapato” y “perro”. Ahora bien, si suponemos que el vocabulario está compuesto por 50000 palabras, modelar cada observación <span class="math inline">\(\xx\)</span> por separado para obtener la distribución conjunta da lugar a <span class="math inline">\(2^{50000}-1\)</span> parámetros. Por tal motivo, el uso de Naive Bayes simplifica mucho el problema; el precio a pagar es la suposición ingenua de independencia: se asume que saber si la <span class="math inline">\(i\)</span>-ésima palabra aparece o no en un documento no aporta información sobre la presencia o ausencia de la <span class="math inline">\(j\)</span>-ésima palabra.</p>
 <div class="myhighlight2">
 <span style="font-size:0.8em;"><em>Supuesto del modelo</em></span>
 <div style="margin-top:-0.1em;">
@@ -1051,8 +1083,16 @@ p(\xx_i\mid y_i)=\prod_{j=1}^p p(x_{ij}\mid y_i)\qquad \forall i=1,\ldots, n
 \]</span> <span class="math display">\[
 \phi_y:=p(y=1).
 \]</span></p>
-<section id="estimación-por-máxima-verosimilitud-1" class="level4">
-<h4 class="anchored" data-anchor-id="estimación-por-máxima-verosimilitud-1">Estimación por máxima verosimilitud</h4>
+<section id="regla-de-decisión-2" class="level4">
+<h4 class="anchored" data-anchor-id="regla-de-decisión-2">Regla de decisión</h4>
+<div class="myhighlight">
+<p>Para un problema de clasificación multiclase, la regla de decisión del modelo Naive Bayes con características Bernoulli es <span class="math display">\[
+G(\xx)=\arg\max_{y} \left(\varphi^{y}(1-\varphi)^{1-y}\prod_{j=1}^p\phi_{j\mid y}^{x_{j}}(1-\phi_{j\mid y})^{1-x_{j}}\right).
+\]</span></p>
+</div>
+</section>
+<section id="estimación-por-máxima-verosimilitud-2" class="level4">
+<h4 class="anchored" data-anchor-id="estimación-por-máxima-verosimilitud-2">Estimación por máxima verosimilitud</h4>
 <p>La función de verosimilitud es <span class="math display">\[
 \begin{align}
 L(\varphi,\phi_{i\mid y=0},\phi_{i\mid y=1})&amp;=\prod_{i=1}^n p(\xx_i\mid y_i; \phi_{i\mid y=0}, \phi_{i\mid y=1})\,p(y_i\mid\varphi) \\
@@ -1078,10 +1118,8 @@ L(\varphi,\phi_{i\mid y=0},\phi_{i\mid y=1})&amp;=\prod_{i=1}^n p(\xx_i\mid y_i;
 <div style="margin-top:2em;">
 
 </div>
-<p>Luego, dada una nueva observación <span class="math inline">\(\xx\)</span>, el clasificador es <span class="math display">\[
-G(\xx)=\arg\max_{y} p(\xx\mid y)\,p(y)=\arg\max_{y} \left(\hat{\varphi}^{y}(1-\hat{\varphi})^{1-y}\prod_{j=1}^p\hat{\phi}_{j\mid y}^{x_{j}}(1-\hat{\phi}_{j\mid y})^{1-x_{j}}\right).
-\]</span></p>
-<p>Con esto hemos desarrollado el método de Naive Bayes para el caso de características binarias <span class="math inline">\(X_i\)</span>. La generalización al caso de variables discretas que toman valores en <span class="math inline">\(\{1,2,\ldots,k\}\)</span> es directa, mediante el uso de la <em>distribución categórica</em>.</p>
+<p>Con esto hemos desarrollado el método de Naive Bayes para el caso de características binarias <span class="math inline">\(X_i\)</span>. La generalización al caso de variables discretas que toman valores en <span class="math inline">\(\{1,2,\ldots,k\}\)</span> es directa, mediante el uso de la <em>distribución categórica</em>, aplicable a otros tipos de problemas donde cada variable puede asumir más de dos categorías (clasificación de encuestas, diagnóstico médico, entre otros).</p>
+<p>En el caso particular de <em>clasificación de textos</em>, es común modelar las variables como <mark>conteos</mark> de palabras en lugar de variables binarias de presencia/auscencia. En ese contexto, se utiliza el <em>Naive Bayes Multinomial</em>, que asume independencia entre apariciones de palabras, lo cual permite modelar <span class="math inline">\(p(\xx\mid y)\)</span> mediante la distribución Multinomial.</p>
 <div style="margin-top:2em;">
 
 </div>
