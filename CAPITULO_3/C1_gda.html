@@ -632,7 +632,7 @@ G(\xx)=1\quad\text{si}\quad \log\frac{p(y=1\mid \xx)}{p(y=0\mid \xx)}&gt;0.
 \log p(y=1\mid \xx) &amp;= \log p(y=0\mid \xx) \\[3pt]
 -\frac{1}{2}(\xx-\bfmu_1)^\top\Sigma^{-1}(\xx-\bfmu_1) + \log p(y=1) &amp;= -\frac{1}{2}(\xx-\bfmu_0)^\top\Sigma^{-1}(\xx-\bfmu_0) + \log p(y=0) \\[3pt]
 (\xx-\bfmu_0)^\top \Sigma^{-1}(\xx-\bfmu_0)-(\xx-\bfmu_1)^\top \Sigma^{-1}(\xx-\bfmu_1) &amp;= 2\log\frac{p(y=0)}{p(y=1)} \\[3pt]
-\underbrace{(\bfmu_1-\bfmu_0)^\top\Sigma^{-1}}_{\bfbeta^\top}\xx &amp;=\underbrace{2\log\frac{p(y=0)}{p(y=1)}-\bfmu_0^\top\Sigma^{-1}\bfmu_0+\bfmu_1^\top\Sigma^{-1}\bfmu_1}_{-\beta_0}
+\underbrace{(\bfmu_1-\bfmu_0)^\top\Sigma^{-1}}_{\bfbeta^\top}\xx &amp;=\underbrace{\log\frac{p(y=0)}{p(y=1)}+\frac{1}{2}\left(\bfmu_1^\top\Sigma^{-1}\bfmu_1-\bfmu_0^\top\Sigma^{-1}\bfmu_0\right)}_{-\beta_0}
 \end{align*}
 \]</span></p>
 <p>Esto es un hiperplano de la forma <span class="math inline">\(f(\xx)=\bfbeta^\top\xx+\beta_0=0\)</span>, con vector normal <span class="math display">\[
@@ -759,7 +759,7 @@ G(\xx)=\arg\max_{y}\left[-\frac{1}{2}(\xx-\bfmu_y)^\top\Sigma^{-1}(\xx-\bfmu_y)+
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 2</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> LDA en datos simulados de clasificación binaria </span></p>
 <p>Simulamos un conjunto de datos en <span class="math inline">\(\RR^2\)</span> perteneciente a dos clases. Al aplicar LDA, el modelo estima una frontera lineal de decisión que separa ambas regiones.</p>
-<div id="a3d1fb72" class="cell" data-execution_count="1">
+<div id="f47c251e" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -817,7 +817,7 @@ G(\xx)=\arg\max_{y}\left[-\frac{1}{2}(\xx-\bfmu_y)^\top\Sigma^{-1}(\xx-\bfmu_y)+
 <p><span class="badge bg-primary">Ejemplo 3</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> LDA en datos de clasificación multiclase </span></p>
 <p>En este ejemplo utilizamos el conjunto de datos <em>wine</em> disponible en <code>scikit-learn</code>, que contiene mediciones químicas de tres tipos de vino. Para visualizar el resultado de la clasificación, consideramos únicamente dos variables predictoras: la intensidad de color y el matiz.</p>
 <p>El modelo LDA estima las fronteras lineales que separan las tres clases, utilizando la comparación de a pares.</p>
-<div id="476838ce" class="cell" data-execution_count="2">
+<div id="98cedfe1" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -955,7 +955,7 @@ G(\xx)=\arg\max_{y}\left[-\frac{1}{2}\log |\Sigma_y|-\frac{1}{2}(\xx-\bfmu_y)^\t
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 4</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> QDA en datos de clasificación multiclase </span></p>
 <p>En este ejemplo utilizamos los mismos datos del Ejemplo 3, pero aplicamos el modelo QDA. A diferencia del LDA, este modelo permite que cada clase tenga su propia matriz de covarianza, lo que da lugar a fronteras de decisión no lineales que se adaptan mejor a la estructura de los datos.</p>
-<div id="6cc2ec59" class="cell" data-execution_count="3">
+<div id="3d7f08d3" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Mostrar código</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
