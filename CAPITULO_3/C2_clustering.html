@@ -740,7 +740,7 @@ J(A,B):=\frac{|A\cap B|}{|A\cup B|},
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 5</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Datos con estructura de bloques diagonales constantes </span></p>
 <p>La función <code>make_biclusters</code> de <code>scikit-learn</code> genera datos con estructura de bloques diagonales constantes. Vamos a generar una matriz de datos <span class="math inline">\(200\times 200\)</span> con una estructura con 5 biclusters.</p>
-<div id="376c2198" class="cell" data-execution_count="1">
+<div id="0989df92" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_biclusters</span>
@@ -773,7 +773,7 @@ J(A,B):=\frac{|A\cap B|}{|A\cup B|},
 </div>
 </div>
 <p>Vamos a aplicar los algoritmos <code>SpectralCoclustering</code> y <code>SpectralBiclustering</code> y evaluar su rendimiento. Por la estructura de los datos, se espera que el primero logre un mejor desempeño, puesto que está especialmente diseñado para este tipo de datos.</p>
-<div id="61ba9d69" class="cell" data-execution_count="2">
+<div id="9568ae4e" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> SpectralCoclustering</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> SpectralBiclustering</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> consensus_score</span>
@@ -818,7 +818,7 @@ J(A,B):=\frac{|A\cap B|}{|A\cup B|},
 <div class="callout-example">
 <p><span class="badge bg-primary">Ejemplo 5</span> <span style="color: #0d6efd; font-family: Arial; font-weight: bold; font-size: 0.85em;"> Datos con estructura tipo tablero de ajedrez </span></p>
 <p>La función <code>make_checkerboard</code> de <code>scikit-learn</code> genera matrices con una estructura tipo tablero de ajedrez, donde los valores dentro de cada bloque son aproximadamente constantes. Vamos a generar una matriz de datos <span class="math inline">\(200 \times 200\)</span> con 5 grupos de filas y 3 grupos de columnas.</p>
-<div id="9f7f4701" class="cell" data-execution_count="3">
+<div id="6106a784" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_checkerboard</span>
@@ -851,7 +851,7 @@ J(A,B):=\frac{|A\cap B|}{|A\cup B|},
 </div>
 </div>
 <p>Vamos a aplicar los algoritmos <code>SpectralCoclustering</code> y <code>SpectralBiclustering</code> y evaluar su rendimiento. Por la estructura de los datos, se espera que el primero logre un mejor desempeño, puesto que está especialmente diseñado para este tipo de datos.</p>
-<div id="79762a1d" class="cell" data-execution_count="4">
+<div id="88c67e82" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> SpectralCoclustering</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> SpectralBiclustering</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> consensus_score</span>
